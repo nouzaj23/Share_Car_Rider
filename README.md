@@ -1,28 +1,29 @@
-# PV168 Project: {{ PROJECT NAME }}
+# PV168 Project: Share Car Rider
 
-<!--- FIXME: fill in the PROJECT NAME above and include short description of what the project is about -->
-{{ PROJECT DESCRIPTION }}
+Desktop application which allows the user to track his personal rides (eg. regular rides, trips...).
+It gives an overview of how much he spends on fuel, how many passengers he's had and total distance travelled.
+
 
 ## Team Information
 
 | Seminar Group | Team |
 |-------------- | ---- |
-| PV168/0X      | Y    | <!--- FIXME: fill in the seminar group and team identification -->
+| PV168/01      | 2    |
 
 ### Members
 
 | Role           | Person               |
 |----------------|----------------------|
-|Team Lead       | [Name Surname](https://is.muni.cz/auth/osoba/UCO) | <!--- FIXME: fill in the name and UCO -->
-|Member          | [Name Surname](https://is.muni.cz/auth/osoba/UCO) | <!--- FIXME: fill in the name and UCO -->
-|Member          | [Name Surname](https://is.muni.cz/auth/osoba/UCO) | <!--- FIXME: fill in the name and UCO -->
-|Member          | [Name Surname](https://is.muni.cz/auth/osoba/UCO) | <!--- FIXME: fill in the name and UCO -->
+|Team Lead       | [Martin Tuček](https://is.muni.cz/auth/osoba/524838) |
+|Member          | [Jan Nouza](https://is.muni.cz/auth/osoba/524780) |
+|Member          | [Jonáš Jadrníček](https://is.muni.cz/auth/osoba/514017) |
+|Member          | [Adam Paulen](https://is.muni.cz/auth/osoba/525093) |
 
 ### Evaluators
 
 | Role           | Person               |
 |----------------|----------------------|
-|PM              | [Name Surname](https://is.muni.cz/auth/osoba/UCO) | <!--- FIXME: fill in the name and UCO -->
+|PM              | [Šimon Mačejovský](https://is.muni.cz/auth/osoba/444140) |
 |Technical Coach | [Name Surname](https://is.muni.cz/auth/osoba/UCO) | <!--- FIXME: fill in the name and UCO -->
 
 ## TODO
