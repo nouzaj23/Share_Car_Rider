@@ -1,6 +1,8 @@
 package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
+import cz.muni.fi.pv168.project.ui.panels.CategoriesPanel;
+import cz.muni.fi.pv168.project.ui.panels.TemplatesPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +17,11 @@ public class MainWindow {
 
         var tabbedPane = new JTabbedPane();
         var carRidesPanel = new CarRidesPanel();
+        var categoriesPanel = new CategoriesPanel();
+        var templatesPanel = new TemplatesPanel();
         tabbedPane.addTab("Car Rides", carRidesPanel);
-        //tabbedPane.addTab("Categories", categoriesPanel);
-        //tabbedPane.addTab("Templates", templatesPanel);
+        tabbedPane.addTab("Categories", categoriesPanel);
+        tabbedPane.addTab("Templates", templatesPanel);
 
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.pack();
