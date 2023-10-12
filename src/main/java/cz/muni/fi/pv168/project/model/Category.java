@@ -25,7 +25,9 @@ public class Category {
     }
 
     public void setDistance(int distance) {
-        this.distance = distance;
+        if (distance >= 0) {
+            this.distance = distance;
+        }
     }
 
     public int getRides() {
@@ -33,6 +35,8 @@ public class Category {
     }
 
     public void setRides(int rides) {
-        this.rides = rides;
+        if (rides >= 0) {
+            this.rides = rides;
+        }
     }
 }

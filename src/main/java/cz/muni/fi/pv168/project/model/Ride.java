@@ -34,7 +34,9 @@ public class Ride {
     }
 
     public void setPassengers(int passengers) {
-        this.passengers = passengers;
+        if (passengers >= 0) {
+            this.passengers = passengers;
+        }
     }
 
     public Currency getCurrency() {
@@ -74,6 +76,8 @@ public class Ride {
     }
 
     public void setDistance(int distance) {
-        this.distance = distance;
+        if (distance >= 0) {
+            this.distance = distance;
+        }
     }
 }
