@@ -1,5 +1,7 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,6 +17,7 @@ abstract public class EntityDialog<E> {
     private final JPanel panel = new JPanel();
 
     EntityDialog() {
+        panel.setLayout(new MigLayout("wrap 2"));
     }
 
     void add(String labelText, JComponent component) {
