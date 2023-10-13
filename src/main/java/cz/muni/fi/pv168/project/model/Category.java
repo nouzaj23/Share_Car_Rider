@@ -39,4 +39,8 @@ public class Category {
             this.rides = rides;
         }
     }
+
+    public static Category exampleCategory(){
+        return new Category("Sluzobka");
+    }
 }

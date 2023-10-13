@@ -11,7 +11,8 @@ public class Ride {
     private LocalDateTime to;
     private int distance;
 
-    public Ride(String name, int passengers, Currency currency, Category category, LocalDateTime from, LocalDateTime to, int distance) {
+    public Ride(String name, int passengers, Currency currency, Category category,
+                LocalDateTime from, LocalDateTime to, int distance) {
         this.name = name;
         this.passengers = passengers;
         this.currency = currency;
@@ -79,5 +80,10 @@ public class Ride {
         if (distance >= 0) {
             this.distance = distance;
         }
+    }
+
+    public static Ride exampleRide(){
+        return new Ride("Sluzobka", 3, Currency.CZK, new Category("Sluzobna jazda"),
+                        LocalDateTime.now(), LocalDateTime.now(), 100);
     }
 }
