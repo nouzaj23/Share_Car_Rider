@@ -91,6 +91,7 @@ public class Ride {
                 category.modifyDistanceFluent(distance - originalDistance);
             }
         }
+
     }
 
     public void setCommitted(boolean committed) {

@@ -14,7 +14,7 @@ public class AddAction<E> extends AbstractAction {
     public AddAction(AbstractPanel<E> panel) {
         super("Add", Icons.ADD_ICON);
         this.panel = panel;
-        putValue(SHORT_DESCRIPTION, "Adds new employee");
+        putValue(SHORT_DESCRIPTION, "Adds record");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
     }
@@ -22,7 +22,7 @@ public class AddAction<E> extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         var dialog = panel.getDialog();
-        dialog.show(panel, "Add Ride")
+        dialog.show(panel, "Add record")
                 .ifPresent(panel::addRow);
     }
 }

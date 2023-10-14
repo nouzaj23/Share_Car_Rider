@@ -2,6 +2,8 @@ package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
 import cz.muni.fi.pv168.project.ui.actions.AddAction;
+import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
+import cz.muni.fi.pv168.project.ui.actions.EditAction;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryModel;
@@ -80,6 +82,8 @@ public class MainWindow {
     private JPopupMenu createRidesPopupMenu(CarRidesPanel carRidesPanel) {
         var menu = new JPopupMenu();
         menu.add(new AddAction<>(carRidesPanel));
+        menu.add(new EditAction<>(carRidesPanel));
+        menu.add(new DeleteAction<>(carRidesPanel));
         return menu;
     }
 

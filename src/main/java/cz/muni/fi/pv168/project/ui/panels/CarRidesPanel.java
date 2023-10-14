@@ -3,7 +3,6 @@ package cz.muni.fi.pv168.project.ui.panels;
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
@@ -21,9 +20,11 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final Consumer<Integer> onSelectionChange;
     private final CarRidesModel carRidesModel;
     private final CategoryListModel categoryListModel;
+    private final JLabel totalDistance;
 
     public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange) {
         this.carRidesModel = carRidesModel;
+        this.carRidesModel.setLinkedPannel(this);
         this.categoryListModel = categoryListModel;
 
         ComboBoxModel<Category> categoryFilter = new ComboBoxModelAdapter<>(categoryListModel);
@@ -33,8 +34,6 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
         var toolbar = new JToolBar();
         toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-        Action addAction = new AddAction<>(this);
-        toolbar.add(new JButton(addAction));
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new FlowLayout());
@@ -68,7 +67,9 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
         JTable table = setUpTable();
 
-        PanelHelper.createTopBar(this, table, filterPanel);
+        totalDistance = new JLabel();
+        triggerTotalDistanceUpdate();
+        PanelHelper.createTopBar(this, table, filterPanel, totalDistance);
     }
 
     private JTable setUpTable() {
@@ -104,5 +105,14 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             categoryListModel.updateRow(entity.getCategory().modifyDistanceFluent(entity.getDistance()));
             entity.getCategory().setRides(entity.getCategory().getRides() + 1);
         }
+        triggerTotalDistanceUpdate();
+    }
+
+    public void triggerTotalDistanceUpdate() {
+        var result = 0;
+        for (int i = 0; i < carRidesModel.getRowCount(); i++) {
+            result += carRidesModel.getEntity(i).getDistance();
+        }
+        totalDistance.setText("Total distance:  " + result);
     }
 }

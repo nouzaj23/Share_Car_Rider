@@ -3,12 +3,12 @@ package cz.muni.fi.pv168.project.ui.panels;
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 import cz.muni.fi.pv168.project.ui.model.TemplateModel;
+import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -31,18 +31,7 @@ public class TemplatesPanel extends AbstractPanel<Ride> {
 
         JTable table = setUpTable();
 
-        var toolbar = new JToolBar();
-        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-        Action addAction = new AddAction<>(this);
-        toolbar.add(new JButton(addAction));
-
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-
-        topPanel.add(toolbar);
-
-        add(topPanel, BorderLayout.NORTH);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        PanelHelper.createTopBar(this, table, null, null);
     }
 
     private JTable setUpTable() {

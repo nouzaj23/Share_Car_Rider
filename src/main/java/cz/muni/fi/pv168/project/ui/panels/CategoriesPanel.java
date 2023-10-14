@@ -23,7 +23,7 @@ public class CategoriesPanel extends AbstractPanel<Category> {
         setLayout(new BorderLayout());
         JTable table = setUpTable(categoryModel);
 
-        PanelHelper.createTopBar(this, table, null);
+        PanelHelper.createTopBar(this, table, null, null);
     }
 
 

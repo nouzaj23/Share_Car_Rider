@@ -3,6 +3,7 @@ package cz.muni.fi.pv168.project.ui.model;
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDateTime;
@@ -13,6 +14,9 @@ import java.util.List;
 public class CarRidesModel extends AbstractTableModel implements EnitityTableModel<Ride> {
 
     private final List<Ride> rides;
+
+    private CarRidesPanel linkedPannel;
+
     private final List<Column<Ride, ?>> columns = List.of(
             Column.editable("Name", String.class, Ride::getName, Ride::setName),
             Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
@@ -20,7 +24,10 @@ public class CarRidesModel extends AbstractTableModel implements EnitityTableMod
             Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
             Column.readonly("From", LocalDateTime.class, Ride::getFrom),
             Column.readonly("To", LocalDateTime.class, Ride::getTo),
-            Column.editable("Distance", Integer.class, Ride::getDistance, Ride::setDistance)
+            Column.editable("Distance", Integer.class, Ride::getDistance, (ride, value) -> {
+                ride.setDistance(value);
+                linkedPannel.triggerTotalDistanceUpdate();
+            })
     );
 
     public CarRidesModel(Collection<Ride> rides) {
@@ -71,6 +78,10 @@ public class CarRidesModel extends AbstractTableModel implements EnitityTableMod
         }
     }
 
+    public void setLinkedPannel(CarRidesPanel linkedPannel) {
+        this.linkedPannel = linkedPannel;
+    }
+
     public void deleteRow(int rowIndex) {
         rides.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
@@ -80,6 +91,7 @@ public class CarRidesModel extends AbstractTableModel implements EnitityTableMod
         int newRowIndex = rides.size();
         ride.setCommitted(true);
         rides.add(ride);
+        linkedPannel.triggerTotalDistanceUpdate();
         fireTableRowsInserted(newRowIndex, newRowIndex);
     }
 
