@@ -30,6 +30,15 @@ public class Category {
         }
     }
 
+    public Category modifyDistanceFluent(int delta) {
+        if (distance < -delta) {
+            throw new IllegalArgumentException();
+        }
+
+        distance += delta;
+        return this;
+    }
+
     public int getRides() {
         return rides;
     }
@@ -38,6 +47,11 @@ public class Category {
         if (rides >= 0) {
             this.rides = rides;
         }
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     public static Category exampleCategory(){

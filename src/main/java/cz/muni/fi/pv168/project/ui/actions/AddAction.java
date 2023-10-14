@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
 import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
+import cz.muni.fi.pv168.project.ui.resources.Icons;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +12,7 @@ public class AddAction<E> extends AbstractAction {
     private final AbstractPanel<E> panel;
 
     public AddAction(AbstractPanel<E> panel) {
-        super("Add");
+        super("Add", Icons.ADD_ICON);
         this.panel = panel;
         putValue(SHORT_DESCRIPTION, "Adds new employee");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);

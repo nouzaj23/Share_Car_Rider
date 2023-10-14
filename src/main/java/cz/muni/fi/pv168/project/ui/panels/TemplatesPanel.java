@@ -6,39 +6,73 @@ import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.actions.AddAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
+import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
+import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
+import cz.muni.fi.pv168.project.ui.model.TemplateModel;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
-import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 public class TemplatesPanel extends AbstractPanel<Ride> {
 
-    private final JTable table;
-    private final Action addAction = new AddAction<Ride>(this);
-    public TemplatesPanel() {
-        setLayout(new BorderLayout());
-        table = setUpTable();
-        var toolbar = new JToolBar();
-        toolbar.add(addAction);
+    private final TemplateModel templateModel;
+    private final Consumer<Integer> onSelectionChange;
+    private final CategoryListModel categoryListModel;
 
-        add(toolbar, BorderLayout.SOUTH);
+    public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange) {
+        this.templateModel = templateModel;
+        this.categoryListModel = categoryListModel;
+        this.onSelectionChange = onSelectionChange;
+
+        setLayout(new BorderLayout());
+
+
+        JTable table = setUpTable();
+
+        var toolbar = new JToolBar();
+        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        Action addAction = new AddAction<>(this);
+        toolbar.add(new JButton(addAction));
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+
+        topPanel.add(toolbar);
+
+        add(topPanel, BorderLayout.NORTH);
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
     private JTable setUpTable() {
-        return super.setUpTable(new String[]{"Name","Passengers", "Currency", "Category", "From", "To", "Distance"},
-                                new Object[]{"Sluzobka", 2, Currency.CZK, new Category("Sluzobna jazda"),
-                                LocalDateTime.now(), LocalDateTime.now(), 130});
+        var table = new JTable(templateModel);
+
+        table.setAutoCreateRowSorter(true);
+        table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        var currencyComboBox = new JComboBox<>(Currency.values());
+        table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
+        var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
+
+        return table;
+    }
+
+    private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
+        var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
+        var count = selectionModel.getSelectedItemsCount();
+        if (onSelectionChange != null) {
+            onSelectionChange.accept(count);
+        }
     }
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide());
+        return new RideDialog(Ride.exampleRide(), categoryListModel);
     }
 
     @Override
     public void addRow(Ride entity) {
-        getModel().addRow(new Object[] {entity.getName(), entity.getPassengers(), entity.getCurrency(),
-                entity.getCategory(), entity.getFrom(), entity.getTo(), entity.getDistance()});
+        templateModel.addRow(entity);
     }
 }

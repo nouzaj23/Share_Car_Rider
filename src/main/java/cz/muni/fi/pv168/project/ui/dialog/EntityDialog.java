@@ -2,15 +2,10 @@ package cz.muni.fi.pv168.project.ui.dialog;
 
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.util.Optional;
 
-import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
-import static javax.swing.JOptionPane.OK_OPTION;
-import static javax.swing.JOptionPane.PLAIN_MESSAGE;
+import static javax.swing.JOptionPane.*;
 
 abstract public class EntityDialog<E> {
 
@@ -33,8 +28,7 @@ abstract public class EntityDialog<E> {
                 OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
         if (result == OK_OPTION) {
             return Optional.of(getEntity());
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 }

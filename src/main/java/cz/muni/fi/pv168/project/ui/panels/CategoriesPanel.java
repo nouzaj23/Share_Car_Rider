@@ -1,33 +1,45 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
 import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
 import cz.muni.fi.pv168.project.ui.dialog.CategoryDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
+import cz.muni.fi.pv168.project.ui.model.CategoryModel;
+import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class CategoriesPanel extends AbstractPanel<Category> {
 
-    private final JTable table;
-    private final Action addAction = new AddAction<Category>(this);
+    private final Consumer<Integer> onSelectionChange;
+    private final CategoryModel categoryModel;
 
-    public CategoriesPanel() {
+    public CategoriesPanel(CategoryModel categoryModel, Consumer<Integer> onSelectionChange) {
+        this.categoryModel = categoryModel;
+        this.onSelectionChange = onSelectionChange;
+
         setLayout(new BorderLayout());
-        table = setUpTable();
+        JTable table = setUpTable(categoryModel);
 
-        var toolbar = new JToolBar();
-        toolbar.add(addAction);
-
-        add(toolbar, BorderLayout.SOUTH);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        PanelHelper.createTopBar(this, table, null);
     }
 
 
-    private JTable setUpTable() {
-        return super.setUpTable(new String[]{"Name", "Number of rides", "Distance"},
-                new Object[]{"Sluzobna jazda", "1", "130KM"});
+    private JTable setUpTable(CategoryModel categoryModel) {
+        var table = new JTable(categoryModel);
+        table.setAutoCreateRowSorter(true);
+        table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        return table;
+    }
+
+    private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
+        var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
+        var count = selectionModel.getSelectedItemsCount();
+        if (onSelectionChange != null) {
+            onSelectionChange.accept(count);
+        }
     }
 
     @Override
@@ -37,6 +49,6 @@ public class CategoriesPanel extends AbstractPanel<Category> {
 
     @Override
     public void addRow(Category entity) {
-        getModel().addRow(new Object[] {entity.getName(), entity.getRides(), entity.getDistance()});
+        categoryModel.addRow(entity);
     }
 }

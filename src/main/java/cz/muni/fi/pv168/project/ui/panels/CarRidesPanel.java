@@ -6,23 +6,35 @@ import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.actions.AddAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
+import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
+import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
+import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
+import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
-import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 public class CarRidesPanel extends AbstractPanel<Ride> {
 
-    private final Action addAction = new AddAction<Ride>(this);
-    private final JTable table;
-    private final JComboBox<Category> categoryFilter = new JComboBox<>();
-    private final JComboBox<Currency> currencyFilter = new JComboBox<>(Currency.values());
-    private final JTextField passengersFilter = new JTextField(2);
-    private final JTextField distanceFilter = new JTextField(5);
-    private final JTextField fromFilter = new JTextField(14);
-    private final JTextField toFilter = new JTextField(14);
-    public CarRidesPanel() {
+    private final Consumer<Integer> onSelectionChange;
+    private final CarRidesModel carRidesModel;
+    private final CategoryListModel categoryListModel;
+
+    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange) {
+        this.carRidesModel = carRidesModel;
+        this.categoryListModel = categoryListModel;
+
+        ComboBoxModel<Category> categoryFilter = new ComboBoxModelAdapter<>(categoryListModel);
+
+        this.onSelectionChange = onSelectionChange;
         setLayout(new BorderLayout());
+
+        var toolbar = new JToolBar();
+        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        Action addAction = new AddAction<>(this);
+        toolbar.add(new JButton(addAction));
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new FlowLayout());
@@ -34,47 +46,63 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         JLabel distanceLabel = new JLabel("Distance:");
         JLabel fromLabel = new JLabel("From:");
         JLabel toLabel = new JLabel("To:");
-        JButton addRow = new JButton("Add Ride");
 
         // Create and add filter components
         filterPanel.add(categoryLabel);
-        filterPanel.add(categoryFilter);
+        filterPanel.add(new JComboBox<>(categoryFilter));
+
         filterPanel.add(currencyLabel);
-        filterPanel.add(currencyFilter);
+        filterPanel.add(new JComboBox<>(new DefaultComboBoxModel<>(Currency.values())));
+
         filterPanel.add(passengersLabel);
-        filterPanel.add(passengersFilter);
+        filterPanel.add(new JTextField());
+
         filterPanel.add(distanceLabel);
-        filterPanel.add(distanceFilter);
+        filterPanel.add(new JTextField());
+
         filterPanel.add(fromLabel);
-        filterPanel.add(fromFilter);
+        filterPanel.add(new JTextField());
+
         filterPanel.add(toLabel);
-        filterPanel.add(toFilter);
+        filterPanel.add(new JTextField());
 
-        table = setUpTable();
+        JTable table = setUpTable();
 
-        var toolbar = new JToolBar();
-        toolbar.add(addAction);
-
-        add(toolbar, BorderLayout.SOUTH);
-        add(filterPanel, BorderLayout.NORTH);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        PanelHelper.createTopBar(this, table, filterPanel);
     }
 
-
     private JTable setUpTable() {
-        return super.setUpTable(new String[]{"Name", "Passengers", "Currency", "Category", "From", "To", "Distance"},
-                                new Object[]{"Sluzobka", 2, Currency.CZK, new Category("Sluzobna jazda"),
-                                LocalDateTime.now(), LocalDateTime.now(), 130});
+        var table = new JTable(carRidesModel);
+
+        table.setAutoCreateRowSorter(true);
+        table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        var currencyComboBox = new JComboBox<>(Currency.values());
+        table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
+        var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
+
+        return table;
+    }
+
+    private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
+        var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
+        var count = selectionModel.getSelectedItemsCount();
+        if (onSelectionChange != null) {
+            onSelectionChange.accept(count);
+        }
     }
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide());
+        return new RideDialog(Ride.exampleRide(), categoryListModel);
     }
 
     @Override
     public void addRow(Ride entity) {
-        getModel().addRow(new Object[] {entity.getName(), entity.getPassengers(), entity.getCurrency(),
-                          entity.getCategory(), entity.getFrom(), entity.getTo(), entity.getDistance()});
+        carRidesModel.addRow(entity);
+        if (entity.getCategory() != null) {
+            categoryListModel.updateRow(entity.getCategory().modifyDistanceFluent(entity.getDistance()));
+            entity.getCategory().setRides(entity.getCategory().getRides() + 1);
+        }
     }
 }

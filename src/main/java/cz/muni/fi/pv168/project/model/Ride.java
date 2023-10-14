@@ -11,6 +11,8 @@ public class Ride {
     private LocalDateTime to;
     private int distance;
 
+    private boolean isCommitted = false;
+
     public Ride(String name, int passengers, Currency currency, Category category,
                 LocalDateTime from, LocalDateTime to, int distance) {
         this.name = name;
@@ -76,14 +78,23 @@ public class Ride {
         return distance;
     }
 
+    public static Ride exampleRide() {
+        return new Ride("Sluzobka", 3, Currency.CZK, null,
+                LocalDateTime.now(), LocalDateTime.now(), 100);
+    }
+
     public void setDistance(int distance) {
         if (distance >= 0) {
+            var originalDistance = this.distance;
             this.distance = distance;
+            if (category != null && isCommitted) {
+                category.modifyDistanceFluent(distance - originalDistance);
+            }
         }
     }
 
-    public static Ride exampleRide(){
-        return new Ride("Sluzobka", 3, Currency.CZK, new Category("Sluzobna jazda"),
-                        LocalDateTime.now(), LocalDateTime.now(), 100);
+    public void setCommitted(boolean committed) {
+        isCommitted = committed;
     }
+
 }
