@@ -58,9 +58,7 @@ public class MainWindow {
     }
 
     private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel) {
-        var carRidesPanel = new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState);
-        carRidesPanel.setComponentPopupMenu(createRidesPopupMenu(carRidesPanel));
-        return carRidesPanel;
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState);
     }
 
     private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {
@@ -77,14 +75,6 @@ public class MainWindow {
         tabbedPane.addTab("Categories", categoriesPanel);
         tabbedPane.addTab("Templates", templatesPanel);
         return tabbedPane;
-    }
-
-    private JPopupMenu createRidesPopupMenu(CarRidesPanel carRidesPanel) {
-        var menu = new JPopupMenu();
-        menu.add(new AddAction<>(carRidesPanel));
-        menu.add(new EditAction<>(carRidesPanel));
-        menu.add(new DeleteAction<>(carRidesPanel));
-        return menu;
     }
 
     public void show() {
