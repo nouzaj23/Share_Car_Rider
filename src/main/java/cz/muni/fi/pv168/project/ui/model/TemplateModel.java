@@ -18,9 +18,10 @@ public class TemplateModel extends AbstractTableModel implements EnitityTableMod
             Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
             Column.editable("Currency", Currency.class, Ride::getCurrency, Ride::setCurrency),
             Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
-            Column.readonly("From", LocalDateTime.class, Ride::getFrom),
-            Column.readonly("To", LocalDateTime.class, Ride::getTo),
-            Column.editable("Distance", Integer.class, Ride::getDistance, Ride::setDistance)
+            Column.readonly("From", String.class, Ride::getFrom),
+            Column.readonly("To", String.class, Ride::getTo),
+            Column.editable("Distance", Integer.class, Ride::getDistance, Ride::setDistance),
+            Column.editable("Hours", Float.class, Ride::getHours, Ride::setHours)
     );
 
     public TemplateModel(Collection<Ride> rides) {
