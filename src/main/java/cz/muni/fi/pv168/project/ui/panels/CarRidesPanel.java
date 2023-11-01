@@ -5,10 +5,7 @@ import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
-import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
-import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
-import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
-import cz.muni.fi.pv168.project.ui.model.TemplateModel;
+import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 
 import javax.swing.*;
@@ -22,12 +19,17 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final CarRidesModel carRidesModel;
     private final CategoryListModel categoryListModel;
     private final JLabel totalDistance;
-
     private final TemplateModel templates;
-    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange, TemplateModel templates) {
+    private CategoryModel categoryModel;
+
+    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
+                         Consumer<Integer> onSelectionChange, TemplateModel templates,
+                         CategoryModel categoryModel) {
+
         this.carRidesModel = carRidesModel;
         this.carRidesModel.setLinkedPannel(this);
         this.categoryListModel = categoryListModel;
+        this.categoryModel = categoryModel;
         this.templates = templates;
 
         ComboBoxModel<Category> categoryFilter = new ComboBoxModelAdapter<>(categoryListModel);
@@ -98,7 +100,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide(), categoryListModel, templates);
+        return new RideDialog(Ride.exampleRide(), categoryListModel, templates, categoryModel);
     }
 
     @Override
