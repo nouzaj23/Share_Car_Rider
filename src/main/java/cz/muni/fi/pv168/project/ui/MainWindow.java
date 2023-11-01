@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
 import cz.muni.fi.pv168.project.ui.actions.AddAction;
+import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
 import cz.muni.fi.pv168.project.ui.actions.EditAction;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
@@ -51,8 +52,10 @@ public class MainWindow {
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
+        JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
         fileMenu.add(openMenuItem);
         fileMenu.add(exitMenuItem);
+        fileMenu.add(darkModeToggle);
         menuBar.add(fileMenu);
         return menuBar;
     }
