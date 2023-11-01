@@ -6,6 +6,7 @@ import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 import cz.muni.fi.pv168.project.ui.model.LocalDateModel;
 import cz.muni.fi.pv168.project.ui.model.TemplateModel;
+import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 
@@ -33,6 +34,7 @@ public class RideDialog extends EntityDialog<Ride>{
         this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
         templates.setSelectedItem(null);
+        templates.setRenderer(new TemplateRenderer());
         templates.addActionListener(e -> {
             Ride selectedTemplate = (Ride) templates.getSelectedItem();
 
