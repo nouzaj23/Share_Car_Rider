@@ -8,6 +8,7 @@ import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
+import cz.muni.fi.pv168.project.ui.model.TemplateModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 
 import javax.swing.*;
@@ -22,10 +23,12 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final CategoryListModel categoryListModel;
     private final JLabel totalDistance;
 
-    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange) {
+    private final TemplateModel templates;
+    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange, TemplateModel templates) {
         this.carRidesModel = carRidesModel;
         this.carRidesModel.setLinkedPannel(this);
         this.categoryListModel = categoryListModel;
+        this.templates = templates;
 
         ComboBoxModel<Category> categoryFilter = new ComboBoxModelAdapter<>(categoryListModel);
 
@@ -95,7 +98,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide(), categoryListModel);
+        return new RideDialog(Ride.exampleRide(), categoryListModel, templates);
     }
 
     @Override

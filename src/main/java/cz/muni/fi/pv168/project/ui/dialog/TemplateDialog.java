@@ -4,18 +4,10 @@ import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
-import cz.muni.fi.pv168.project.ui.model.LocalDateModel;
-import cz.muni.fi.pv168.project.ui.model.TemplateModel;
-import org.jdatepicker.DateModel;
-import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
-import java.time.LocalDate;
-import java.util.Optional;
 
-import static javax.swing.JOptionPane.*;
-
-public class RideDialog extends EntityDialog<Ride>{
+public class TemplateDialog extends EntityDialog<Ride>{
     private final JTextField name = new JTextField();
     private final JSpinner passengers = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
     private final ComboBoxModel<Currency> currencyModel = new DefaultComboBoxModel<>(Currency.values());
@@ -24,40 +16,13 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JTextField to = new JTextField();
     private final JSpinner distance = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
     private final JSpinner hours = new JSpinner(new SpinnerNumberModel(1, 0, Float.MAX_VALUE, 0.1));
-    private final DateModel<LocalDate> date = new LocalDateModel();
     private final Ride ride;
-    private final JComboBox<Ride> templates;
 
-    public RideDialog(Ride ride, ListModel<Category> categoryListModel, TemplateModel templateModel) {
+    public TemplateDialog(Ride ride, ListModel<Category> categoryListModel) {
         this.ride = ride;
         this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
-        this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
-        templates.setSelectedItem(null);
-        templates.addActionListener(e -> {
-            Ride selectedTemplate = (Ride) templates.getSelectedItem();
-
-            if (selectedTemplate != null) {
-                name.setText(selectedTemplate.getName());
-                passengers.setValue(selectedTemplate.getPassengers());
-                currencyModel.setSelectedItem(selectedTemplate.getCurrency());
-                categoryModel.setSelectedItem(selectedTemplate.getCategory());
-                from.setText(selectedTemplate.getFrom());
-                to.setText(selectedTemplate.getTo());
-                distance.setValue(selectedTemplate.getDistance());
-                hours.setValue(selectedTemplate.getHours());
-                date.setValue(selectedTemplate.getDate());
-            }
-        });
-
         setValues();
         addFields();
-
-        JButton addTemplate = new JButton("Add Template");
-        addTemplate.addActionListener(e -> {
-            templateModel.addRow(getEntity());
-        });
-
-        addButton(addTemplate);
     }
     private void setValues() {
         name.setText(ride.getName());
@@ -68,12 +33,10 @@ public class RideDialog extends EntityDialog<Ride>{
         to.setText(ride.getTo());
         distance.setValue(ride.getDistance());
         hours.setValue(ride.getHours());
-        date.setValue(ride.getDate());
     }
 
     private void addFields() {
-        add("Templates", templates);
-        add("Ride name:", name);
+        add("Template name:", name);
         add("Number of passengers:", passengers);
         add("Currency:", new JComboBox<>(currencyModel));
         add("Category:", categoryModel);
@@ -81,7 +44,6 @@ public class RideDialog extends EntityDialog<Ride>{
         add("To:", to);
         add("Distance (km): ", distance);
         add("Hours:", hours);
-        add("Date", new JDatePicker(date));
     }
 
     @Override
@@ -94,7 +56,7 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setTo(to.getText());
         ride.setDistance(((Number) distance.getValue()).intValue());
         ride.setHours(((Number) hours.getValue()).floatValue());
-        ride.setDate(date.getValue());
+        ride.setDate(null);
         return ride;
     }
 }
