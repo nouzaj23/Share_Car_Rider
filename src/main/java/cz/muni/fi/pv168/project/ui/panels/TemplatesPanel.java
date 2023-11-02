@@ -9,6 +9,7 @@ import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 import cz.muni.fi.pv168.project.ui.model.TemplateModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
+import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -43,6 +44,7 @@ public class TemplatesPanel extends AbstractPanel<Ride> {
         table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
+        table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this));
 
         return table;
     }

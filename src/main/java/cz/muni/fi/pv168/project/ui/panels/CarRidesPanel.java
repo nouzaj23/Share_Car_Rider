@@ -3,12 +3,16 @@ package cz.muni.fi.pv168.project.ui.panels;
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.ui.actions.AddAction;
+import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
+import cz.muni.fi.pv168.project.ui.actions.EditAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
+import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -81,7 +85,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
-
+        table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this));
         return table;
     }
 
