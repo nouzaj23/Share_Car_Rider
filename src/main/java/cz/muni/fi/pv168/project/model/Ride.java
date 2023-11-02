@@ -1,20 +1,21 @@
 package cz.muni.fi.pv168.project.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Ride {
     private String name;
     private int passengers;
     private Currency currency;
     private Category category;
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private String from;
+    private String to;
     private int distance;
-
+    private float hours;
+    private LocalDate date;
     private boolean isCommitted = false;
 
     public Ride(String name, int passengers, Currency currency, Category category,
-                LocalDateTime from, LocalDateTime to, int distance) {
+                String from, String to, int distance) {
         this.name = name;
         this.passengers = passengers;
         this.currency = currency;
@@ -58,19 +59,19 @@ public class Ride {
         this.category = category;
     }
 
-    public LocalDateTime getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(LocalDateTime from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public LocalDateTime getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(LocalDateTime to) {
+    public void setTo(String to) {
         this.to = to;
     }
 
@@ -78,9 +79,24 @@ public class Ride {
         return distance;
     }
 
+    public float getHours() {
+        return hours;
+    }
+
+    public void setHours(float hours) {
+        this.hours = hours;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public static Ride exampleRide() {
-        return new Ride("Sluzobka", 3, Currency.CZK, null,
-                LocalDateTime.now(), LocalDateTime.now(), 100);
+        return new Ride("Sluzobka", 3, Currency.CZK, null, "Doma", "Práce", 2);
     }
 
     public void setDistance(int distance) {
@@ -97,5 +113,4 @@ public class Ride {
     public void setCommitted(boolean committed) {
         isCommitted = committed;
     }
-
 }

@@ -6,6 +6,7 @@ import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 
 import javax.swing.table.AbstractTableModel;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,12 +23,14 @@ public class CarRidesModel extends AbstractTableModel implements EnitityTableMod
             Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
             Column.editable("Currency", Currency.class, Ride::getCurrency, Ride::setCurrency),
             Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
-            Column.readonly("From", LocalDateTime.class, Ride::getFrom),
-            Column.readonly("To", LocalDateTime.class, Ride::getTo),
+            Column.readonly("From", String.class, Ride::getFrom),
+            Column.readonly("To", String.class, Ride::getTo),
             Column.editable("Distance", Integer.class, Ride::getDistance, (ride, value) -> {
                 ride.setDistance(value);
                 linkedPannel.triggerTotalDistanceUpdate();
-            })
+            }),
+            Column.editable("Hours", Float.class, Ride::getHours, Ride::setHours),
+            Column.editable("Date", LocalDate.class, Ride::getDate, Ride::setDate)
     );
 
     public CarRidesModel(Collection<Ride> rides) {

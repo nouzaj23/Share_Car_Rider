@@ -4,9 +4,12 @@ import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
+import cz.muni.fi.pv168.project.ui.model.LocalDateModel;
+import org.jdatepicker.DateModel;
+import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class RideDialog extends EntityDialog<Ride>{
     private final JTextField name = new JTextField();
@@ -16,7 +19,8 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JTextField from = new JTextField();
     private final JTextField to = new JTextField();
     private final JSpinner distance = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-
+    private final JSpinner hours = new JSpinner(new SpinnerNumberModel(1, 0, Float.MAX_VALUE, 0.1));
+    private final DateModel<LocalDate> date = new LocalDateModel();
     private final Ride ride;
 
     public RideDialog(Ride ride, ListModel<Category> categoryListModel) {
@@ -31,9 +35,11 @@ public class RideDialog extends EntityDialog<Ride>{
         passengers.setValue(ride.getPassengers());
         currencyModel.setSelectedItem(ride.getCurrency());
         categoryListModel.setSelectedItem(ride.getCategory());
-        from.setText(LocalDateTime.now().toString());
-        to.setText(LocalDateTime.now().plusHours(2).toString());
+        from.setText(ride.getFrom());
+        to.setText(ride.getTo());
         distance.setValue(ride.getDistance());
+        hours.setValue(ride.getHours());
+        date.setValue(ride.getDate());
     }
 
     private void addFields() {
@@ -41,9 +47,11 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Number of passengers:", passengers);
         add("Currency:", new JComboBox<>(currencyModel));
         add("Category:", new JComboBox<>(categoryListModel));
-        add("Date From:", from);
-        add("Date to:", to);
-        add("Distance", distance);
+        add("From:", from);
+        add("To:", to);
+        add("Distance (km): ", distance);
+        add("Hours:", hours);
+        add("Date", new JDatePicker(date));
     }
 
     @Override
@@ -52,9 +60,11 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setPassengers(((Number) passengers.getValue()).intValue());
         ride.setCurrency((Currency) currencyModel.getSelectedItem());
         ride.setCategory((Category) categoryListModel.getSelectedItem());
-        ride.setFrom(LocalDateTime.parse(from.getText()));
-        ride.setTo(LocalDateTime.parse(to.getText()));
+        ride.setFrom(from.getText());
+        ride.setTo(to.getText());
         ride.setDistance(((Number) distance.getValue()).intValue());
+        ride.setHours(((Number) hours.getValue()).floatValue());
+        ride.setDate(date.getValue());
         return ride;
     }
 }
