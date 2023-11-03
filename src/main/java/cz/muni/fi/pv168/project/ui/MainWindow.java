@@ -1,9 +1,7 @@
 package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
-import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
-import cz.muni.fi.pv168.project.ui.actions.EditAction;
+import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryModel;
@@ -48,12 +46,19 @@ public class MainWindow {
 
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         fileMenu.add(openMenuItem);
         fileMenu.add(exitMenuItem);
         menuBar.add(fileMenu);
+
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem aboutMenuItem = new HelpAboutPopup("About");
+        helpMenu.add(aboutMenuItem);
+        menuBar.add(helpMenu);
+
         return menuBar;
     }
 
