@@ -23,12 +23,12 @@ public class MainWindow {
         initializeFrame();
         frame.setJMenuBar(createMenuBar());
 
-        var carRideModel = new CarRidesModel(new ArrayList<>());
         var templateModel = new TemplateModel(new ArrayList<>());
         var categoryListModel = new CategoryListModel(TestDataGenerator.CATEGORIES);
         var categoryModel = new CategoryModel(categoryListModel);
+        var carRideModel = new CarRidesModel(new ArrayList<>());
 
-        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel);
+        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel);
         var categoriesPanel = createCategoriesPanel(categoryModel);
         var templatesPanel = createTemplatesPanel(templateModel, categoryListModel);
 
@@ -65,8 +65,8 @@ public class MainWindow {
         return menuBar;
     }
 
-    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel) {
-        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel);
+    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel) {
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel);
     }
 
     private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {
