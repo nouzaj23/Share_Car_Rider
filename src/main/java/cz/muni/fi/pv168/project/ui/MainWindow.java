@@ -1,10 +1,8 @@
 package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
-import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
-import cz.muni.fi.pv168.project.ui.actions.EditAction;
+import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.CategoryModel;
@@ -49,6 +47,7 @@ public class MainWindow {
 
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
@@ -57,15 +56,17 @@ public class MainWindow {
         fileMenu.add(exitMenuItem);
         fileMenu.add(darkModeToggle);
         menuBar.add(fileMenu);
+
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem aboutMenuItem = new HelpAboutPopup("About");
+        helpMenu.add(aboutMenuItem);
+        menuBar.add(helpMenu);
+
         return menuBar;
     }
 
-    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel,
-                                              TemplateModel templateModel, CategoryModel categoryModel) {
-
-        var carRidesPanel = new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel);
-        carRidesPanel.setComponentPopupMenu(createRidesPopupMenu(carRidesPanel));
-        return carRidesPanel;
+    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel) {
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel);
     }
 
     private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {
@@ -82,14 +83,6 @@ public class MainWindow {
         tabbedPane.addTab("Categories", categoriesPanel);
         tabbedPane.addTab("Templates", templatesPanel);
         return tabbedPane;
-    }
-
-    private JPopupMenu createRidesPopupMenu(CarRidesPanel carRidesPanel) {
-        var menu = new JPopupMenu();
-        menu.add(new AddAction<>(carRidesPanel));
-        menu.add(new EditAction<>(carRidesPanel));
-        menu.add(new DeleteAction<>(carRidesPanel));
-        return menu;
     }
 
     public void show() {
