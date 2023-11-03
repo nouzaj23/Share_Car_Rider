@@ -65,8 +65,8 @@ public class MainWindow {
         return menuBar;
     }
 
-    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel) {
-        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel);
+    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel) {
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel);
     }
 
     private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {
