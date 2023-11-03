@@ -5,6 +5,7 @@ import cz.muni.fi.pv168.project.ui.dialog.CategoryDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
+import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -31,6 +32,7 @@ public class CategoriesPanel extends AbstractPanel<Category> {
         var table = new JTable(categoryModel);
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this));
         return table;
     }
 
