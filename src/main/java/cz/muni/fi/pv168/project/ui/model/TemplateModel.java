@@ -28,6 +28,9 @@ public class TemplateModel extends AbstractTableModel implements EnitityTableMod
         this.templates = new ArrayList<>(rides);
     }
 
+    public Ride[] getArray(){
+        return templates.toArray(Ride[]::new);
+    }
     @Override
     public int getRowCount() {
         return templates.size();

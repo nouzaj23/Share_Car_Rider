@@ -27,7 +27,7 @@ public class MainWindow {
         var categoryListModel = new CategoryListModel(TestDataGenerator.CATEGORIES);
         var categoryModel = new CategoryModel(categoryListModel);
 
-        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel);
+        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel);
         var categoriesPanel = createCategoriesPanel(categoryModel);
         var templatesPanel = createTemplatesPanel(templateModel, categoryListModel);
 
@@ -62,8 +62,8 @@ public class MainWindow {
         return menuBar;
     }
 
-    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel) {
-        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState);
+    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel) {
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel);
     }
 
     private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {

@@ -4,7 +4,7 @@ import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
-import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
+import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 import cz.muni.fi.pv168.project.ui.model.TemplateModel;
@@ -59,7 +59,7 @@ public class TemplatesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide(), categoryListModel);
+        return new TemplateDialog(Ride.exampleRide(), categoryListModel);
     }
 
     @Override
