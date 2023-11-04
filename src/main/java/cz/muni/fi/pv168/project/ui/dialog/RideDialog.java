@@ -1,8 +1,6 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
-import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.model.*;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
 import org.jdatepicker.DateModel;
@@ -22,7 +20,7 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JSpinner hours = new JSpinner(new SpinnerNumberModel(1, 0, Float.MAX_VALUE, 0.1));
     private final DateModel<LocalDate> date = new LocalDateModel();
     private final Ride ride;
-    private final JComboBox<Ride> templates;
+    private final JComboBox<Template> templates;
     private final CategoryModel categoryModel;
 
     public RideDialog(Ride ride, ListModel<Category> categoryListModel, TemplateModel templateModel, CategoryModel categoryModel) {
@@ -34,7 +32,7 @@ public class RideDialog extends EntityDialog<Ride>{
         templates.setSelectedItem(null);
         templates.setRenderer(new TemplateRenderer());
         templates.addActionListener(e -> {
-            Ride selectedTemplate = (Ride) templates.getSelectedItem();
+            AbstractRide selectedTemplate = (AbstractRide) templates.getSelectedItem();
 
             if (selectedTemplate != null) {
                 name.setText(selectedTemplate.getName());
@@ -45,7 +43,6 @@ public class RideDialog extends EntityDialog<Ride>{
                 to.setText(selectedTemplate.getTo());
                 distance.setValue(selectedTemplate.getDistance());
                 hours.setValue(selectedTemplate.getHours());
-                date.setValue(selectedTemplate.getDate());
             }
         });
 
@@ -54,7 +51,7 @@ public class RideDialog extends EntityDialog<Ride>{
 
         JButton addTemplate = new JButton("Add Template");
         addTemplate.addActionListener(e -> {
-            templateModel.addRow(getEntity());
+            templateModel.addRow(getEntity().extractTemplate());
         });
 
         addButton(addTemplate);
