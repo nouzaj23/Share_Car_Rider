@@ -2,34 +2,33 @@ package cz.muni.fi.pv168.project.ui.model;
 
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.model.Template;
 
 import javax.swing.table.AbstractTableModel;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class TemplateModel extends AbstractTableModel implements EnitityTableModel<Ride> {
+public class TemplateModel extends AbstractTableModel implements EnitityTableModel<Template> {
 
-    private final List<Ride> templates;
-    private final List<Column<Ride, ?>> columns = List.of(
-            Column.editable("Name", String.class, Ride::getName, Ride::setName),
-            Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
-            Column.editable("Currency", Currency.class, Ride::getCurrency, Ride::setCurrency),
-            Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
-            Column.readonly("From", String.class, Ride::getFrom),
-            Column.readonly("To", String.class, Ride::getTo),
-            Column.editable("Distance", Integer.class, Ride::getDistance, Ride::setDistance),
-            Column.editable("Hours", Float.class, Ride::getHours, Ride::setHours)
+    private final List<Template> templates;
+    private final List<Column<Template, ?>> columns = List.of(
+            Column.editable("Name", String.class, Template::getName, Template::setName),
+            Column.editable("Passengers", Integer.class, Template::getPassengers, Template::setPassengers),
+            Column.editable("Currency", Currency.class, Template::getCurrency, Template::setCurrency),
+            Column.editable("Category", Category.class, Template::getCategory, Template::setCategory),
+            Column.readonly("From", String.class, Template::getFrom),
+            Column.readonly("To", String.class, Template::getTo),
+            Column.editable("Distance", Integer.class, Template::getDistance, Template::setDistance),
+            Column.editable("Hours", Float.class, Template::getHours, Template::setHours)
     );
 
-    public TemplateModel(Collection<Ride> rides) {
-        this.templates = new ArrayList<>(rides);
+    public TemplateModel(Collection<Template> templates) {
+        this.templates = new ArrayList<>(templates);
     }
 
-    public Ride[] getArray(){
-        return templates.toArray(Ride[]::new);
+    public Template[] getArray(){
+        return templates.toArray(Template[]::new);
     }
     @Override
     public int getRowCount() {
@@ -48,7 +47,7 @@ public class TemplateModel extends AbstractTableModel implements EnitityTableMod
     }
 
     @Override
-    public Ride getEntity(int rowIndex) {
+    public Template getEntity(int rowIndex) {
         return templates.get(rowIndex);
     }
 
@@ -70,8 +69,8 @@ public class TemplateModel extends AbstractTableModel implements EnitityTableMod
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         if (value != null) {
-            var ride = getEntity(rowIndex);
-            columns.get(columnIndex).setValue(value, ride);
+            var template = getEntity(rowIndex);
+            columns.get(columnIndex).setValue(value, template);
         }
     }
 
@@ -80,14 +79,14 @@ public class TemplateModel extends AbstractTableModel implements EnitityTableMod
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    public void addRow(Ride ride) {
+    public void addRow(Template template) {
         int newRowIndex = templates.size();
-        templates.add(ride);
+        templates.add(template);
         fireTableRowsInserted(newRowIndex, newRowIndex);
     }
 
-    public void updateRow(Ride ride) {
-        int rowIndex = templates.indexOf(ride);
+    public void updateRow(Template template) {
+        int rowIndex = templates.indexOf(template);
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 }
