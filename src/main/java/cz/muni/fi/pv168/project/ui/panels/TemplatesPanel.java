@@ -2,7 +2,7 @@ package cz.muni.fi.pv168.project.ui.panels;
 
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.model.Template;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class TemplatesPanel extends AbstractPanel<Ride> {
+public class TemplatesPanel extends AbstractPanel<Template> {
 
     private final TemplateModel templateModel;
     private final Consumer<Integer> onSelectionChange;
@@ -58,12 +58,12 @@ public class TemplatesPanel extends AbstractPanel<Ride> {
     }
 
     @Override
-    public EntityDialog<Ride> getDialog() {
-        return new TemplateDialog(Ride.exampleRide(), categoryListModel);
+    public EntityDialog<Template> getDialog() {
+        return new TemplateDialog(Template.exampleTemplate(), categoryListModel);
     }
 
     @Override
-    public void addRow(Ride entity) {
+    public void addRow(Template entity) {
         templateModel.addRow(entity);
     }
 }
