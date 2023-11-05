@@ -1,16 +1,16 @@
 package cz.muni.fi.pv168.project.ui.model;
 
 import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.model.Template;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemplateListModel extends AbstractListModel<Ride> {
-    private final ArrayList<Ride> templates;
+public class TemplateListModel extends AbstractListModel<Template> {
+    private final ArrayList<Template> templates;
 
-    public TemplateListModel(List<Ride> templates) {
+    public TemplateListModel(List<Template> templates) {
         this.templates = new ArrayList<>(templates);
     }
 
@@ -20,15 +20,15 @@ public class TemplateListModel extends AbstractListModel<Ride> {
     }
 
     @Override
-    public Ride getElementAt(int index) {
+    public Template getElementAt(int index) {
         return templates.get(index);
     }
 
-    public int indexOf(Ride ride) {
-        return templates.indexOf(ride);
+    public int indexOf(Template template) {
+        return templates.indexOf(template);
     }
 
-    public void addRow(Ride template) {
+    public void addRow(Template template) {
         var categoriesSize = templates.size() - 1;
         templates.add(template);
         fireIntervalAdded(this, categoriesSize, categoriesSize);
