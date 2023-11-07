@@ -110,9 +110,10 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     @Override
     public void addRow(Ride entity) {
         carRidesModel.addRow(entity);
-        if (entity.getCategory() != null) {
-            categoryListModel.updateRow(entity.getCategory().modifyDistanceFluent(entity.getDistance()));
-            entity.getCategory().setRides(entity.getCategory().getRides() + 1);
+        Category rideCategory = entity.getCategory();
+        if (rideCategory != null) {
+            categoryListModel.updateRow(rideCategory.modifyDistanceFluent(entity.getDistance()));
+            entity.getCategory().setRides(rideCategory.getRides() + 1);
         }
         triggerTotalDistanceUpdate();
     }
