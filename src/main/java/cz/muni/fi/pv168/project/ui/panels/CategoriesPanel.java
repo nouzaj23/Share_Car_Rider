@@ -51,6 +51,11 @@ public class CategoriesPanel extends AbstractPanel<Category> {
     }
 
     @Override
+    public EntityDialog<Category> getDialog(Category entity) {
+        return new CategoryDialog(entity);
+    }
+
+    @Override
     public void addRow(Category entity) {
         categoryModel.addRow(entity);
     }

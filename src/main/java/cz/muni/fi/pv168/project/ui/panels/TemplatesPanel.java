@@ -64,6 +64,11 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     }
 
     @Override
+    public EntityDialog<Template> getDialog(Template entity) {
+        return new TemplateDialog(entity, categoryListModel);
+    }
+
+    @Override
     public void addRow(Template entity) {
         templateModel.addRow(entity);
     }
