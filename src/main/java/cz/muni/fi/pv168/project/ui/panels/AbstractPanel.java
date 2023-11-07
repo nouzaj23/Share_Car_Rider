@@ -9,6 +9,8 @@ abstract public class AbstractPanel<E> extends JPanel {
 
     private final DefaultTableModel model = new DefaultTableModel();
 
+    protected JTable table;
+
     public JTable setUpTable(String[] columnNames, Object[] template) {
         var table = new JTable();
         table.setAutoCreateRowSorter(true);
@@ -28,4 +30,7 @@ abstract public class AbstractPanel<E> extends JPanel {
 
     public abstract void addRow(E entity);
 
+    public JTable getTable() {
+        return table;
+    }
 }
