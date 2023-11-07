@@ -53,4 +53,9 @@ public class CategoriesPanel extends AbstractPanel<Category> {
     public void addRow(Category entity) {
         categoryModel.addRow(entity);
     }
+
+    @Override
+    public void deleteRow(int rowIndex) {
+        categoryModel.deleteRow(rowIndex);
+    }
 }

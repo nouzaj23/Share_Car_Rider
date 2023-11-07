@@ -66,4 +66,9 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     public void addRow(Template entity) {
         templateModel.addRow(entity);
     }
+
+    @Override
+    public void deleteRow(int rowIndex) {
+        templateModel.deleteRow(rowIndex);
+    }
 }

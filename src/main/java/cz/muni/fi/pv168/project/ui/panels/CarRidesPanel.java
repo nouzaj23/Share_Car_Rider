@@ -117,6 +117,18 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         triggerTotalDistanceUpdate();
     }
 
+    @Override
+    public void deleteRow(int rowIndex) {
+        Ride ride = carRidesModel.getEntity(rowIndex);
+        Category rideCategory = ride.getCategory();
+        if (rideCategory != null) {
+            categoryListModel.updateRow(rideCategory.modifyDistanceFluent(-ride.getDistance()));
+            ride.getCategory().setRides(rideCategory.getRides() - 1);
+        }
+        carRidesModel.deleteRow(rowIndex);
+        triggerTotalDistanceUpdate();
+    }
+
     public void triggerTotalDistanceUpdate() {
         var result = 0;
         for (int i = 0; i < carRidesModel.getRowCount(); i++) {
