@@ -28,6 +28,7 @@ abstract public class AbstractPanel<E> extends JPanel {
     }
 
     abstract public EntityDialog<E> getDialog();
+    abstract public EntityDialog<E> getDialog(E entity);
 
     public abstract void addRow(E entity);
     public abstract void deleteRow(int rowIndex);
