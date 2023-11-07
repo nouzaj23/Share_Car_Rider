@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.project.ui.panels;
 
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
+import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.model.Template;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
@@ -70,5 +71,10 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     @Override
     public void deleteRow(int rowIndex) {
         templateModel.deleteRow(rowIndex);
+    }
+
+    @Override
+    public void editRow(Template newEntity, Ride oldRide) {
+        templateModel.updateRow(newEntity);
     }
 }

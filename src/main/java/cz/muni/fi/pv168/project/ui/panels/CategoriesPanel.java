@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
 import cz.muni.fi.pv168.project.model.Category;
+import cz.muni.fi.pv168.project.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.CategoryDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryModel;
@@ -57,5 +58,10 @@ public class CategoriesPanel extends AbstractPanel<Category> {
     @Override
     public void deleteRow(int rowIndex) {
         categoryModel.deleteRow(rowIndex);
+    }
+
+    @Override
+    public void editRow(Category newEntity, Ride oldRide) {
+        categoryModel.updateRow(newEntity);
     }
 }
