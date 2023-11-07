@@ -74,7 +74,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         filterPanel.add(toLabel);
         filterPanel.add(new JTextField());
 
-        JTable table = setUpTable();
+        this.table = setUpTable();
 
         totalDistance = new JLabel();
         triggerTotalDistanceUpdate();

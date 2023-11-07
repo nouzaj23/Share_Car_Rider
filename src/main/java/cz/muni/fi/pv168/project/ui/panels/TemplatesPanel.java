@@ -30,7 +30,7 @@ public class TemplatesPanel extends AbstractPanel<Template> {
         setLayout(new BorderLayout());
 
 
-        JTable table = setUpTable();
+        this.table = setUpTable();
 
         PanelHelper.createTopBar(this, table, null, null);
     }
