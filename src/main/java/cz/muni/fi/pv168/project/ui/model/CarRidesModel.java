@@ -22,6 +22,7 @@ public class CarRidesModel extends AbstractTableModel implements EnitityTableMod
             Column.editable("Name", String.class, Ride::getName, Ride::setName),
             Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
             Column.editable("Currency", Currency.class, Ride::getCurrency, Ride::setCurrency),
+            Column.editable("Fuel Expenses", Float.class, Ride::getFuelExpenses, Ride::setFuelExpenses),
             Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
             Column.readonly("From", String.class, Ride::getFrom),
             Column.readonly("To", String.class, Ride::getTo),

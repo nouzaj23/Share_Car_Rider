@@ -4,11 +4,14 @@ import java.time.LocalDate;
 
 public class Ride extends AbstractRide{
     private LocalDate date;
+
+    private float fuelExpenses;
     private boolean isCommitted = false;
 
-    public Ride(String name, int passengers, Currency currency, Category category,
+    public Ride(String name, int passengers, Currency currency, float fuelExpenses, Category category,
                 String from, String to, int distance) {
         super(name, passengers, currency, category, from, to, distance);
+        this.fuelExpenses = fuelExpenses;
     }
 
     public Template extractTemplate() {
@@ -16,7 +19,7 @@ public class Ride extends AbstractRide{
     }
 
     public static Ride exampleRide() {
-        return new Ride("Sluzobka", 3, Currency.CZK, null, "Doma", "Práce", 2);
+        return new Ride("Sluzobka", 3, Currency.CZK, 157, null, "Doma", "Práce", 2);
     }
 
     public LocalDate getDate() {
@@ -25,6 +28,15 @@ public class Ride extends AbstractRide{
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+
+    public float getFuelExpenses() {
+        return fuelExpenses;
+    }
+
+    public void setFuelExpenses(float fuelExpenses) {
+        this.fuelExpenses = fuelExpenses;
     }
 
     @Override
@@ -42,4 +54,6 @@ public class Ride extends AbstractRide{
     public void setCommitted(boolean committed) {
         isCommitted = committed;
     }
+
+
 }
