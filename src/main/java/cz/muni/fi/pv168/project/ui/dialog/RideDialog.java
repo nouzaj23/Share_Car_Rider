@@ -13,6 +13,7 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JTextField name = new JTextField();
     private final JSpinner passengers = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
     private final ComboBoxModel<Currency> currencyModel = new DefaultComboBoxModel<>(Currency.values());
+    private final JSpinner fuelExpenses = new JSpinner(new SpinnerNumberModel(1, - Float.MAX_VALUE, Float.MAX_VALUE, 0.1));
     private final JComboBox<Category> categoryJComboBox;
     private final JTextField from = new JTextField();
     private final JTextField to = new JTextField();
@@ -61,6 +62,7 @@ public class RideDialog extends EntityDialog<Ride>{
         passengers.setValue(ride.getPassengers());
         currencyModel.setSelectedItem(ride.getCurrency());
         categoryJComboBox.setSelectedItem(ride.getCategory());
+        fuelExpenses.setValue(ride.getFuelExpenses());
         from.setText(ride.getFrom());
         to.setText(ride.getTo());
         distance.setValue(ride.getDistance());
@@ -73,6 +75,7 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Ride name:", name);
         add("Number of passengers:", passengers);
         add("Currency:", new JComboBox<>(currencyModel));
+        add("Fuel Expenses:", fuelExpenses);
         add("Category:", categoryJComboBox);
         add("From:", from);
         add("To:", to);
@@ -97,6 +100,7 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setTo(to.getText());
         ride.setDistance(((Number) distance.getValue()).intValue());
         ride.setHours(((Number) hours.getValue()).floatValue());
+        ride.setFuelExpenses(((Number) fuelExpenses.getValue()).floatValue());
         ride.setDate(date.getValue());
         return ride;
     }
