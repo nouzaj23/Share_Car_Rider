@@ -3,18 +3,22 @@ package cz.muni.fi.pv168.project.ui.panels;
 import cz.muni.fi.pv168.project.model.Category;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.model.Ride;
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
-import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
-import cz.muni.fi.pv168.project.ui.actions.EditAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
+import cz.muni.fi.pv168.project.ui.filters.RideTableFilter;
+import cz.muni.fi.pv168.project.ui.filters.components.FilterListModelBuilder;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
+import cz.muni.fi.pv168.project.ui.renderers.CategoryRenderer;
+import cz.muni.fi.pv168.project.ui.renderers.CurrencyRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 
 public class CarRidesPanel extends AbstractPanel<Ride> {
@@ -28,16 +32,13 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
                          Consumer<Integer> onSelectionChange, TemplateModel templates,
-                         CategoryModel categoryModel) {
+                         CategoryModel categoryModel, CurrencyListModel currencyListModel) {
 
         this.carRidesModel = carRidesModel;
         this.carRidesModel.setLinkedPannel(this);
         this.categoryListModel = categoryListModel;
         this.categoryModel = categoryModel;
         this.templates = templates;
-
-        ComboBoxModel<Category> categoryFilter = new ComboBoxModelAdapter<>(categoryListModel);
-
         this.onSelectionChange = onSelectionChange;
         setLayout(new BorderLayout());
 
@@ -51,30 +52,33 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         JLabel categoryLabel = new JLabel("Category:");
         JLabel currencyLabel = new JLabel("Currency:");
         JLabel passengersLabel = new JLabel("Passengers:");
-        JLabel distanceLabel = new JLabel("Distance:");
-        JLabel fromLabel = new JLabel("From:");
-        JLabel toLabel = new JLabel("To:");
 
         // Create and add filter components
+        var rowSorter = new TableRowSorter<>(carRidesModel);
+        var carRideFilter = new RideTableFilter(rowSorter);
+
+
+        var categoryFilter = createCategoryFilter(carRideFilter, categoryListModel);
+
         filterPanel.add(categoryLabel);
-        filterPanel.add(new JComboBox<>(categoryFilter));
+        filterPanel.add(new JScrollPane(categoryFilter));
 
         filterPanel.add(currencyLabel);
-        filterPanel.add(new JComboBox<>(new DefaultComboBoxModel<>(Currency.values())));
+        filterPanel.add(new JScrollPane(createCurrencyFilter(carRideFilter, currencyListModel)));
 
         filterPanel.add(passengersLabel);
         filterPanel.add(new JTextField());
 
-        filterPanel.add(distanceLabel);
-        filterPanel.add(new JTextField());
+        var resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+            carRideFilter.resetFilter();
+            //categoryFilter.setSelectedIndex(Integer.MAX_VALUE);
+            categoryFilter.setSelectedIndices(new int[0]);
+        });
+        filterPanel.add(resetButton);
 
-        filterPanel.add(fromLabel);
-        filterPanel.add(new JTextField());
-
-        filterPanel.add(toLabel);
-        filterPanel.add(new JTextField());
-
-        this.table = setUpTable();
+        JTable table = setUpTable();
+        table.setRowSorter(rowSorter);
 
         totalDistance = new JLabel();
         triggerTotalDistanceUpdate();
@@ -163,5 +167,25 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             result += carRidesModel.getEntity(i).getDistance();
         }
         totalDistance.setText("Total distance:  " + result);
+    }
+
+    private static JList<Category> createCategoryFilter(
+            RideTableFilter rideTableFilter, CategoryListModel categoryListModel) {
+        return FilterListModelBuilder.create(categoryListModel)
+                .setSelectedIndex(0)
+                .setVisibleRowsCount(3)
+                .setValuesRenderer(new CategoryRenderer())
+                .setFilter(rideTableFilter::filterCategory)
+                .build();
+    }
+
+    private static JList<Currency> createCurrencyFilter(
+            RideTableFilter rideTableFilter, CurrencyListModel currencyListModel) {
+        return FilterListModelBuilder.create(currencyListModel)
+                .setSelectedIndex(0)
+                .setVisibleRowsCount(3)
+                .setValuesRenderer(new CurrencyRenderer())
+                .setFilter(rideTableFilter::filterCurrency)
+                .build();
     }
 }

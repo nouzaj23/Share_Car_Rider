@@ -7,12 +7,11 @@ import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CarRidesModel extends AbstractTableModel implements EnitityTableModel<Ride> {
+public class CarRidesModel extends AbstractTableModel implements EntityTableModel<Ride> {
 
     private final List<Ride> rides;
 

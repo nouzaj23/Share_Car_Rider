@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class TemplateModel extends AbstractTableModel implements EnitityTableModel<Template> {
+public class TemplateModel extends AbstractTableModel implements EntityTableModel<Template> {
 
     private final List<Template> templates;
     private final List<Column<Template, ?>> columns = List.of(
