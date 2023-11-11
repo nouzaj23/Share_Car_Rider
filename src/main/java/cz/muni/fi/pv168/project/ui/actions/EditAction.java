@@ -36,7 +36,7 @@ public class EditAction<E> extends AbstractAction {
         var entity = tableModel.getEntity(modelRow);
         var dialog = panel.getDialog((E) entity);
         if (entity instanceof Ride oldRide) {
-            Ride oldRideCopy = new Ride(oldRide.getName(), oldRide.getPassengers(), oldRide.getCurrency(), oldRide.getCategory(), oldRide.getFrom(), oldRide.getTo(), oldRide.getDistance());
+            Ride oldRideCopy = new Ride(oldRide.getName(), oldRide.getPassengers(), oldRide.getCurrency(), oldRide.getFuelExpenses(), oldRide.getCategory(), oldRide.getFrom(), oldRide.getTo(), oldRide.getDistance());
             dialog.show(table, "Edit Employee")
                     .ifPresent(r -> panel.editRow(r, oldRideCopy));
         } else {
