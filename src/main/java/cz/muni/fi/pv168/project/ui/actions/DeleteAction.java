@@ -6,6 +6,8 @@ import cz.muni.fi.pv168.project.ui.resources.Icons;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class DeleteAction<E> extends AbstractAction {
 
@@ -21,6 +23,15 @@ public class DeleteAction<E> extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO implement logic
+        var table = panel.getTable();
+
+        Arrays.stream(table.getSelectedRows())
+                // view row index must be converted to model row index
+                .map(table::convertRowIndexToModel)
+                .boxed()
+                // We need to delete rows in descending order to not change index of rows
+                // which are not deleted yet
+                .sorted(Comparator.reverseOrder())
+                .forEach(panel::deleteRow);
     }
 }

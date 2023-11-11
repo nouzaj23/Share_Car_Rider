@@ -22,7 +22,7 @@ public class CategoriesPanel extends AbstractPanel<Category> {
         this.onSelectionChange = onSelectionChange;
 
         setLayout(new BorderLayout());
-        JTable table = setUpTable(categoryModel);
+        this.table = setUpTable(categoryModel);
 
         PanelHelper.createTopBar(this, table, null, null);
     }
@@ -52,5 +52,10 @@ public class CategoriesPanel extends AbstractPanel<Category> {
     @Override
     public void addRow(Category entity) {
         categoryModel.addRow(entity);
+    }
+
+    @Override
+    public void deleteRow(int rowIndex) {
+        categoryModel.deleteRow(rowIndex);
     }
 }

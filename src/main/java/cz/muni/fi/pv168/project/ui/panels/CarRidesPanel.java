@@ -74,7 +74,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         filterPanel.add(toLabel);
         filterPanel.add(new JTextField());
 
-        JTable table = setUpTable();
+        this.table = setUpTable();
 
         totalDistance = new JLabel();
         triggerTotalDistanceUpdate();
@@ -110,10 +110,23 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     @Override
     public void addRow(Ride entity) {
         carRidesModel.addRow(entity);
-        if (entity.getCategory() != null) {
-            categoryListModel.updateRow(entity.getCategory().modifyDistanceFluent(entity.getDistance()));
-            entity.getCategory().setRides(entity.getCategory().getRides() + 1);
+        Category rideCategory = entity.getCategory();
+        if (rideCategory != null) {
+            categoryListModel.updateRow(rideCategory.modifyDistanceFluent(entity.getDistance()));
+            entity.getCategory().setRides(rideCategory.getRides() + 1);
         }
+        triggerTotalDistanceUpdate();
+    }
+
+    @Override
+    public void deleteRow(int rowIndex) {
+        Ride ride = carRidesModel.getEntity(rowIndex);
+        Category rideCategory = ride.getCategory();
+        if (rideCategory != null) {
+            categoryListModel.updateRow(rideCategory.modifyDistanceFluent(-ride.getDistance()));
+            ride.getCategory().setRides(rideCategory.getRides() - 1);
+        }
+        carRidesModel.deleteRow(rowIndex);
         triggerTotalDistanceUpdate();
     }
 
