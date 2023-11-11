@@ -13,24 +13,45 @@ import java.util.List;
 
 public class CarRidesModel extends AbstractTableModel implements EntityTableModel<Ride> {
 
-    private final List<Ride> rides;
+    private List<Ride> rides;
 
     private CarRidesPanel linkedPannel;
 
     private final List<Column<Ride, ?>> columns = List.of(
-            Column.editable("Name", String.class, Ride::getName, Ride::setName),
-            Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
-            Column.editable("Currency", Currency.class, Ride::getCurrency, Ride::setCurrency),
-            Column.editable("Fuel Expenses", Float.class, Ride::getFuelExpenses, Ride::setFuelExpenses),
-            Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
+            Column.editable("Name", String.class, Ride::getName, (ride, value) -> {
+                ride.setName(value);
+                triggerSafeUpdate(ride);
+            }),
+            Column.editable("Passengers", Integer.class, Ride::getPassengers, (ride, value) -> {
+                ride.setPassengers(value);
+                triggerSafeUpdate(ride);
+            }),
+            Column.editable("Currency", Currency.class, Ride::getCurrency, (ride, value) -> {
+                ride.setCurrency(value);
+                triggerSafeUpdate(ride);
+            }),
+            Column.editable("Fuel Expenses", Float.class, Ride::getFuelExpenses, (ride, value) -> {
+                ride.setFuelExpenses(value);
+                triggerSafeUpdate(ride);
+            }),
+            Column.editable("Category", Category.class, Ride::getCategory, (ride, value) -> {
+                ride.setCategory(value);
+                triggerSafeUpdate(ride);
+            }),
             Column.readonly("From", String.class, Ride::getFrom),
             Column.readonly("To", String.class, Ride::getTo),
             Column.editable("Distance", Integer.class, Ride::getDistance, (ride, value) -> {
                 ride.setDistance(value);
                 linkedPannel.triggerTotalDistanceUpdate();
             }),
-            Column.editable("Hours", Float.class, Ride::getHours, Ride::setHours),
-            Column.editable("Date", LocalDate.class, Ride::getDate, Ride::setDate)
+            Column.editable("Hours", Float.class, Ride::getHours, (ride, value) -> {
+                ride.setHours(value);
+                triggerSafeUpdate(ride);
+            }),
+            Column.editable("Date", LocalDate.class, Ride::getDate, (ride, value) -> {
+                ride.setDate(value);
+                triggerSafeUpdate(ride);
+            })
     );
 
     public CarRidesModel(Collection<Ride> rides) {
@@ -101,5 +122,13 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
     public void updateRow(Ride ride) {
         int rowIndex = rides.indexOf(ride);
         fireTableRowsUpdated(rowIndex, rowIndex);
+    }
+
+    private void triggerSafeUpdate(Ride ride) {
+        if (ride != null) {
+            int rowIndex = rides.indexOf(ride);
+            fireTableDataChanged();
+            fireTableRowsUpdated(rowIndex, rowIndex);
+        }
     }
 }
