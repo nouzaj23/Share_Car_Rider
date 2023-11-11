@@ -7,6 +7,8 @@ import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.filters.RideTableFilter;
 import cz.muni.fi.pv168.project.ui.filters.components.FilterListModelBuilder;
+import cz.muni.fi.pv168.project.ui.filters.components.FilterTextModelBuilder;
+import cz.muni.fi.pv168.project.ui.filters.components.FilterValueRangeModelBuilder;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
@@ -17,8 +19,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 
 public class CarRidesPanel extends AbstractPanel<Ride> {
@@ -28,7 +28,8 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final CategoryListModel categoryListModel;
     private final JLabel totalDistance;
     private final TemplateModel templates;
-    private CategoryModel categoryModel;
+    private final CategoryModel categoryModel;
+    private final CurrencyListModel currencyListModel;
 
     public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
                          Consumer<Integer> onSelectionChange, TemplateModel templates,
@@ -37,6 +38,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         this.carRidesModel = carRidesModel;
         this.carRidesModel.setLinkedPannel(this);
         this.categoryListModel = categoryListModel;
+        this.currencyListModel = currencyListModel;
         this.categoryModel = categoryModel;
         this.templates = templates;
         this.onSelectionChange = onSelectionChange;
@@ -45,44 +47,15 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         var toolbar = new JToolBar();
         toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        JPanel filterPanel = new JPanel();
-        filterPanel.setLayout(new FlowLayout());
-
-        // Create and add labels for each filter
-        JLabel categoryLabel = new JLabel("Category:");
-        JLabel currencyLabel = new JLabel("Currency:");
-        JLabel passengersLabel = new JLabel("Passengers:");
-
-        // Create and add filter components
         var rowSorter = new TableRowSorter<>(carRidesModel);
         var carRideFilter = new RideTableFilter(rowSorter);
-
-
-        var categoryFilter = createCategoryFilter(carRideFilter, categoryListModel);
-
-        filterPanel.add(categoryLabel);
-        filterPanel.add(new JScrollPane(categoryFilter));
-
-        filterPanel.add(currencyLabel);
-        filterPanel.add(new JScrollPane(createCurrencyFilter(carRideFilter, currencyListModel)));
-
-        filterPanel.add(passengersLabel);
-        filterPanel.add(new JTextField());
-
-        var resetButton = new JButton("Reset");
-        resetButton.addActionListener(e -> {
-            carRideFilter.resetFilter();
-            //categoryFilter.setSelectedIndex(Integer.MAX_VALUE);
-            categoryFilter.setSelectedIndices(new int[0]);
-        });
-        filterPanel.add(resetButton);
 
         JTable table = setUpTable();
         table.setRowSorter(rowSorter);
 
         totalDistance = new JLabel();
         triggerTotalDistanceUpdate();
-        PanelHelper.createTopBar(this, table, filterPanel, totalDistance);
+        PanelHelper.createTopBar(this, table, createFilterPanel(carRideFilter), totalDistance);
     }
 
     private JTable setUpTable() {
@@ -172,7 +145,6 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private static JList<Category> createCategoryFilter(
             RideTableFilter rideTableFilter, CategoryListModel categoryListModel) {
         return FilterListModelBuilder.create(categoryListModel)
-                .setSelectedIndex(0)
                 .setVisibleRowsCount(3)
                 .setValuesRenderer(new CategoryRenderer())
                 .setFilter(rideTableFilter::filterCategory)
@@ -182,10 +154,97 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private static JList<Currency> createCurrencyFilter(
             RideTableFilter rideTableFilter, CurrencyListModel currencyListModel) {
         return FilterListModelBuilder.create(currencyListModel)
-                .setSelectedIndex(0)
                 .setVisibleRowsCount(3)
                 .setValuesRenderer(new CurrencyRenderer())
                 .setFilter(rideTableFilter::filterCurrency)
                 .build();
+    }
+
+    private static JTextField createFromFilter(
+            RideTableFilter rideTableFilter) {
+        return FilterTextModelBuilder.create()
+                .setFilter(rideTableFilter::filterFrom)
+                .build();
+    }
+
+    private static JTextField createToFilter(
+            RideTableFilter rideTableFilter) {
+        return FilterTextModelBuilder.create()
+                .setFilter(rideTableFilter::filterTo)
+                .build();
+    }
+
+    private static JTextField createPassengerFilterMin(
+            RideTableFilter rideTableFilter) {
+        return FilterValueRangeModelBuilder.create()
+                .setFilter(rideTableFilter::filterMin)
+                .build();
+    }
+
+    private static JTextField createPassengerFilterMax(
+            RideTableFilter rideTableFilter) {
+        return FilterValueRangeModelBuilder.create()
+                .setFilter(rideTableFilter::filterMax)
+                .build();
+    }
+
+    private JPanel createFilterPanel(RideTableFilter carRideFilter) {
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new FlowLayout());
+
+        JLabel categoryLabel = new JLabel("Category:");
+        JLabel currencyLabel = new JLabel("Currency:");
+        JLabel fromLabel = new JLabel("From:");
+        JLabel toLabel = new JLabel("To:");
+        JLabel passengersLabelMin = new JLabel("Min passenger count:");
+        JLabel passengersLabelMax = new JLabel("Max passenger count:");
+
+        var categoryFilter = createCategoryFilter(carRideFilter, categoryListModel);
+        var currencyFilter = createCurrencyFilter(carRideFilter, currencyListModel);
+        var fromFilter = createFromFilter(carRideFilter);
+        var toFilter = createToFilter(carRideFilter);
+        var passengerFilterMin = createPassengerFilterMin(carRideFilter);
+        var passengerFilterMax = createPassengerFilterMax(carRideFilter);
+
+        filterPanel.add(categoryLabel);
+        filterPanel.add(new JScrollPane(categoryFilter));
+
+        filterPanel.add(currencyLabel);
+        filterPanel.add(new JScrollPane(currencyFilter));
+
+        JPanel passengerFilterPanel = new JPanel();
+        passengerFilterPanel.setLayout(new BoxLayout(passengerFilterPanel, BoxLayout.Y_AXIS));
+
+        passengerFilterPanel.add(passengersLabelMin);
+        passengerFilterPanel.add(passengerFilterMin);
+
+        passengerFilterPanel.add(passengersLabelMax);
+        passengerFilterPanel.add(passengerFilterMax);
+
+        filterPanel.add(passengerFilterPanel);
+
+        JPanel fromToFilterPanel = new JPanel();
+        fromToFilterPanel.setLayout(new BoxLayout(fromToFilterPanel, BoxLayout.Y_AXIS));
+        fromToFilterPanel.add(fromLabel);
+        fromToFilterPanel.add(fromFilter);
+
+        fromToFilterPanel.add(toLabel);
+        fromToFilterPanel.add(toFilter);
+
+        filterPanel.add(fromToFilterPanel);
+
+        var resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+            carRideFilter.resetFilter();
+            currencyFilter.setSelectedIndices(new int[0]);
+            categoryFilter.setSelectedIndices(new int[0]);
+            passengerFilterMin.setText("");
+            passengerFilterMax.setText("");
+            fromFilter.setText("");
+            toFilter.setText("");
+        });
+        filterPanel.add(resetButton);
+
+        return filterPanel;
     }
 }

@@ -11,7 +11,6 @@ public class FilterListModelBuilder<R> {
     private final ListModel<R> values;
     private AbstractRenderer<R> valuesRenderer;
     private Consumer<List<R>> filter;
-    private int selectedIndex = 0;
     private int visibleRowsCount = 3;
 
     private FilterListModelBuilder(ListModel<R> values) {
@@ -32,31 +31,18 @@ public class FilterListModelBuilder<R> {
         return jList;
     }
 
-    public FilterListModelBuilder<R> setValuesRenderer(AbstractRenderer<R> valuesRenderer)
-    {
+    public FilterListModelBuilder<R> setValuesRenderer(AbstractRenderer<R> valuesRenderer) {
         this.valuesRenderer = valuesRenderer;
         return this;
     }
 
-    public FilterListModelBuilder<R> setSelectedIndex(int selectedIndex)
-    {
-        this.selectedIndex = selectedIndex;
-        return this;
-    }
-
-    public FilterListModelBuilder< R> setVisibleRowsCount(int visibleRowsCount)
-    {
+    public FilterListModelBuilder<R> setVisibleRowsCount(int visibleRowsCount) {
         this.visibleRowsCount = visibleRowsCount;
         return this;
     }
 
-    public FilterListModelBuilder<R> setFilter(Consumer<List<R>> filter)
-    {
+    public FilterListModelBuilder<R> setFilter(Consumer<List<R>> filter) {
         this.filter = filter;
         return this;
-    }
-
-    public Consumer<List<R>> getFilter() {
-        return this.filter;
     }
 }

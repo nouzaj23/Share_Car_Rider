@@ -15,10 +15,6 @@ public class RideCurrencyMatcher extends EntityMatcher<Ride> {
         this.selectedCurrencies = List.of(selectedCurrency);
     }
 
-    public RideCurrencyMatcher(Collection<Currency> selectedCurrencies) {
-        this.selectedCurrencies = selectedCurrencies;
-    }
-
     @Override
     public boolean evaluate(Ride ride) {
         return selectedCurrencies.stream()
