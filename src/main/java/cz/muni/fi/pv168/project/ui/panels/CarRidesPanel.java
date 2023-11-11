@@ -108,6 +108,11 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     }
 
     @Override
+    public EntityDialog<Ride> getDialog(Ride entity) {
+        return new RideDialog(entity, categoryListModel, templates, categoryModel);
+    }
+
+    @Override
     public void addRow(Ride entity) {
         carRidesModel.addRow(entity);
         Category rideCategory = entity.getCategory();
@@ -127,6 +132,28 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             ride.getCategory().setRides(rideCategory.getRides() - 1);
         }
         carRidesModel.deleteRow(rowIndex);
+        triggerTotalDistanceUpdate();
+    }
+
+    @Override
+    public void editRow(Ride newEntity, Ride oldRide) {
+        Category oldCategory = oldRide.getCategory();
+        Category newCategory = newEntity.getCategory();
+        if (oldCategory == newCategory) {
+            if (newCategory != null) {
+                categoryListModel.updateRow(newCategory.modifyDistanceFluent(newEntity.getDistance() - oldRide.getDistance()));
+            }
+        } else {
+            if (oldCategory != null) {
+                categoryListModel.updateRow(oldCategory.modifyDistanceFluent(-oldRide.getDistance()));
+                oldCategory.setRides(oldCategory.getRides() - 1);
+            }
+            if (newCategory != null) {
+                categoryListModel.updateRow(newCategory.modifyDistanceFluent(newEntity.getDistance()));
+                newCategory.setRides(newCategory.getRides() + 1);
+            }
+        }
+        carRidesModel.updateRow(newEntity);
         triggerTotalDistanceUpdate();
     }
 
