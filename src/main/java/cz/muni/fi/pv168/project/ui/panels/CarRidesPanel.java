@@ -19,6 +19,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class CarRidesPanel extends AbstractPanel<Ride> {
@@ -30,6 +32,8 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final TemplateModel templates;
     private final CategoryModel categoryModel;
     private final CurrencyListModel currencyListModel;
+
+    private final JTable table;
 
     public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
                          Consumer<Integer> onSelectionChange, TemplateModel templates,
@@ -50,7 +54,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         var rowSorter = new TableRowSorter<>(carRidesModel);
         var carRideFilter = new RideTableFilter(rowSorter);
 
-        JTable table = setUpTable();
+        this.table = setUpTable();
         table.setRowSorter(rowSorter);
 
         totalDistance = new JLabel();
@@ -132,6 +136,16 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         }
         carRidesModel.updateRow(newEntity);
         triggerTotalDistanceUpdate();
+    }
+
+    public List<Ride> getFilteredRides() {
+        List<Ride> filteredRides = new ArrayList<>();
+        for (int i = 0; i < table.getRowCount(); i++) {
+            int modelIndex = table.convertRowIndexToModel(i);
+            Ride ride = carRidesModel.getEntity(modelIndex);
+            filteredRides.add(ride);
+        }
+        return filteredRides;
     }
 
     public void triggerTotalDistanceUpdate() {
