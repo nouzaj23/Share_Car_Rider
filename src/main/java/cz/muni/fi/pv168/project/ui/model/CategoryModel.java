@@ -5,7 +5,7 @@ import cz.muni.fi.pv168.project.model.Category;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class CategoryModel extends AbstractTableModel implements EnitityTableModel<Category> {
+public class CategoryModel extends AbstractTableModel implements EntityTableModel<Category> {
     private final CategoryListModel categoryListModel;
     private final List<Column<Category, ?>> columns = List.of(
             Column.editable("Name", String.class, Category::getName, Category::setName),

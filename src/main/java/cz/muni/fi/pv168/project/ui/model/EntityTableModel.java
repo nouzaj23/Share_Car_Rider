@@ -2,7 +2,7 @@ package cz.muni.fi.pv168.project.ui.model;
 
 import javax.swing.table.TableModel;
 
-public interface EnitityTableModel<E> extends TableModel {
+public interface EntityTableModel<E> extends TableModel {
     /**
      * Gets the entity at a certain index.
      *

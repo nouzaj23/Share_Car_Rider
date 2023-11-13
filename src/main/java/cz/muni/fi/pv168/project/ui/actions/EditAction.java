@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
 import cz.muni.fi.pv168.project.model.Ride;
-import cz.muni.fi.pv168.project.ui.model.EnitityTableModel;
+import cz.muni.fi.pv168.project.ui.model.EntityTableModel;
 import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
 import cz.muni.fi.pv168.project.ui.resources.Icons;
 
@@ -31,7 +31,7 @@ public class EditAction<E> extends AbstractAction {
         if (table.isEditing()) {
             table.getCellEditor().cancelCellEditing();
         }
-        var tableModel = (EnitityTableModel) table.getModel();
+        var tableModel = (EntityTableModel) table.getModel();
         int modelRow = table.convertRowIndexToModel(selectedRows[0]);
         var entity = tableModel.getEntity(modelRow);
         var dialog = panel.getDialog((E) entity);
