@@ -33,8 +33,6 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final CategoryModel categoryModel;
     private final CurrencyListModel currencyListModel;
 
-    private final JTable table;
-
     public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
                          Consumer<Integer> onSelectionChange, TemplateModel templates,
                          CategoryModel categoryModel, CurrencyListModel currencyListModel) {
