@@ -28,7 +28,8 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final Consumer<Integer> onSelectionChange;
     private final CarRidesModel carRidesModel;
     private final CategoryListModel categoryListModel;
-    private final JLabel totalDistance;
+    private final JLabel totalFuelExpenses = new JLabel();
+    private final JLabel filteredFuelExpenses = new JLabel();
     private final TemplateModel templates;
     private final CategoryModel categoryModel;
     private final CurrencyListModel currencyListModel;
@@ -57,9 +58,21 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         this.table = setUpTable();
         table.setRowSorter(rowSorter);
 
-        totalDistance = new JLabel();
-        triggerTotalDistanceUpdate();
-        PanelHelper.createTopBar(this, table, createFilterPanel(carRideFilter), totalDistance);
+        JPanel statsPanel = new JPanel(new GridBagLayout());
+        setUpStatsPanel(statsPanel);
+        triggerStatsUpdate();
+        PanelHelper.createTopBar(this, table, createFilterPanel(carRideFilter), statsPanel);
+    }
+
+    private void setUpStatsPanel(JPanel statsPanel) {
+        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+        statsPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Aligns contents to the left
+        totalFuelExpenses.setFont(new Font("Arial", Font.BOLD, 14));
+        filteredFuelExpenses.setFont(new Font("Arial", Font.BOLD, 14));
+        statsPanel.setBackground(new Color(230, 230, 250)); // Light background
+        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
+        statsPanel.add(totalFuelExpenses);
+        statsPanel.add(filteredFuelExpenses);
     }
 
     private JTable setUpTable() {
@@ -101,7 +114,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             categoryListModel.updateRow(rideCategory.modifyDistanceFluent(entity.getDistance()));
             entity.getCategory().setRides(rideCategory.getRides() + 1);
         }
-        triggerTotalDistanceUpdate();
+        triggerStatsUpdate();
     }
 
     @Override
@@ -113,7 +126,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             ride.getCategory().setRides(rideCategory.getRides() - 1);
         }
         carRidesModel.deleteRow(rowIndex);
-        triggerTotalDistanceUpdate();
+        triggerStatsUpdate();
     }
 
     @Override
@@ -135,7 +148,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             }
         }
         carRidesModel.updateRow(newEntity);
-        triggerTotalDistanceUpdate();
+        triggerStatsUpdate();
     }
 
     public List<Ride> getFilteredRides() {
@@ -147,13 +160,28 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         }
         return filteredRides;
     }
-
-    public void triggerTotalDistanceUpdate() {
-        var result = 0;
+    
+    public void triggerStatsUpdate() {
+        triggerAllRides();
+        triggerFilteredRides();
+    }
+    
+    private void triggerAllRides() {
+        float result = 0;
         for (int i = 0; i < carRidesModel.getRowCount(); i++) {
-            result += carRidesModel.getEntity(i).getDistance();
+            Ride ride = carRidesModel.getEntity(i);
+            result += ride.getFuelExpenses();
         }
-        totalDistance.setText("Total distance:  " + result);
+        totalFuelExpenses.setText("Total Fuel Expenses:  " + result);
+    }
+    
+    private void triggerFilteredRides() {
+        float result = 0;
+        List<Ride> filteredRides = getFilteredRides();
+        for (Ride ride: filteredRides) {
+            result += ride.getFuelExpenses();
+        }
+        filteredFuelExpenses.setText("Filtered Fuel Expenses:  " + result);
     }
 
     private static JList<Category> createCategoryFilter(

@@ -42,7 +42,7 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
             Column.readonly("To", String.class, Ride::getTo),
             Column.editable("Distance", Integer.class, Ride::getDistance, (ride, value) -> {
                 ride.setDistance(value);
-                linkedPannel.triggerTotalDistanceUpdate();
+                linkedPannel.triggerStatsUpdate();
             }),
             Column.editable("Hours", Float.class, Ride::getHours, (ride, value) -> {
                 ride.setHours(value);
@@ -106,6 +106,10 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         this.linkedPannel = linkedPannel;
     }
 
+    public CarRidesPanel getLinkedPannel() {
+        return this.linkedPannel;
+    }
+
     public void deleteRow(int rowIndex) {
         rides.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
@@ -115,8 +119,8 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         int newRowIndex = rides.size();
         ride.setCommitted(true);
         rides.add(ride);
-        linkedPannel.triggerTotalDistanceUpdate();
         fireTableRowsInserted(newRowIndex, newRowIndex);
+        linkedPannel.triggerStatsUpdate();
     }
 
     public void updateRow(Ride ride) {

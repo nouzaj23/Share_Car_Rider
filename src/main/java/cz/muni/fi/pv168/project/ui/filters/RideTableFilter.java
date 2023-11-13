@@ -7,6 +7,7 @@ import cz.muni.fi.pv168.project.ui.filters.matchers.EntityMatcher;
 import cz.muni.fi.pv168.project.ui.filters.matchers.EntityMatchers;
 import cz.muni.fi.pv168.project.ui.filters.matchers.ride.*;
 import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
+import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 
 import javax.swing.table.TableRowSorter;
 import java.util.ArrayList;
@@ -17,10 +18,12 @@ import java.util.stream.Stream;
 
 public class RideTableFilter {
     private final RideCompoundMatcher rideCompoundMatcher;
+    private final CarRidesPanel carRidesPanel;
 
     public RideTableFilter(TableRowSorter<CarRidesModel> rowSorter) {
         rideCompoundMatcher = new RideCompoundMatcher(rowSorter);
         rowSorter.setRowFilter(rideCompoundMatcher);
+        carRidesPanel = rowSorter.getModel().getLinkedPannel();
     }
 
     public void filterCategory(List<Category> selectedItems) {
@@ -30,6 +33,7 @@ public class RideTableFilter {
             rideCompoundMatcher.setCategoryMatcher(null);
         }
         rideCompoundMatcher.setCategoryMatcher(new RideCommonCompoundMatcher(matchers));
+        carRidesPanel.triggerStatsUpdate();
     }
 
     public void filterCurrency(List<Currency> selectedItems) {
@@ -39,14 +43,17 @@ public class RideTableFilter {
             rideCompoundMatcher.setCurrencyMatcher(null);
         }
         rideCompoundMatcher.setCurrencyMatcher(new RideCommonCompoundMatcher(matchers));
+        carRidesPanel.triggerStatsUpdate();
     }
 
     public void filterFrom(String filterString) {
         rideCompoundMatcher.setFromMatcher(createCommonStringCompoundMatcher(filterString, Ride::getFrom));
+        carRidesPanel.triggerStatsUpdate();
     }
 
     public void filterTo(String filterString) {
         rideCompoundMatcher.setToMatcher(createCommonStringCompoundMatcher(filterString, Ride::getTo));
+        carRidesPanel.triggerStatsUpdate();
     }
 
     private RideCommonCompoundMatcher createCommonStringCompoundMatcher(
@@ -75,6 +82,9 @@ public class RideTableFilter {
         } catch (NumberFormatException e) {
             rideCompoundMatcher.setMinPassengers(null);
         }
+        finally {
+            carRidesPanel.triggerStatsUpdate();
+        }
     }
 
     public void filterMax(String filterString) {
@@ -84,10 +94,14 @@ public class RideTableFilter {
         } catch (NumberFormatException e) {
             rideCompoundMatcher.setMaxPassengers(null);
         }
+        finally {
+            carRidesPanel.triggerStatsUpdate();
+        }
     }
 
     public void resetFilter() {
         rideCompoundMatcher.resetFilter();
+        carRidesPanel.triggerStatsUpdate();
     }
 
     private static class RideCompoundMatcher extends EntityMatcher<Ride> {
