@@ -2,12 +2,17 @@ package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
 import cz.muni.fi.pv168.project.export.CSVexport;
+import cz.muni.fi.pv168.project.export.CSVimport;
 import cz.muni.fi.pv168.project.export.JsonExport;
+import cz.muni.fi.pv168.project.export.JsonImport;
 import cz.muni.fi.pv168.project.export.service.ExportService;
 import cz.muni.fi.pv168.project.export.service.GenericExportService;
+import cz.muni.fi.pv168.project.export.service.GenericImportService;
+import cz.muni.fi.pv168.project.export.service.ImportService;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.actions.ExportAction;
+import cz.muni.fi.pv168.project.ui.actions.ImportAction;
 import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
@@ -25,6 +30,7 @@ public class MainWindow {
     private JFrame frame;
 
     private ExportService exportService;
+    private ImportService importService;
 
     public MainWindow() {
         initializeFrame();
@@ -42,7 +48,9 @@ public class MainWindow {
         var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel);
 
         this.exportService = new GenericExportService(carRideModel, templateModel, categoryModel, List.of(new CSVexport(), new JsonExport()));
-        frame.setJMenuBar(createMenuBar(exportService));
+        this.importService = new GenericImportService(carRideModel, categoryModel, templateModel, List.of(new CSVimport(), new JsonImport()));
+
+        frame.setJMenuBar(createMenuBar(exportService, importService));
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.pack();
     }
@@ -54,7 +62,7 @@ public class MainWindow {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private JMenuBar createMenuBar(ExportService exportService) {
+    private JMenuBar createMenuBar(ExportService exportService, ImportService importService) {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
@@ -62,10 +70,12 @@ public class MainWindow {
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
         JMenuItem exportMenuItem = new JMenuItem(new ExportAction(frame, exportService));
+        JMenuItem importMenuItem = new JMenuItem(new ImportAction(frame, importService));
         fileMenu.add(openMenuItem);
         fileMenu.add(exitMenuItem);
         fileMenu.add(darkModeToggle);
         fileMenu.add(exportMenuItem);
+        fileMenu.add(importMenuItem);
         menuBar.add(fileMenu);
 
         JMenu helpMenu = new JMenu("Help");

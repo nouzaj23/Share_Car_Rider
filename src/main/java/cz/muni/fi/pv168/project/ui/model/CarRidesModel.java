@@ -139,4 +139,10 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
     public List<Ride> getList() {
         return new ArrayList<>(rides);
     }
+
+    public void deleteAll(){
+        while ( getRowCount() != 0 ){
+            deleteRow(0);
+        }
+    }
 }
