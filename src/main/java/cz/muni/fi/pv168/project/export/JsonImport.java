@@ -74,7 +74,6 @@ public class JsonImport implements BatchImporter {
                 String from = templateObject.getString("from");
                 String to = templateObject.getString("to");
                 int distance = templateObject.getInt("distance");
-                float fuel = templateObject.getFloat("fuelExpenses");
 
                 Template template = new Template(name, passengers,currency, category, from, to, distance);
 

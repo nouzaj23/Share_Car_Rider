@@ -45,6 +45,11 @@ public class GenericImportService implements ImportService {
 
     private void createRide(Ride ride) {
         ridesModel.addRow(ride);
+        Category rideCategory = ride.getCategory();
+        if (rideCategory != null) {
+            categoryModel.updateRow(rideCategory.modifyDistanceFluent(ride.getDistance()));
+            ride.getCategory().setRides(rideCategory.getRides() + 1);
+        }
     }
 
     private void createCategory(Category category) {
