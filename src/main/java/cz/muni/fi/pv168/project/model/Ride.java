@@ -55,5 +55,18 @@ public class Ride extends AbstractRide{
         isCommitted = committed;
     }
 
+    @Override
+    public String toString() {
+        return "Ride{" +
+                "name='" + name + '\'' +
+                ", passengers=" + passengers +
+                ", currency=" + currency +
+                ", fuelExpenses=" + fuelExpenses +
+                ", category=" + category +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", distance=" + distance +
+                '}';
+    }
 
 }

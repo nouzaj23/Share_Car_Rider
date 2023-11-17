@@ -1,8 +1,13 @@
 package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
+import cz.muni.fi.pv168.project.export.CSVexport;
+import cz.muni.fi.pv168.project.export.JsonExport;
+import cz.muni.fi.pv168.project.export.service.ExportService;
+import cz.muni.fi.pv168.project.export.service.GenericExportService;
 import cz.muni.fi.pv168.project.model.Currency;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
+import cz.muni.fi.pv168.project.ui.actions.ExportAction;
 import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
@@ -13,14 +18,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainWindow {
 
     private JFrame frame;
 
+    private ExportService exportService;
+
     public MainWindow() {
         initializeFrame();
-        frame.setJMenuBar(createMenuBar());
 
         var templateModel = new TemplateModel(new ArrayList<>());
         var categoryListModel = new CategoryListModel(TestDataGenerator.CATEGORIES);
@@ -34,6 +41,8 @@ public class MainWindow {
 
         var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel);
 
+        this.exportService = new GenericExportService(carRideModel, templateModel, categoryModel, List.of(new CSVexport(), new JsonExport()));
+        frame.setJMenuBar(createMenuBar(exportService));
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.pack();
     }
@@ -45,16 +54,18 @@ public class MainWindow {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private JMenuBar createMenuBar() {
+    private JMenuBar createMenuBar(ExportService exportService) {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
+        JMenuItem exportMenuItem = new JMenuItem(new ExportAction(frame, exportService));
         fileMenu.add(openMenuItem);
         fileMenu.add(exitMenuItem);
         fileMenu.add(darkModeToggle);
+        fileMenu.add(exportMenuItem);
         menuBar.add(fileMenu);
 
         JMenu helpMenu = new JMenu("Help");

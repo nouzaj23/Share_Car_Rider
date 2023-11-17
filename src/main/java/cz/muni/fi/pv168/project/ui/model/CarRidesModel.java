@@ -135,4 +135,8 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
             fireTableRowsUpdated(rowIndex, rowIndex);
         }
     }
+
+    public List<Ride> getList() {
+        return new ArrayList<>(rides);
+    }
 }
