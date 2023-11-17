@@ -20,38 +20,10 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class JsonExport implements BatchExporter {
-
-    class System {
-        Collection<Ride> rides;
-        Collection<Category> categories;
-        Collection<Template> templates;
-        Currency[] currencies = Currency.values();
-        System(Batch batch){
-            rides = batch.rides();
-            categories = batch.categories();
-            templates = batch.templates();
-        }
-
-        public Collection<Ride> getRides() {
-            return rides;
-        }
-
-        public Collection<Category> getCategories() {
-            return categories;
-        }
-
-        public Collection<Template> getTemplates() {
-            return templates;
-        }
-
-        public Currency[] getCurrencies(){
-            return currencies;
-        }
-    }
     @Override
     public void exportBatch(Batch batch, String filePath) {
 
-        var system = new System(batch);
+        var system = new JsonSystemHelper(batch);
         try (var writer = Files.newBufferedWriter(Path.of(filePath), StandardCharsets.UTF_8)) {
             writer.write(Objects.requireNonNull(exportToJson(system)));
         } catch (IOException exception) {
@@ -59,7 +31,7 @@ public class JsonExport implements BatchExporter {
         }
     }
 
-    private static String exportToJson(System system) {
+    private static String exportToJson(JsonSystemHelper system) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 

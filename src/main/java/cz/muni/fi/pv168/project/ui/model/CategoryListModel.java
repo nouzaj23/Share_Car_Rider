@@ -29,7 +29,7 @@ public class CategoryListModel extends AbstractListModel<Category> {
     }
 
     public void addRow(Category category) {
-        var categoriesSize = categories.size() - 1;
+        var categoriesSize = categories.size();
         categories.add(category);
         fireIntervalAdded(this, categoriesSize, categoriesSize);
     }

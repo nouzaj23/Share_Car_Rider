@@ -80,4 +80,10 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
     public List<Category> getList(){
         return categoryListModel.getList();
     }
+
+    public void deleteAll(){
+        while ( getRowCount() != 0 ){
+            deleteRow(0);
+        }
+    }
 }

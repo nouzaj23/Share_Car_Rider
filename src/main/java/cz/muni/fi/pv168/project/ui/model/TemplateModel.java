@@ -93,4 +93,10 @@ public class TemplateModel extends AbstractTableModel implements EntityTableMode
     public List<Template> getList(){
         return new ArrayList<>(templates);
     }
+
+    public void deleteAll(){
+        while ( getRowCount() != 0 ){
+            deleteRow(0);
+        }
+    }
 }
