@@ -43,4 +43,8 @@ public class CategoryListModel extends AbstractListModel<Category> {
         int rowIndex = categories.indexOf(category);
         fireContentsChanged(this, rowIndex, rowIndex);
     }
+
+    public List<Category> getList(){
+        return new ArrayList<>(categories);
+    }
 }

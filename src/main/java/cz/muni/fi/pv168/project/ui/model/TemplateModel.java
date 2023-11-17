@@ -89,4 +89,8 @@ public class TemplateModel extends AbstractTableModel implements EntityTableMode
         int rowIndex = templates.indexOf(template);
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
+
+    public List<Template> getList(){
+        return new ArrayList<>(templates);
+    }
 }

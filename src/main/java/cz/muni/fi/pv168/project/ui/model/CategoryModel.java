@@ -76,4 +76,8 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
         int rowIndex = categoryListModel.indexOf(category);
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
+
+    public List<Category> getList(){
+        return categoryListModel.getList();
+    }
 }
