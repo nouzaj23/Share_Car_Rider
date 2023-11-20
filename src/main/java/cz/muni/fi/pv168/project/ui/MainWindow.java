@@ -1,6 +1,5 @@
 package cz.muni.fi.pv168.project.ui;
 
-import cz.muni.fi.pv168.project.data.TestDataGenerator;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
@@ -8,24 +7,24 @@ import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 import cz.muni.fi.pv168.project.ui.panels.CategoriesPanel;
 import cz.muni.fi.pv168.project.ui.panels.TemplatesPanel;
+import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainWindow {
 
     private JFrame frame;
 
-    public MainWindow() {
+    public MainWindow(DependencyProvider dependencyProvider) {
         initializeFrame();
         frame.setJMenuBar(createMenuBar());
 
-        var templateModel = new TemplateModel(new ArrayList<>());
-        var categoryListModel = new CategoryListModel(TestDataGenerator.CATEGORIES);
-        var categoryModel = new CategoryModel(categoryListModel);
-        var carRideModel = new CarRidesModel(new ArrayList<>());
+        var templateModel = new TemplateModel(dependencyProvider.getTemplateCrudService());
+        var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
+        var categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService());
+        var carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
         var currencyListModel = new CurrencyListModel(Arrays.stream(Currency.values()).toList());
 
         var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);

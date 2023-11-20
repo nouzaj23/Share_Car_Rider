@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.project;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import cz.muni.fi.pv168.project.ui.MainWindow;
+import cz.muni.fi.pv168.project.wiring.CommonDependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ public class Main {
         initFlatLightLafLookAndFeel();
 
         //initNimbusLookAndFeel();
-        EventQueue.invokeLater(() -> new MainWindow().show());
+        EventQueue.invokeLater(() -> new MainWindow(new CommonDependencyProvider()).show());
     }
 
     private static void initNimbusLookAndFeel() {
