@@ -131,12 +131,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void editRow(Ride newEntity, Ride oldRide) {
         Category oldCategory = oldRide.getCategory();
         Category newCategory = newEntity.getCategory();
-        if (oldCategory == newCategory) {
-            if (newCategory != null) {
-                newCategory.modifyDistanceFluent(newEntity.getDistance() - oldRide.getDistance());
-                newCategory.setDistance(newEntity.getDistance() - oldRide.getDistance());
-            }
-        } else {
+        if (oldCategory != newCategory) {
             if (oldCategory != null) {
                 oldCategory.modifyDistanceFluent(-oldRide.getDistance());
                 oldCategory.setRides(oldCategory.getRides() - 1);
