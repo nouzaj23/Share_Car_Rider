@@ -80,6 +80,7 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         if (value != null) {
             var ride = getEntity(rowIndex);
             columns.get(columnIndex).setValue(value, ride);
+            updateRow(ride);
         }
     }
 
