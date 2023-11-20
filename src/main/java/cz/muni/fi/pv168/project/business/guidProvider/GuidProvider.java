@@ -1,4 +1,4 @@
-package cz.muni.fi.pv168.project.business.GuidProvider;
+package cz.muni.fi.pv168.project.business.guidProvider;
 
 /**
  * Provider of globally unique identifiers for new entities.
