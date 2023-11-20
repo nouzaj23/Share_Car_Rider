@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.business.model;
 
-public class Category {
+public class Category extends Entity {
     private String name;
     private int distance;
     private int rides;
