@@ -26,7 +26,7 @@ public class TemplateModel extends AbstractTableModel implements EntityTableMode
 
     public TemplateModel(CrudService<Template> templateCrudService) {
         this.templateCrudService = templateCrudService;
-        this.templates = templateCrudService.findAll();
+        this.templates = new ArrayList<>(templateCrudService.findAll());
     }
     public Template[] getArray(){
         return templates.toArray(Template[]::new);
