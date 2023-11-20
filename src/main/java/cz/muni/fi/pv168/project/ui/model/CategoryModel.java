@@ -10,15 +10,17 @@ import java.util.List;
 public class CategoryModel extends AbstractTableModel implements EntityTableModel<Category> {
     private List<Category> categories;
     private final CrudService<Category> categoryCrudService;
+    private final CategoryListModel categoryListModel;
     private final List<Column<Category, ?>> columns = List.of(
             Column.editable("Name", String.class, Category::getName, Category::setName),
             Column.readonly("Rides", Integer.class, Category::getRides),
             Column.readonly("Distance", Integer.class, Category::getDistance)
     );
 
-    public CategoryModel(CrudService<Category> categoryCrudService) {
+    public CategoryModel(CrudService<Category> categoryCrudService, CategoryListModel categoryListModel) {
         this.categoryCrudService = categoryCrudService;
         this.categories = new ArrayList<>(categoryCrudService.findAll());
+        this.categoryListModel = categoryListModel;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
             var category = getEntity(rowIndex);
             columns.get(columnIndex).setValue(value, category);
             updateRow(category);
+            categoryListModel.refresh();
         }
     }
 
@@ -70,6 +73,7 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
         categoryCrudService.deleteByGuid(categoryToBeDeleted.getGuid());
         categories.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
+        categoryListModel.refresh();
     }
 
     public void addRow(Category category) {
@@ -78,6 +82,7 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
         int newRowIndex = categories.size();
         categories.add(category);
         fireTableRowsInserted(newRowIndex, newRowIndex);
+        categoryListModel.refresh();
     }
 
     public void updateRow(Category category) {
@@ -85,6 +90,7 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
                 .intoException();
         int rowIndex = categories.indexOf(category);
         fireTableRowsUpdated(rowIndex, rowIndex);
+        categoryListModel.refresh();
     }
 
     public void refresh() {

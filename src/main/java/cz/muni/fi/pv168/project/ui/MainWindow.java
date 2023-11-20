@@ -23,7 +23,7 @@ public class MainWindow {
 
         var templateModel = new TemplateModel(dependencyProvider.getTemplateCrudService());
         var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
-        var categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService());
+        var categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
         var carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
         var currencyListModel = new CurrencyListModel(Arrays.stream(Currency.values()).toList());
 
