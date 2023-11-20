@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
-import cz.muni.fi.pv168.project.model.*;
+import cz.muni.fi.pv168.project.business.model.*;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
 import org.jdatepicker.DateModel;

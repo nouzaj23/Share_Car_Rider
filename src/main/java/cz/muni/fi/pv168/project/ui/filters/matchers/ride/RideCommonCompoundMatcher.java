@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.ui.filters.matchers.ride;
 
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.filters.matchers.EntityMatcher;
 
 import java.util.Collection;

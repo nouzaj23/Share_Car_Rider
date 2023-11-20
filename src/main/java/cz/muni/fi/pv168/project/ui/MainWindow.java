@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.project.ui;
 
 import cz.muni.fi.pv168.project.data.TestDataGenerator;
-import cz.muni.fi.pv168.project.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.*;

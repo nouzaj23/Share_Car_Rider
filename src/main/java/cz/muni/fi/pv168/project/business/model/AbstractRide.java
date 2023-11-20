@@ -1,4 +1,4 @@
-package cz.muni.fi.pv168.project.model;
+package cz.muni.fi.pv168.project.business.model;
 
 public abstract class AbstractRide {
     protected String name;
