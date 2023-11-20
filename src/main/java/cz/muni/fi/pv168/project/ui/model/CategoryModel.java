@@ -18,7 +18,7 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
 
     public CategoryModel(CrudService<Category> categoryCrudService) {
         this.categoryCrudService = categoryCrudService;
-        this.categories = categoryCrudService.findAll();
+        this.categories = new ArrayList<>(categoryCrudService.findAll());
     }
 
     @Override
