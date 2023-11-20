@@ -23,7 +23,7 @@ public class RideTableFilter {
     public RideTableFilter(TableRowSorter<CarRidesModel> rowSorter) {
         rideCompoundMatcher = new RideCompoundMatcher(rowSorter);
         rowSorter.setRowFilter(rideCompoundMatcher);
-        carRidesPanel = rowSorter.getModel().getLinkedPannel();
+        carRidesPanel = rowSorter.getModel().getLinkedPanel();
     }
 
     public void filterCategory(List<Category> selectedItems) {

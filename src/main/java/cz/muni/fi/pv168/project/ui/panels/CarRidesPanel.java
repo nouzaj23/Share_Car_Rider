@@ -39,7 +39,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
                          CategoryModel categoryModel, CurrencyListModel currencyListModel) {
 
         this.carRidesModel = carRidesModel;
-        this.carRidesModel.setLinkedPannel(this);
+        this.carRidesModel.setLinkedPanel(this);
         this.categoryListModel = categoryListModel;
         this.currencyListModel = currencyListModel;
         this.categoryModel = categoryModel;

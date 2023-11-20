@@ -15,7 +15,7 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
 
     private List<Ride> rides;
 
-    private CarRidesPanel linkedPannel;
+    private CarRidesPanel linkedPanel;
 
     private final List<Column<Ride, ?>> columns = List.of(
             Column.editable("Name", String.class, Ride::getName, (ride, value) -> {
@@ -42,7 +42,7 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
             Column.readonly("To", String.class, Ride::getTo),
             Column.editable("Distance", Integer.class, Ride::getDistance, (ride, value) -> {
                 ride.setDistance(value);
-                linkedPannel.triggerStatsUpdate();
+                linkedPanel.triggerStatsUpdate();
             }),
             Column.editable("Hours", Float.class, Ride::getHours, (ride, value) -> {
                 ride.setHours(value);
@@ -102,12 +102,12 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         }
     }
 
-    public void setLinkedPannel(CarRidesPanel linkedPannel) {
-        this.linkedPannel = linkedPannel;
+    public void setLinkedPanel(CarRidesPanel linkedPanel) {
+        this.linkedPanel = linkedPanel;
     }
 
-    public CarRidesPanel getLinkedPannel() {
-        return this.linkedPannel;
+    public CarRidesPanel getLinkedPanel() {
+        return this.linkedPanel;
     }
 
     public void deleteRow(int rowIndex) {
@@ -120,7 +120,7 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         ride.setCommitted(true);
         rides.add(ride);
         fireTableRowsInserted(newRowIndex, newRowIndex);
-        linkedPannel.triggerStatsUpdate();
+        linkedPanel.triggerStatsUpdate();
     }
 
     public void updateRow(Ride ride) {
