@@ -109,7 +109,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         carRidesModel.addRow(entity);
         Category rideCategory = entity.getCategory();
         if (rideCategory != null) {
-            categoryListModel.updateRow(rideCategory.modifyDistanceFluent(entity.getDistance()));
+            rideCategory.modifyDistanceFluent(entity.getDistance());
             entity.getCategory().setRides(rideCategory.getRides() + 1);
         }
         triggerStatsUpdate();
@@ -120,7 +120,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         Ride ride = carRidesModel.getEntity(rowIndex);
         Category rideCategory = ride.getCategory();
         if (rideCategory != null) {
-            categoryListModel.updateRow(rideCategory.modifyDistanceFluent(-ride.getDistance()));
+            rideCategory.modifyDistanceFluent(-ride.getDistance());
             ride.getCategory().setRides(rideCategory.getRides() - 1);
         }
         carRidesModel.deleteRow(rowIndex);
@@ -133,15 +133,16 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         Category newCategory = newEntity.getCategory();
         if (oldCategory == newCategory) {
             if (newCategory != null) {
-                categoryListModel.updateRow(newCategory.modifyDistanceFluent(newEntity.getDistance() - oldRide.getDistance()));
+                newCategory.modifyDistanceFluent(newEntity.getDistance() - oldRide.getDistance());
+                newCategory.setDistance(newEntity.getDistance() - oldRide.getDistance());
             }
         } else {
             if (oldCategory != null) {
-                categoryListModel.updateRow(oldCategory.modifyDistanceFluent(-oldRide.getDistance()));
+                oldCategory.modifyDistanceFluent(-oldRide.getDistance());
                 oldCategory.setRides(oldCategory.getRides() - 1);
             }
             if (newCategory != null) {
-                categoryListModel.updateRow(newCategory.modifyDistanceFluent(newEntity.getDistance()));
+                newCategory.modifyDistanceFluent(newEntity.getDistance());
                 newCategory.setRides(newCategory.getRides() + 1);
             }
         }
