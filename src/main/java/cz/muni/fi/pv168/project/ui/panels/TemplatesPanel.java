@@ -1,9 +1,9 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
-import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
-import cz.muni.fi.pv168.project.model.Template;
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;

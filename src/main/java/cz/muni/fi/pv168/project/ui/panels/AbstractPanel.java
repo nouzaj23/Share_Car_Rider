@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 
 import javax.swing.*;
