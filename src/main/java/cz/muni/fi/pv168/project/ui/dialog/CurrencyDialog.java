@@ -2,11 +2,13 @@ package cz.muni.fi.pv168.project.ui.dialog;
 
 import cz.muni.fi.pv168.project.business.model.Currency;
 
-import javax.swing.*;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 public class CurrencyDialog extends EntityDialog<Currency>{
     private final JTextField name = new JTextField();
-    private final JTextField rate = new JTextField();
+    private final JSpinner rate = new JSpinner(new SpinnerNumberModel(1, Float.MIN_VALUE, Float.MAX_VALUE, 1));
     private final Currency currency;
 
     public CurrencyDialog(Currency currency) {
@@ -17,6 +19,7 @@ public class CurrencyDialog extends EntityDialog<Currency>{
 
     private void setValues() {
         name.setText(currency.getName());
+        rate.setValue(currency.getRate());
     }
 
     private void addFields() {
@@ -27,6 +30,7 @@ public class CurrencyDialog extends EntityDialog<Currency>{
     @Override
     Currency getEntity() {
         currency.setName(name.getText());
+        currency.setRate(((Number) rate.getValue()).floatValue());
         return currency;
     }
 
