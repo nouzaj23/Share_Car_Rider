@@ -10,8 +10,9 @@ public abstract class AbstractRide extends Entity {
     protected int distance;
     protected float hours;
 
-    public AbstractRide(String name, int passengers, Currency currency, Category category,
+    public AbstractRide(String guid, String name, int passengers, Currency currency, Category category,
                     String from, String to, int distance) {
+        super(guid);
         this.name = name;
         this.passengers = passengers;
         this.currency = currency;

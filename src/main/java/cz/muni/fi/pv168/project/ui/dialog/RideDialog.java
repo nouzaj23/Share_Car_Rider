@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
+import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
 import cz.muni.fi.pv168.project.business.model.*;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
@@ -24,11 +25,12 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JComboBox<Template> templates;
     private final CategoryModel categoryModel;
 
-    public RideDialog(Ride ride, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel,TemplateModel templateModel, CategoryModel categoryModel) {
+    public RideDialog(Ride ride, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel, TemplateModel templateModel, CategoryModel categoryModel) {
         this.categoryModel = categoryModel;
         this.ride = ride;
-        this.categoryJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         this.currencyJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
+        this.currencyJComboBox.setEditable(true);
+        this.categoryJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         this.categoryJComboBox.setEditable(true);
         this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
         templates.setSelectedItem(null);
@@ -91,7 +93,7 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setPassengers(((Number) passengers.getValue()).intValue());
         ride.setCurrency((Currency) currencyJComboBox.getSelectedItem());
         if (!(categoryJComboBox.getSelectedItem() instanceof Category)) {
-            Category newCategory = new Category(categoryJComboBox.getSelectedItem().toString());
+            Category newCategory = new Category(UuidGuidProvider.newGuidStatic(), categoryJComboBox.getSelectedItem().toString());
             categoryModel.addRow(newCategory);
             ride.setCategory(newCategory);
         } else {

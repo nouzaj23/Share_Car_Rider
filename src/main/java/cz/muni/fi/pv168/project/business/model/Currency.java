@@ -1,39 +1,39 @@
 package cz.muni.fi.pv168.project.business.model;
 
-public class Currency extends Entity {
+import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
 
+public class Currency extends Entity{
+    private String code;
+    private double conversionRatio;
 
-    private String name;
-    private float rate;
-
-
-    public Currency(String name, float rate) {
-        this.name = name;
-        this.rate = rate;
+    public Currency(String guid, String code, double conversionRatio) {
+        super(guid);
+        this.code = code;
+        this.conversionRatio = conversionRatio;
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public float getRate() {
-        return rate;
+    public double getConversionRatio() {
+        return conversionRatio;
     }
 
-    public void setRate(float rate) {
-        this.rate = rate;
+    public void setConversionRatio(double conversionRatio) {
+        this.conversionRatio = conversionRatio;
     }
 
-    public static Currency exampleCurrency(){
-        return new Currency("USD", 18);
+        public static Currency exampleCurrency(){
+        return new Currency(UuidGuidProvider.newGuidStatic(), "USD", 0.045);
     }
 
     @Override
     public String toString() {
-        return name;
+        return code;
     }
 }

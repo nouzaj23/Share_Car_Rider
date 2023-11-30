@@ -23,7 +23,7 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     private final TemplateModel templateModel;
     private final Consumer<Integer> onSelectionChange;
     private final CategoryListModel categoryListModel;
-    private CurrencyListModel currencyListModel;
+    private final CurrencyListModel currencyListModel;
 
     public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Consumer<Integer> onSelectionChange) {
         this.templateModel = templateModel;
@@ -63,7 +63,8 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
     @Override
     public EntityDialog<Template> getDialog() {
-        return new TemplateDialog(Template.exampleTemplate(), categoryListModel, currencyListModel);
+        // FIXME: here exception will be thrown if no currencies exist
+        return new TemplateDialog(Template.exampleTemplate(currencyListModel.getElementAt(0)), categoryListModel, currencyListModel);
     }
 
     @Override

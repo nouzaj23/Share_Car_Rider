@@ -23,9 +23,9 @@ public class MainWindow {
         var templateModel = new TemplateModel(dependencyProvider.getTemplateCrudService());
         var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
         var categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
-        var carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
         var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
         var currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
+        var carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService(), categoryModel);
 
         var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
         var categoriesPanel = createCategoriesPanel(categoryModel);

@@ -2,7 +2,7 @@ package cz.muni.fi.pv168.project;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import cz.muni.fi.pv168.project.ui.MainWindow;
-import cz.muni.fi.pv168.project.wiring.CommonDependencyProvider;
+import cz.muni.fi.pv168.project.wiring.ProductionDependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,20 +15,7 @@ public class Main {
         initFlatLightLafLookAndFeel();
 
         //initNimbusLookAndFeel();
-        EventQueue.invokeLater(() -> new MainWindow(new CommonDependencyProvider()).show());
-    }
-
-    private static void initNimbusLookAndFeel() {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Nimbus layout initialization failed", ex);
-        }
+        EventQueue.invokeLater(() -> new MainWindow(new ProductionDependencyProvider()).show());
     }
 
     private static void initFlatLightLafLookAndFeel() {

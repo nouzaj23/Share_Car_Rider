@@ -1,22 +1,22 @@
 package cz.muni.fi.pv168.project.business.service.crud;
 
+import java.util.List;
+
 import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
 
-import java.util.List;
-
 public class CurrencyCrudService implements CrudService<Currency> {
     private final Repository<Currency> currencyRepository;
     private final Validator<Currency> currencyValidator;
     private final GuidProvider guidProvider;
 
-    public CurrencyCrudService(Repository<Currency> currencyRepository, Validator<Currency> categoryValidator,
+    public CurrencyCrudService(Repository<Currency> currencyRepository, Validator<Currency> currencyValidator,
                                GuidProvider guidProvider) {
         this.currencyRepository = currencyRepository;
-        this.currencyValidator = categoryValidator;
+        this.currencyValidator = currencyValidator;
         this.guidProvider = guidProvider;
     }
     @Override
@@ -30,7 +30,7 @@ public class CurrencyCrudService implements CrudService<Currency> {
         if (newEntity.getGuid() == null || newEntity.getGuid().isBlank()) {
             newEntity.setGuid(guidProvider.newGuid());
         } else if (currencyRepository.existsByGuid(newEntity.getGuid())) {
-            throw new EntityAlreadyExistsException("Category with given guid already exists: " + newEntity.getGuid());
+            throw new EntityAlreadyExistsException("Currency with given guid already exists: " + newEntity.getGuid());
         }
 
         if (validationResult.isValid()) {

@@ -96,7 +96,8 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide(), categoryListModel, currencyListModel, templates, categoryModel);
+        // FIXME: here exception will be thrown if no currencies exist
+        return new RideDialog(Ride.exampleRide(currencyListModel.getElementAt(0)), categoryListModel, currencyListModel, templates, categoryModel);
     }
 
     @Override
@@ -113,10 +114,14 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void addRow(Ride entity) {
         carRidesModel.addRow(entity);
         Category rideCategory = entity.getCategory();
+
         if (rideCategory != null) {
             rideCategory.modifyDistanceFluent(entity.getDistance());
             entity.getCategory().setRides(rideCategory.getRides() + 1);
         }
+
+        categoryModel.refresh();
+
         triggerStatsUpdate();
     }
 
@@ -124,11 +129,15 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void deleteRow(int rowIndex) {
         Ride ride = carRidesModel.getEntity(rowIndex);
         Category rideCategory = ride.getCategory();
+
         if (rideCategory != null) {
             rideCategory.modifyDistanceFluent(-ride.getDistance());
             ride.getCategory().setRides(rideCategory.getRides() - 1);
         }
+
         carRidesModel.deleteRow(rowIndex);
+        categoryModel.refresh();
+
         triggerStatsUpdate();
     }
 
@@ -136,6 +145,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void editRow(Ride newEntity, Ride oldRide) {
         Category oldCategory = oldRide.getCategory();
         Category newCategory = newEntity.getCategory();
+
         if (oldCategory != newCategory) {
             if (oldCategory != null) {
                 oldCategory.modifyDistanceFluent(-oldRide.getDistance());
@@ -146,7 +156,10 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
                 newCategory.setRides(newCategory.getRides() + 1);
             }
         }
+
         carRidesModel.updateRow(newEntity);
+        categoryModel.refresh();
+
         triggerStatsUpdate();
     }
 

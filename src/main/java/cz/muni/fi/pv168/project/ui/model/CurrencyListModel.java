@@ -1,10 +1,10 @@
 package cz.muni.fi.pv168.project.ui.model;
 
-import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 
 import javax.swing.*;
+
 import java.util.ArrayList;
 import java.util.List;
 

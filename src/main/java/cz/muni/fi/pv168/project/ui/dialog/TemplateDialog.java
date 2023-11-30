@@ -20,8 +20,8 @@ public class TemplateDialog extends EntityDialog<Template>{
 
     public TemplateDialog(Template template, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel) {
         this.template = template;
-        this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         this.currencyModel = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
+        this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         setValues();
         addFields();
     }

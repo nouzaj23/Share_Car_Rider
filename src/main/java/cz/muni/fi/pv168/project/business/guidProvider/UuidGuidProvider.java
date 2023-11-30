@@ -8,4 +8,8 @@ public class UuidGuidProvider implements GuidProvider {
     public String newGuid() {
         return UUID.randomUUID().toString();
     }
+
+    public static String newGuidStatic() {
+        return UUID.randomUUID().toString();
+    }
 }

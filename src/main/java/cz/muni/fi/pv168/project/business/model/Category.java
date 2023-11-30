@@ -1,14 +1,21 @@
 package cz.muni.fi.pv168.project.business.model;
 
+import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
+
 public class Category extends Entity {
     private String name;
     private int distance;
     private int rides;
 
-    public Category(String name) {
+    public Category(String guid, String name) {
+        this(guid, name, 0, 0);
+    }
+
+    public Category(String guid, String name, int distance, int rides) {
+        super(guid);
         this.name = name;
-        this.distance = 0;
-        this.rides = 0;
+        this.distance = distance;
+        this.rides = rides;
     }
 
     public String getName() {
@@ -54,6 +61,6 @@ public class Category extends Entity {
     }
 
     public static Category exampleCategory(){
-        return new Category("Sluzobka");
+        return new Category(UuidGuidProvider.newGuidStatic(), "Sluzobka");
     }
 }
