@@ -3,6 +3,7 @@ package cz.muni.fi.pv168.project.ui.panels;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.CurrencyDialog;
+import cz.muni.fi.pv168.project.ui.dialog.CurrencyEditDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.model.CurrencyModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
@@ -52,6 +53,11 @@ public class CurrencyPanel extends AbstractPanel<Currency> {
     @Override
     public EntityDialog<Currency> getDialog(Currency entity) {
         return new CurrencyDialog(entity);
+    }
+
+    @Override
+    public EntityDialog<Currency> getEditDialog(Currency entity) {
+        return new CurrencyEditDialog(entity);
     }
 
     @Override
