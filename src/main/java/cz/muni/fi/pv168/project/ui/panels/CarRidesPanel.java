@@ -105,6 +105,11 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     }
 
     @Override
+    public EntityDialog<Ride> getEditDialog (Ride entity) {
+        return getDialog(entity);
+    }
+
+    @Override
     public void addRow(Ride entity) {
         carRidesModel.addRow(entity);
         Category rideCategory = entity.getCategory();
