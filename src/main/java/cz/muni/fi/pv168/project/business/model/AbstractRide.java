@@ -1,6 +1,6 @@
-package cz.muni.fi.pv168.project.model;
+package cz.muni.fi.pv168.project.business.model;
 
-public abstract class AbstractRide {
+public abstract class AbstractRide extends Entity {
     protected String name;
     protected int passengers;
     protected Currency currency;

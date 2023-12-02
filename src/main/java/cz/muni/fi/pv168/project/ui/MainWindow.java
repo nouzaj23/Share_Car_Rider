@@ -1,44 +1,30 @@
 package cz.muni.fi.pv168.project.ui;
 
-import cz.muni.fi.pv168.project.data.TestDataGenerator;
-import cz.muni.fi.pv168.project.export.CSVexport;
-import cz.muni.fi.pv168.project.export.CSVimport;
-import cz.muni.fi.pv168.project.export.JsonExport;
-import cz.muni.fi.pv168.project.export.JsonImport;
-import cz.muni.fi.pv168.project.export.service.ExportService;
-import cz.muni.fi.pv168.project.export.service.GenericExportService;
-import cz.muni.fi.pv168.project.export.service.GenericImportService;
-import cz.muni.fi.pv168.project.export.service.ImportService;
-import cz.muni.fi.pv168.project.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
-import cz.muni.fi.pv168.project.ui.actions.ExportAction;
-import cz.muni.fi.pv168.project.ui.actions.ImportAction;
 import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 import cz.muni.fi.pv168.project.ui.panels.CategoriesPanel;
 import cz.muni.fi.pv168.project.ui.panels.TemplatesPanel;
+import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class MainWindow {
 
     private JFrame frame;
 
-    private ExportService exportService;
-    private ImportService importService;
-
-    public MainWindow() {
+    public MainWindow(DependencyProvider dependencyProvider) {
         initializeFrame();
+        frame.setJMenuBar(createMenuBar());
 
-        var templateModel = new TemplateModel(new ArrayList<>());
-        var categoryListModel = new CategoryListModel(TestDataGenerator.CATEGORIES);
-        var categoryModel = new CategoryModel(categoryListModel);
-        var carRideModel = new CarRidesModel(new ArrayList<>());
+        var templateModel = new TemplateModel(dependencyProvider.getTemplateCrudService());
+        var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
+        var categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
+        var carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
         var currencyListModel = new CurrencyListModel(Arrays.stream(Currency.values()).toList());
 
         var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
@@ -47,10 +33,6 @@ public class MainWindow {
 
         var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel);
 
-        this.exportService = new GenericExportService(carRideModel, templateModel, categoryModel, List.of(new CSVexport(), new JsonExport()));
-        this.importService = new GenericImportService(carRideModel, categoryModel, templateModel, List.of(new CSVimport(), new JsonImport()));
-
-        frame.setJMenuBar(createMenuBar(exportService, importService));
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.pack();
     }
@@ -62,20 +44,16 @@ public class MainWindow {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private JMenuBar createMenuBar(ExportService exportService, ImportService importService) {
+    private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
-        JMenuItem exportMenuItem = new JMenuItem(new ExportAction(frame, exportService));
-        JMenuItem importMenuItem = new JMenuItem(new ImportAction(frame, importService));
         fileMenu.add(openMenuItem);
         fileMenu.add(exitMenuItem);
         fileMenu.add(darkModeToggle);
-        fileMenu.add(exportMenuItem);
-        fileMenu.add(importMenuItem);
         menuBar.add(fileMenu);
 
         JMenu helpMenu = new JMenu("Help");

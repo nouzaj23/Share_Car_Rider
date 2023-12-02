@@ -1,8 +1,9 @@
 package cz.muni.fi.pv168.project.ui.model;
 
-import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 
 import javax.swing.table.AbstractTableModel;
@@ -14,48 +15,28 @@ import java.util.List;
 public class CarRidesModel extends AbstractTableModel implements EntityTableModel<Ride> {
 
     private List<Ride> rides;
-
-    private CarRidesPanel linkedPannel;
+    private final CrudService<Ride> rideCrudService;
+    private CarRidesPanel linkedPanel;
 
     private final List<Column<Ride, ?>> columns = List.of(
-            Column.editable("Name", String.class, Ride::getName, (ride, value) -> {
-                ride.setName(value);
-                triggerSafeUpdate(ride);
-            }),
-            Column.editable("Passengers", Integer.class, Ride::getPassengers, (ride, value) -> {
-                ride.setPassengers(value);
-                triggerSafeUpdate(ride);
-            }),
-            Column.editable("Currency", Currency.class, Ride::getCurrency, (ride, value) -> {
-                ride.setCurrency(value);
-                triggerSafeUpdate(ride);
-            }),
+            Column.editable("Name", String.class, Ride::getName, Ride::setName),
+            Column.editable("Passengers", Integer.class, Ride::getPassengers, Ride::setPassengers),
+            Column.editable("Currency", Currency.class, Ride::getCurrency, Ride::setCurrency),
             Column.editable("Fuel Expenses", Float.class, Ride::getFuelExpenses, (ride, value) -> {
                 ride.setFuelExpenses(value);
-                triggerSafeUpdate(ride);
+                linkedPanel.triggerStatsUpdate();
             }),
-            Column.editable("Category", Category.class, Ride::getCategory, (ride, value) -> {
-                ride.setCategory(value);
-                triggerSafeUpdate(ride);
-            }),
+            Column.editable("Category", Category.class, Ride::getCategory, Ride::setCategory),
             Column.readonly("From", String.class, Ride::getFrom),
             Column.readonly("To", String.class, Ride::getTo),
-            Column.editable("Distance", Integer.class, Ride::getDistance, (ride, value) -> {
-                ride.setDistance(value);
-                linkedPannel.triggerStatsUpdate();
-            }),
-            Column.editable("Hours", Float.class, Ride::getHours, (ride, value) -> {
-                ride.setHours(value);
-                triggerSafeUpdate(ride);
-            }),
-            Column.editable("Date", LocalDate.class, Ride::getDate, (ride, value) -> {
-                ride.setDate(value);
-                triggerSafeUpdate(ride);
-            })
+            Column.editable("Distance", Integer.class, Ride::getDistance, Ride::setDistance),
+            Column.editable("Hours", Float.class, Ride::getHours, Ride::setHours),
+            Column.readonly("Date", LocalDate.class, Ride::getDate)
     );
 
-    public CarRidesModel(Collection<Ride> rides) {
-        this.rides = new ArrayList<>(rides);
+    public CarRidesModel(CrudService<Ride> rideCrudService) {
+        this.rideCrudService = rideCrudService;
+        this.rides = new ArrayList<>(rideCrudService.findAll());
     }
 
     @Override
@@ -99,41 +80,44 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         if (value != null) {
             var ride = getEntity(rowIndex);
             columns.get(columnIndex).setValue(value, ride);
+            updateRow(ride);
         }
     }
 
-    public void setLinkedPannel(CarRidesPanel linkedPannel) {
-        this.linkedPannel = linkedPannel;
+    public void setLinkedPanel(CarRidesPanel linkedPanel) {
+        this.linkedPanel = linkedPanel;
     }
 
-    public CarRidesPanel getLinkedPannel() {
-        return this.linkedPannel;
+    public CarRidesPanel getLinkedPanel() {
+        return this.linkedPanel;
     }
 
     public void deleteRow(int rowIndex) {
+        var rideToBeDeleted = getEntity(rowIndex);
+        rideCrudService.deleteByGuid(rideToBeDeleted.getGuid());
         rides.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
     public void addRow(Ride ride) {
+        rideCrudService.create(ride)
+                .intoException();
         int newRowIndex = rides.size();
         ride.setCommitted(true);
         rides.add(ride);
         fireTableRowsInserted(newRowIndex, newRowIndex);
-        linkedPannel.triggerStatsUpdate();
     }
 
     public void updateRow(Ride ride) {
+        rideCrudService.update(ride)
+                .intoException();
         int rowIndex = rides.indexOf(ride);
         fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
-    private void triggerSafeUpdate(Ride ride) {
-        if (ride != null) {
-            int rowIndex = rides.indexOf(ride);
-            fireTableDataChanged();
-            fireTableRowsUpdated(rowIndex, rowIndex);
-        }
+    public void refresh() {
+        this.rides = new ArrayList<>(rideCrudService.findAll());
+        fireTableDataChanged();
     }
 
     public List<Ride> getList() {

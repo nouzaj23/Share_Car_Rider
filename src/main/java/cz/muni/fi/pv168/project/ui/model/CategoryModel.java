@@ -1,11 +1,15 @@
 package cz.muni.fi.pv168.project.ui.model;
 
-import cz.muni.fi.pv168.project.model.Category;
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryModel extends AbstractTableModel implements EntityTableModel<Category> {
+    private List<Category> categories;
+    private final CrudService<Category> categoryCrudService;
     private final CategoryListModel categoryListModel;
     private final List<Column<Category, ?>> columns = List.of(
             Column.editable("Name", String.class, Category::getName, Category::setName),
@@ -13,13 +17,15 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
             Column.readonly("Distance", Integer.class, Category::getDistance)
     );
 
-    public CategoryModel(CategoryListModel categoryListModel) {
+    public CategoryModel(CrudService<Category> categoryCrudService, CategoryListModel categoryListModel) {
+        this.categoryCrudService = categoryCrudService;
+        this.categories = new ArrayList<>(categoryCrudService.findAll());
         this.categoryListModel = categoryListModel;
     }
 
     @Override
     public int getRowCount() {
-        return categoryListModel.getSize();
+        return categories.size();
     }
 
     @Override
@@ -32,10 +38,9 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
         var category = getEntity(rowIndex);
         return columns.get(columnIndex).getValue((category));
     }
-
     @Override
     public Category getEntity(int rowIndex) {
-        return categoryListModel.getElementAt(rowIndex);
+        return categories.get(rowIndex);
     }
 
     @Override
@@ -58,23 +63,39 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
         if (value != null) {
             var category = getEntity(rowIndex);
             columns.get(columnIndex).setValue(value, category);
+            updateRow(category);
+            categoryListModel.refresh();
         }
     }
 
     public void deleteRow(int rowIndex) {
-        categoryListModel.deleteRow(rowIndex);
+        var categoryToBeDeleted = getEntity(rowIndex);
+        categoryCrudService.deleteByGuid(categoryToBeDeleted.getGuid());
+        categories.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
+        categoryListModel.refresh();
     }
 
     public void addRow(Category category) {
-        int newRowIndex = categoryListModel.getSize();
-        categoryListModel.addRow(category);
+        categoryCrudService.create(category)
+                .intoException();
+        int newRowIndex = categories.size();
+        categories.add(category);
         fireTableRowsInserted(newRowIndex, newRowIndex);
+        categoryListModel.refresh();
     }
 
     public void updateRow(Category category) {
-        int rowIndex = categoryListModel.indexOf(category);
+        categoryCrudService.update(category)
+                .intoException();
+        int rowIndex = categories.indexOf(category);
         fireTableRowsUpdated(rowIndex, rowIndex);
+        categoryListModel.refresh();
+    }
+
+    public void refresh() {
+        this.categories = new ArrayList<>(categoryCrudService.findAll());
+        fireTableDataChanged();
     }
 
     public List<Category> getList(){
