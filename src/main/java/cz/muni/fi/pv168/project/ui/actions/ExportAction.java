@@ -32,7 +32,6 @@ public final class ExportAction extends AbstractAction {
             if (filter instanceof Filter) {
                 exportFile = ((Filter) filter).decorate(exportFile);
             }
-
             exportService.exportData(exportFile);
 
             JOptionPane.showMessageDialog(frame, "Export has successfully finished.");

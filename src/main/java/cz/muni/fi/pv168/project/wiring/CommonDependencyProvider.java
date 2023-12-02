@@ -12,7 +12,12 @@ import cz.muni.fi.pv168.project.business.service.crud.TemplateCrudService;
 import cz.muni.fi.pv168.project.business.service.validation.CategoryValidator;
 import cz.muni.fi.pv168.project.business.service.validation.RideValidator;
 import cz.muni.fi.pv168.project.business.service.validation.TemplateValidator;
+import cz.muni.fi.pv168.project.export.CSVimport;
+import cz.muni.fi.pv168.project.export.JsonImport;
+import cz.muni.fi.pv168.project.export.service.GenericImportService;
 import cz.muni.fi.pv168.project.storage.memory.InMemoryRepository;
+
+import java.util.List;
 
 /**
  * Common dependency provider for both production and test environment.
@@ -25,6 +30,7 @@ public class CommonDependencyProvider implements DependencyProvider {
     private final CrudService<Ride> rideCrudService;
     private final CrudService<Category> categoryCrudService;
     private final CrudService<Template> templateCrudService;
+    private final GenericImportService genericImportService;
 
     public CommonDependencyProvider() {
         this.rideRepository = new InMemoryRepository<>();
@@ -37,6 +43,7 @@ public class CommonDependencyProvider implements DependencyProvider {
         this.rideCrudService = new RideCrudService(rideRepository, rideValidator, guidProvider);
         this.categoryCrudService = new CategoryCrudService(categoryRepository, categoryValidator, guidProvider);
         this.templateCrudService = new TemplateCrudService(templateRepository, templateValidator, guidProvider);
+        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, guidProvider, List.of(new JsonImport(), new CSVimport()));
     }
     @Override
     public Repository<Ride> getRideRepository() {
@@ -66,5 +73,10 @@ public class CommonDependencyProvider implements DependencyProvider {
     @Override
     public CrudService<Template> getTemplateCrudService() {
         return templateCrudService;
+    }
+
+    @Override
+    public GenericImportService getGenericImportService() {
+        return genericImportService;
     }
 }

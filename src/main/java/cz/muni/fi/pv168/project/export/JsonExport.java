@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchExporter;
 import cz.muni.fi.pv168.project.export.format.Format;
-import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
+
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import cz.muni.fi.pv168.project.model.Template;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

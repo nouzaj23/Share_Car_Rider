@@ -13,11 +13,15 @@ public final class ImportAction extends AbstractAction {
 
     private final JFrame frame;
     private final ImportService importService;
+    private final Runnable refresh;
 
     public ImportAction(
             JFrame frame,
-            ImportService importService) {
+            ImportService importService,
+            Runnable refresh) {
+
         super("Import");
+        this.refresh = refresh;
         this.frame = Objects.requireNonNull(frame);
         this.importService = Objects.requireNonNull(importService);
 
@@ -38,6 +42,8 @@ public final class ImportAction extends AbstractAction {
             File importFile = fileChooser.getSelectedFile();
 
             importService.importData(importFile.getAbsolutePath());
+
+            refresh.run();
 
             JOptionPane.showMessageDialog(frame, "Import was done");
         }

@@ -53,8 +53,8 @@ public class RideDialog extends EntityDialog<Ride>{
         JButton addTemplate = new JButton("Add Template");
         addTemplate.addActionListener(e -> {
             templateModel.addRow(getEntity().extractTemplate());
+            addTemplate.setEnabled(false);
         });
-
         addButton(addTemplate);
     }
     private void setValues() {

@@ -1,11 +1,11 @@
 package cz.muni.fi.pv168.project.export;
 
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchImporter;
 import cz.muni.fi.pv168.project.export.format.Format;
-import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Ride;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,6 +41,8 @@ public class CSVimport implements BatchImporter {
     private Ride parseRide(HashMap<String, Category> categories, String line) {
         var fields = line.split(",");
         var category = categories.computeIfAbsent(fields[4], num -> new Category(fields[4]));
+        category.setRides(category.getRides() + 1);
+        category.modifyDistanceFluent(Integer.parseInt(fields[7]));
 
         Ride ride = new Ride(
                 fields[0],
@@ -54,6 +56,7 @@ public class CSVimport implements BatchImporter {
         );
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy");
         ride.setDate(LocalDate.parse(fields[8], formatter));
+        ride.setGuid(fields[9]);
         return ride;
     }
 }

@@ -97,14 +97,4 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
         this.categories = new ArrayList<>(categoryCrudService.findAll());
         fireTableDataChanged();
     }
-
-    public List<Category> getList(){
-        return categoryListModel.getList();
-    }
-
-    public void deleteAll(){
-        while ( getRowCount() != 0 ){
-            deleteRow(0);
-        }
-    }
 }
