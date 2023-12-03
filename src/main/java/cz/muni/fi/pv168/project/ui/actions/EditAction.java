@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
-import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.model.EntityTableModel;
 import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
@@ -39,7 +39,7 @@ public class EditAction<E> extends AbstractAction {
         if (entity instanceof Ride oldRide) {
             Ride oldRideCopy = 
             new Ride(
-                UuidGuidProvider.newGuidStatic(),
+                GuidProvider.newGuid(),
                 oldRide.getName(), 
                 oldRide.getPassengers(), 
                 oldRide.getCurrency(), 

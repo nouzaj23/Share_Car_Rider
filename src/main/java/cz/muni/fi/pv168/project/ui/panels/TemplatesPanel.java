@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
@@ -63,8 +64,11 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
     @Override
     public EntityDialog<Template> getDialog() {
-        // FIXME: here exception will be thrown if no currencies exist
-        return new TemplateDialog(Template.exampleTemplate(currencyListModel.getElementAt(0)), categoryListModel, currencyListModel);
+        return new TemplateDialog(
+            new Template(GuidProvider.newGuid(), "", 0, null, null, "", "", 0),
+            categoryListModel,
+            currencyListModel
+        );
     }
 
     @Override

@@ -1,6 +1,5 @@
 package cz.muni.fi.pv168.project.wiring;
 
-import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
@@ -86,11 +85,10 @@ public class CommonDependencyProvider implements DependencyProvider {
         var categoryValidator = new CategoryValidator();
         var templateValidator = new TemplateValidator();
         var currencyValidator = new CurrencyValidator();
-        var guidProvider = new UuidGuidProvider();
-        this.categoryCrudService = new CategoryCrudService(categories, categoryValidator, guidProvider);
-        this.templateCrudService = new TemplateCrudService(templates, templateValidator, guidProvider);
-        this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator, guidProvider);
-        this.rideCrudService = new RideCrudService(rides, rideValidator, (CategorySqlRepository) categories, guidProvider);
+        this.categoryCrudService = new CategoryCrudService(categories, categoryValidator);
+        this.templateCrudService = new TemplateCrudService(templates, templateValidator);
+        this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator);
+        this.rideCrudService = new RideCrudService(rides, rideValidator, (CategorySqlRepository) categories);
     }
 
     @Override

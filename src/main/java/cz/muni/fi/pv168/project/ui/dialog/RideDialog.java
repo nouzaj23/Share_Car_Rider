@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
-import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.*;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
@@ -93,7 +93,7 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setPassengers(((Number) passengers.getValue()).intValue());
         ride.setCurrency((Currency) currencyJComboBox.getSelectedItem());
         if (!(categoryJComboBox.getSelectedItem() instanceof Category)) {
-            Category newCategory = new Category(UuidGuidProvider.newGuidStatic(), categoryJComboBox.getSelectedItem().toString());
+            Category newCategory = new Category(GuidProvider.newGuid(), categoryJComboBox.getSelectedItem().toString());
             categoryModel.addRow(newCategory);
             ride.setCategory(newCategory);
         } else {

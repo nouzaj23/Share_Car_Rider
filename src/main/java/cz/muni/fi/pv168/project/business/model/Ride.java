@@ -2,7 +2,7 @@ package cz.muni.fi.pv168.project.business.model;
 
 import java.time.LocalDate;
 
-import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 
 public class Ride extends AbstractRide{
     private LocalDate date;
@@ -18,11 +18,7 @@ public class Ride extends AbstractRide{
     }
 
     public Template extractTemplate() {
-        return new Template(UuidGuidProvider.newGuidStatic(), name, passengers, currency, category, from, to, distance);
-    }
-
-    public static Ride exampleRide(Currency currency) {
-        return new Ride(UuidGuidProvider.newGuidStatic(), "Sluzobka", 3, currency, 157, null, "Doma", "Práce", 2, LocalDate.now());
+        return new Template(GuidProvider.newGuid(), name, passengers, currency, category, from, to, distance);
     }
 
     public LocalDate getDate() {

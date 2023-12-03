@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
@@ -19,6 +20,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -96,8 +98,13 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        // FIXME: here exception will be thrown if no currencies exist
-        return new RideDialog(Ride.exampleRide(currencyListModel.getElementAt(0)), categoryListModel, currencyListModel, templates, categoryModel);
+        return new RideDialog(
+            new Ride(GuidProvider.newGuid(), "", 0, null, 0, null, "", "", 0, LocalDate.now()),
+            categoryListModel,
+            currencyListModel,
+            templates,
+            categoryModel
+        );    
     }
 
     @Override

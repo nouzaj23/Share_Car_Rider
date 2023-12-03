@@ -1,7 +1,5 @@
 package cz.muni.fi.pv168.project.business.model;
 
-import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
-
 public class Currency extends Entity{
     private String code;
     private double conversionRatio;
@@ -26,10 +24,6 @@ public class Currency extends Entity{
 
     public void setConversionRatio(double conversionRatio) {
         this.conversionRatio = conversionRatio;
-    }
-
-        public static Currency exampleCurrency(){
-        return new Currency(UuidGuidProvider.newGuidStatic(), "USD", 0.045);
     }
 
     @Override

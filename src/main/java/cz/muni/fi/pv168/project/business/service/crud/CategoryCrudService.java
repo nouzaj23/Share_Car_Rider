@@ -11,13 +11,10 @@ import java.util.List;
 public class CategoryCrudService implements CrudService<Category> {
     private final Repository<Category> categoryRepository;
     private final Validator<Category> categoryValidator;
-    private final GuidProvider guidProvider;
 
-    public CategoryCrudService(Repository<Category> categoryRepository, Validator<Category> categoryValidator,
-                               GuidProvider guidProvider) {
+    public CategoryCrudService(Repository<Category> categoryRepository, Validator<Category> categoryValidator) {
         this.categoryRepository = categoryRepository;
         this.categoryValidator = categoryValidator;
-        this.guidProvider = guidProvider;
     }
     @Override
     public List<Category> findAll() {
@@ -28,7 +25,7 @@ public class CategoryCrudService implements CrudService<Category> {
     public ValidationResult create(Category newEntity) {
         var validationResult = categoryValidator.validate(newEntity);
         if (newEntity.getGuid() == null || newEntity.getGuid().isBlank()) {
-            newEntity.setGuid(guidProvider.newGuid());
+            newEntity.setGuid(GuidProvider.newGuid());
         } else if (categoryRepository.existsByGuid(newEntity.getGuid())) {
             throw new EntityAlreadyExistsException("Category with given guid already exists: " + newEntity.getGuid());
         }

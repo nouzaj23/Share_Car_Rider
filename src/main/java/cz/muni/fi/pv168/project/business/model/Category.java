@@ -1,7 +1,5 @@
 package cz.muni.fi.pv168.project.business.model;
 
-import cz.muni.fi.pv168.project.business.guidProvider.UuidGuidProvider;
-
 public class Category extends Entity {
     private String name;
     private int distance;
@@ -58,9 +56,5 @@ public class Category extends Entity {
     @Override
     public String toString() {
         return name;
-    }
-
-    public static Category exampleCategory(){
-        return new Category(UuidGuidProvider.newGuidStatic(), "Sluzobka");
     }
 }

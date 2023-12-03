@@ -1,5 +1,7 @@
 package cz.muni.fi.pv168.project.business.guidProvider;
 
+import java.util.UUID;
+
 /**
  * Provider of globally unique identifiers for new entities.
  *
@@ -8,5 +10,7 @@ package cz.muni.fi.pv168.project.business.guidProvider;
  */
 public interface GuidProvider {
 
-    String newGuid();
+    static String newGuid() {
+        return UUID.randomUUID().toString();
+    }
 }

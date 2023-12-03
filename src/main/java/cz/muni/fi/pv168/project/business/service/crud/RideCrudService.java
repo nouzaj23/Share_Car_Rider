@@ -14,14 +14,11 @@ public class RideCrudService implements CrudService<Ride> {
     private final Repository<Ride> rideRepository;
     private final CategorySqlRepository categoryRepository;
     private final Validator<Ride> rideValidator;
-    private final GuidProvider guidProvider;
 
-    public RideCrudService(Repository<Ride> rideRepository, Validator<Ride> rideValidator, CategorySqlRepository categoryRepository,
-                           GuidProvider guidProvider) {
+    public RideCrudService(Repository<Ride> rideRepository, Validator<Ride> rideValidator, CategorySqlRepository categoryRepository) {
         this.rideRepository = rideRepository;
         this.categoryRepository = categoryRepository;
         this.rideValidator = rideValidator;
-        this.guidProvider = guidProvider;
     }
     @Override
     public List<Ride> findAll() {
@@ -32,7 +29,7 @@ public class RideCrudService implements CrudService<Ride> {
     public ValidationResult create(Ride newEntity) {
         var validationResult = rideValidator.validate(newEntity);
         if (newEntity.getGuid() == null || newEntity.getGuid().isBlank()) {
-            newEntity.setGuid(guidProvider.newGuid());
+            newEntity.setGuid(GuidProvider.newGuid());
         } else if (rideRepository.existsByGuid(newEntity.getGuid())) {
             throw new EntityAlreadyExistsException("Ride with given guid already exists: " + newEntity.getGuid());
         }
