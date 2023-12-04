@@ -19,7 +19,7 @@ public class Ride extends AbstractRide{
     }
 
     public static Ride exampleRide() {
-        return new Ride("Sluzobka", 3, Currency.CZK, 157, null, "Doma", "Práce", 2);
+        return new Ride("Sluzobka", 3, null,157, null, "Doma", "Práce", 2);
     }
 
     public LocalDate getDate() {

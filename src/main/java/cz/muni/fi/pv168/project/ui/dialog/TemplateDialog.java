@@ -10,7 +10,7 @@ import javax.swing.*;
 public class TemplateDialog extends EntityDialog<Template>{
     private final JTextField name = new JTextField();
     private final JSpinner passengers = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-    private final ComboBoxModel<Currency> currencyModel = new DefaultComboBoxModel<>(Currency.values());
+    private final JComboBox<Currency> currencyModel;
     private final JComboBox<Category> categoryModel;
     private final JTextField from = new JTextField();
     private final JTextField to = new JTextField();
@@ -18,9 +18,10 @@ public class TemplateDialog extends EntityDialog<Template>{
     private final JSpinner hours = new JSpinner(new SpinnerNumberModel(1, 0, Float.MAX_VALUE, 0.1));
     private final Template template;
 
-    public TemplateDialog(Template template, ListModel<Category> categoryListModel) {
+    public TemplateDialog(Template template, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel) {
         this.template = template;
         this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        this.currencyModel = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
         setValues();
         addFields();
     }
@@ -38,7 +39,7 @@ public class TemplateDialog extends EntityDialog<Template>{
     private void addFields() {
         add("Template name:", name);
         add("Number of passengers:", passengers);
-        add("Currency:", new JComboBox<>(currencyModel));
+        add("Currency:", currencyModel);
         add("Category:", categoryModel);
         add("From:", from);
         add("To:", to);

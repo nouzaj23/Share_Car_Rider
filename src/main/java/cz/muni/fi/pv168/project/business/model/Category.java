@@ -6,7 +6,6 @@ public class Category extends Entity {
     private int rides;
 
     public Category(String name) {
-
         this.name = name;
         this.distance = 0;
         this.rides = 0;

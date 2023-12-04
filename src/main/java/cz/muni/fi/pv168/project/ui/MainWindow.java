@@ -11,6 +11,7 @@ import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 import cz.muni.fi.pv168.project.ui.panels.CategoriesPanel;
+import cz.muni.fi.pv168.project.ui.panels.CurrencyPanel;
 import cz.muni.fi.pv168.project.ui.panels.TemplatesPanel;
 import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
@@ -37,13 +38,15 @@ public class MainWindow {
         var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
         this.categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
         this.carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
-        var currencyListModel = new CurrencyListModel(Arrays.stream(Currency.values()).toList());
+        var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
+        var currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
 
-        this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
-        this.categoriesPanel = createCategoriesPanel(categoryModel);
-        this.templatesPanel = createTemplatesPanel(templateModel, categoryListModel);
+        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
+        var categoriesPanel = createCategoriesPanel(categoryModel);
+        var templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel);
+        var currencyPanel = createCurrencyPanel(currencyModel);
 
-        var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel);
+        var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel, currencyPanel);
 
         frame.setJMenuBar(createMenuBar(dependencyProvider));
         frame.add(tabbedPane, BorderLayout.CENTER);
@@ -94,15 +97,20 @@ public class MainWindow {
         return new CategoriesPanel(categoryModel, this::changeActionsState);
     }
 
-    private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel) {
-        return new TemplatesPanel(templateModel, categoryListModel, this::changeActionsState);
+    private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel) {
+        return new TemplatesPanel(templateModel, categoryListModel, currencyListModel, this::changeActionsState);
     }
 
-    private JTabbedPane createTabbedPane(CarRidesPanel carRidesPanel, CategoriesPanel categoriesPanel, TemplatesPanel templatesPanel) {
+    private CurrencyPanel createCurrencyPanel(CurrencyModel currencyModel) {
+        return new CurrencyPanel( currencyModel, this::changeActionsState);
+    }
+
+    private JTabbedPane createTabbedPane(CarRidesPanel carRidesPanel, CategoriesPanel categoriesPanel, TemplatesPanel templatesPanel, CurrencyPanel currencyPanel) {
         var tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Car Rides", carRidesPanel);
         tabbedPane.addTab("Categories", categoriesPanel);
         tabbedPane.addTab("Templates", templatesPanel);
+        tabbedPane.addTab("Currency", currencyPanel);
         return tabbedPane;
     }
 

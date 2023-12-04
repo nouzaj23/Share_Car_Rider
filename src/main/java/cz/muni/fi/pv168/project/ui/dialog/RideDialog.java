@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class RideDialog extends EntityDialog<Ride>{
     private final JTextField name = new JTextField();
     private final JSpinner passengers = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-    private final ComboBoxModel<Currency> currencyModel = new DefaultComboBoxModel<>(Currency.values());
+    private final JComboBox<Currency> currencyJComboBox;
     private final JSpinner fuelExpenses = new JSpinner(new SpinnerNumberModel(1, - Float.MAX_VALUE, Float.MAX_VALUE, 0.1));
     private final JComboBox<Category> categoryJComboBox;
     private final JTextField from = new JTextField();
@@ -24,10 +24,11 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JComboBox<Template> templates;
     private final CategoryModel categoryModel;
 
-    public RideDialog(Ride ride, ListModel<Category> categoryListModel, TemplateModel templateModel, CategoryModel categoryModel) {
+    public RideDialog(Ride ride, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel,TemplateModel templateModel, CategoryModel categoryModel) {
         this.categoryModel = categoryModel;
         this.ride = ride;
         this.categoryJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        this.currencyJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
         this.categoryJComboBox.setEditable(true);
         this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
         templates.setSelectedItem(null);
@@ -38,7 +39,7 @@ public class RideDialog extends EntityDialog<Ride>{
             if (selectedTemplate != null) {
                 name.setText(selectedTemplate.getName());
                 passengers.setValue(selectedTemplate.getPassengers());
-                currencyModel.setSelectedItem(selectedTemplate.getCurrency());
+                currencyJComboBox.setSelectedItem(selectedTemplate.getCurrency());
                 categoryJComboBox.setSelectedItem(selectedTemplate.getCategory());
                 from.setText(selectedTemplate.getFrom());
                 to.setText(selectedTemplate.getTo());
@@ -60,7 +61,7 @@ public class RideDialog extends EntityDialog<Ride>{
     private void setValues() {
         name.setText(ride.getName());
         passengers.setValue(ride.getPassengers());
-        currencyModel.setSelectedItem(ride.getCurrency());
+        currencyJComboBox.setSelectedItem(ride.getCurrency());
         categoryJComboBox.setSelectedItem(ride.getCategory());
         fuelExpenses.setValue(ride.getFuelExpenses());
         from.setText(ride.getFrom());
@@ -74,7 +75,7 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Templates", templates);
         add("Ride name:", name);
         add("Number of passengers:", passengers);
-        add("Currency:", new JComboBox<>(currencyModel));
+        add("Currency:", currencyJComboBox);
         add("Fuel Expenses:", fuelExpenses);
         add("Category:", categoryJComboBox);
         add("From:", from);
@@ -88,7 +89,7 @@ public class RideDialog extends EntityDialog<Ride>{
     Ride getEntity() {
         ride.setName(name.getText());
         ride.setPassengers(((Number) passengers.getValue()).intValue());
-        ride.setCurrency((Currency) currencyModel.getSelectedItem());
+        ride.setCurrency((Currency) currencyJComboBox.getSelectedItem());
         if (!(categoryJComboBox.getSelectedItem() instanceof Category)) {
             Category newCategory = new Category(categoryJComboBox.getSelectedItem().toString());
             categoryModel.addRow(newCategory);

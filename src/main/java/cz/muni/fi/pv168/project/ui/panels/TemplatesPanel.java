@@ -8,6 +8,7 @@ import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
+import cz.muni.fi.pv168.project.ui.model.CurrencyListModel;
 import cz.muni.fi.pv168.project.ui.model.TemplateModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
@@ -22,11 +23,13 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     private final TemplateModel templateModel;
     private final Consumer<Integer> onSelectionChange;
     private final CategoryListModel categoryListModel;
+    private CurrencyListModel currencyListModel;
 
-    public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, Consumer<Integer> onSelectionChange) {
+    public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Consumer<Integer> onSelectionChange) {
         this.templateModel = templateModel;
         this.categoryListModel = categoryListModel;
         this.onSelectionChange = onSelectionChange;
+        this.currencyListModel = currencyListModel;
 
         setLayout(new BorderLayout());
 
@@ -41,7 +44,7 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        var currencyComboBox = new JComboBox<>(Currency.values());
+        var currencyComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
         table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
@@ -60,12 +63,17 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
     @Override
     public EntityDialog<Template> getDialog() {
-        return new TemplateDialog(Template.exampleTemplate(), categoryListModel);
+        return new TemplateDialog(Template.exampleTemplate(), categoryListModel, currencyListModel);
     }
 
     @Override
     public EntityDialog<Template> getDialog(Template entity) {
-        return new TemplateDialog(entity, categoryListModel);
+        return new TemplateDialog(entity, categoryListModel, currencyListModel);
+    }
+
+    @Override
+    public EntityDialog<Template> getEditDialog(Template entity) {
+        return getDialog(entity);
     }
 
     @Override
