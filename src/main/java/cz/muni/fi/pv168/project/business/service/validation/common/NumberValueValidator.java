@@ -6,6 +6,11 @@ public final class NumberValueValidator extends PropertyValidator<Number> {
 
     private final Number min;
     private final Number max;
+
+    /**
+     * @param min minimum value
+     * @param max maximum value, if null then only min value is checked
+     */
     public NumberValueValidator(Number min, Number max, String name) {
         super(name);
         this.min = min;
@@ -15,6 +20,15 @@ public final class NumberValueValidator extends PropertyValidator<Number> {
     @Override
     public ValidationResult validate(Number value) {
         var result = new ValidationResult();
+
+        if (max == null) {
+            if (min.doubleValue() > value.doubleValue()) {
+                result.add("'%s' must be higher than %f (inclusive)"
+                        .formatted(getName(), min.doubleValue())
+                );
+            }
+            return result;
+        }
 
         if ( min.doubleValue() > value.doubleValue() ||  value.doubleValue() > max.doubleValue() ) {
             result.add("'%s' length is not between %f (inclusive) and %f (inclusive)"
