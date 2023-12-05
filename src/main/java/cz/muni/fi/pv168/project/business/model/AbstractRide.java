@@ -21,11 +21,6 @@ public abstract class AbstractRide extends Entity {
         this.distance = distance;
     }
 
-    public static AbstractRide exampleAbstractRide() {
-        return new AbstractRide("Work trip", 2, Currency.CZK, Category.exampleCategory(), "Home", "Work", 2) {
-        };
-    }
-
     public String getName() {
         return name;
     }

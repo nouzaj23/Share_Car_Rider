@@ -78,7 +78,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        var currencyComboBox = new JComboBox<>(Currency.values());
+        var currencyComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
         table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
@@ -96,12 +96,17 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide(), categoryListModel, templates, categoryModel);
+        return new RideDialog(Ride.exampleRide(), categoryListModel, currencyListModel, templates, categoryModel);
     }
 
     @Override
     public EntityDialog<Ride> getDialog(Ride entity) {
-        return new RideDialog(entity, categoryListModel, templates, categoryModel);
+        return new RideDialog(entity, categoryListModel, currencyListModel, templates, categoryModel);
+    }
+
+    @Override
+    public EntityDialog<Ride> getEditDialog (Ride entity) {
+        return getDialog(entity);
     }
 
     @Override

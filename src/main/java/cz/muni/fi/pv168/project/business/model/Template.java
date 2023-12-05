@@ -8,7 +8,7 @@ public class Template extends AbstractRide{
     }
 
     public static Template exampleTemplate() {
-        return new Template("Template", 2, Currency.CZK, Category.exampleCategory(), "Home", "Work", 2);
+        return new Template("Template", 2, null, Category.exampleCategory(), "Home", "Work", 2);
     }
 
 }

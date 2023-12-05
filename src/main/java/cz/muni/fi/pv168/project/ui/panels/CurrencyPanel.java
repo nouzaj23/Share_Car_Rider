@@ -1,10 +1,11 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
-import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
-import cz.muni.fi.pv168.project.ui.dialog.CategoryDialog;
+import cz.muni.fi.pv168.project.ui.dialog.CurrencyDialog;
+import cz.muni.fi.pv168.project.ui.dialog.CurrencyEditDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
-import cz.muni.fi.pv168.project.ui.model.CategoryModel;
+import cz.muni.fi.pv168.project.ui.model.CurrencyModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
 
@@ -13,23 +14,22 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class CategoriesPanel extends AbstractPanel<Category> {
-
+public class CurrencyPanel extends AbstractPanel<Currency> {
     private final Consumer<Integer> onSelectionChange;
-    private final CategoryModel categoryModel;
+    private final CurrencyModel currencyModel;
 
-    public CategoriesPanel(CategoryModel categoryModel, Consumer<Integer> onSelectionChange) {
-        this.categoryModel = categoryModel;
+    public CurrencyPanel(CurrencyModel currencyModel, Consumer<Integer> onSelectionChange) {
+        this.currencyModel = currencyModel;
         this.onSelectionChange = onSelectionChange;
 
         setLayout(new BorderLayout());
-        this.table = setUpTable(categoryModel);
+        this.table = setUpTable(currencyModel);
 
         PanelHelper.createTopBar(this, table, null, null);
     }
 
 
-    private JTable setUpTable(CategoryModel categoryModel) {
+    private JTable setUpTable(CurrencyModel categoryModel) {
         var table = new JTable(categoryModel);
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
@@ -46,32 +46,32 @@ public class CategoriesPanel extends AbstractPanel<Category> {
     }
 
     @Override
-    public EntityDialog<Category> getDialog() {
-        return new CategoryDialog(Category.exampleCategory());
+    public EntityDialog<Currency> getDialog() {
+        return new CurrencyDialog(Currency.exampleCurrency());
     }
 
     @Override
-    public EntityDialog<Category> getDialog(Category entity) {
-        return new CategoryDialog(entity);
+    public EntityDialog<Currency> getDialog(Currency entity) {
+        return new CurrencyDialog(entity);
     }
 
     @Override
-    public EntityDialog<Category> getEditDialog(Category entity) {
-        return getDialog(entity);
+    public EntityDialog<Currency> getEditDialog(Currency entity) {
+        return new CurrencyEditDialog(entity);
     }
 
     @Override
-    public void addRow(Category entity) {
-        categoryModel.addRow(entity);
+    public void addRow(Currency entity) {
+        currencyModel.addRow(entity);
     }
 
     @Override
     public void deleteRow(int rowIndex) {
-        categoryModel.deleteRow(rowIndex);
+        currencyModel.deleteRow(rowIndex);
     }
 
     @Override
-    public void editRow(Category newEntity, Ride oldRide) {
-        categoryModel.updateRow(newEntity);
+    public void editRow(Currency newEntity, Ride oldRide) {
+        currencyModel.updateRow(newEntity);
     }
 }
