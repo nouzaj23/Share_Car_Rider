@@ -12,7 +12,7 @@ import static cz.muni.fi.pv168.project.business.service.validation.Validator.ext
 public class CurrencyValidator implements Validator<Currency> {
 
     @Override
-    public ValidationResult validate(Currency category) {
+    public ValidationResult validate(Currency currency) {
         var validators = List.of(
                 extracting(
                         Currency::getCode, new StringLengthValidator(1, 5, "Currency code")),
@@ -21,6 +21,6 @@ public class CurrencyValidator implements Validator<Currency> {
                 )
         );
 
-        return Validator.compose(validators).validate(category);
+        return Validator.compose(validators).validate(currency);
     }
 }
