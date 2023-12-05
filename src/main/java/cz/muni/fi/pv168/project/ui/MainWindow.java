@@ -48,12 +48,8 @@ public class MainWindow {
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem openMenuItem = new JMenuItem("Open");
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        JMenu fileMenu = new JMenu("Menu");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
-        fileMenu.add(openMenuItem);
-        fileMenu.add(exitMenuItem);
         fileMenu.add(darkModeToggle);
         menuBar.add(fileMenu);
 
