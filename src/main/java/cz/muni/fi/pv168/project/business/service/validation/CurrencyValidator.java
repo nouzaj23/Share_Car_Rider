@@ -17,7 +17,7 @@ public class CurrencyValidator implements Validator<Currency> {
                 extracting(
                         Currency::getCode, new StringLengthValidator(1, 5, "Currency code")),
                 extracting(
-                        Currency::getConversionRatio, new NumberValueValidator(Double.MIN_VALUE, Double.MAX_VALUE, "Currency conversion ratio")
+                        Currency::getConversionRatio, new NumberValueValidator(Double.MIN_VALUE, null, "Currency conversion ratio")
                 )
         );
 

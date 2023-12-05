@@ -23,9 +23,9 @@ public class TemplateValidator implements Validator<Template> {
                 extracting(
                         Template::getPassengers, new NumberValueValidator(0, 10, "Passengers count")),
                 extracting(
-                        Template::getDistance, new NumberValueValidator(0, Integer.MAX_VALUE, "Distance value")),
+                        Template::getDistance, new NumberValueValidator(0, null, "Distance value")),
                 extracting(
-                        Template::getHours, new NumberValueValidator(0, Float.MAX_VALUE, "Hours value")),
+                        Template::getHours, new NumberValueValidator(0, null, "Hours value")),
                 extracting(
                         Template::getCurrency, new CurrencyValidator()),
                 extracting(
