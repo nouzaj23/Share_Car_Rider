@@ -12,13 +12,10 @@ public class TemplateCrudService implements CrudService<Template> {
 
     private final Repository<Template> templateRepository;
     private final Validator<Template> templateValidator;
-    private final GuidProvider guidProvider;
 
-    public TemplateCrudService(Repository<Template> templateRepository, Validator<Template> templateValidator,
-                               GuidProvider guidProvider) {
+    public TemplateCrudService(Repository<Template> templateRepository, Validator<Template> templateValidator) {
         this.templateRepository = templateRepository;
         this.templateValidator = templateValidator;
-        this.guidProvider = guidProvider;
     }
     @Override
     public List<Template> findAll() {
@@ -29,7 +26,7 @@ public class TemplateCrudService implements CrudService<Template> {
     public ValidationResult create(Template newEntity) {
         var validationResult = templateValidator.validate(newEntity);
         if (newEntity.getGuid() == null || newEntity.getGuid().isBlank()) {
-            newEntity.setGuid(guidProvider.newGuid());
+            newEntity.setGuid(GuidProvider.newGuid());
         } else if (templateRepository.existsByGuid(newEntity.getGuid())) {
             throw new EntityAlreadyExistsException("Template with given guid already exists: " + newEntity.getGuid());
         }

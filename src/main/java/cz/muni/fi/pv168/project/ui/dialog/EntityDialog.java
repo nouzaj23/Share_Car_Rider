@@ -3,7 +3,6 @@ package cz.muni.fi.pv168.project.ui.dialog;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.util.Optional;
 
 import static javax.swing.JOptionPane.*;

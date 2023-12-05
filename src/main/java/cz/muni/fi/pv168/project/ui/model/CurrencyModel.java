@@ -12,8 +12,8 @@ public class CurrencyModel extends AbstractTableModel implements EntityTableMode
     private final CrudService<Currency> currencyCrudService;
     private final CurrencyListModel currencyListModel;
     private final List<Column<Currency, ?>> columns = List.of(
-            Column.editable("Name", String.class, Currency::getName, Currency::setName),
-            Column.readonly("Rate", Float.class, Currency::getRate)
+            Column.editable("Name", String.class, Currency::getCode, Currency::setCode),
+            Column.readonly("Rate", Double.class, Currency::getConversionRatio)
     );
 
     public CurrencyModel(CrudService<Currency> currencyCrudService, CurrencyListModel currencyListModel) {

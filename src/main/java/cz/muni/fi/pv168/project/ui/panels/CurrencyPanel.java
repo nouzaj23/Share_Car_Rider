@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.CurrencyDialog;
@@ -47,7 +48,7 @@ public class CurrencyPanel extends AbstractPanel<Currency> {
 
     @Override
     public EntityDialog<Currency> getDialog() {
-        return new CurrencyDialog(Currency.exampleCurrency());
+        return new CurrencyDialog(new Currency(GuidProvider.newGuid(), "", 0));
     }
 
     @Override

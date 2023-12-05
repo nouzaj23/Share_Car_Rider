@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.CategoryDialog;
@@ -47,7 +48,7 @@ public class CategoriesPanel extends AbstractPanel<Category> {
 
     @Override
     public EntityDialog<Category> getDialog() {
-        return new CategoryDialog(Category.exampleCategory());
+        return new CategoryDialog(new Category(GuidProvider.newGuid(), ""));
     }
 
     @Override

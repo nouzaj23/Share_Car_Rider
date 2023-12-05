@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
@@ -23,7 +24,7 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     private final TemplateModel templateModel;
     private final Consumer<Integer> onSelectionChange;
     private final CategoryListModel categoryListModel;
-    private CurrencyListModel currencyListModel;
+    private final CurrencyListModel currencyListModel;
 
     public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Consumer<Integer> onSelectionChange) {
         this.templateModel = templateModel;
@@ -63,7 +64,11 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
     @Override
     public EntityDialog<Template> getDialog() {
-        return new TemplateDialog(Template.exampleTemplate(), categoryListModel, currencyListModel);
+        return new TemplateDialog(
+            new Template(GuidProvider.newGuid(), "", 0, null, null, "", "", 0),
+            categoryListModel,
+            currencyListModel
+        );
     }
 
     @Override

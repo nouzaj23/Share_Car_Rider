@@ -18,8 +18,8 @@ public class CurrencyDialog extends EntityDialog<Currency>{
     }
 
     private void setValues() {
-        name.setText(currency.getName());
-        rate.setValue(currency.getRate());
+        name.setText(currency.getCode());
+        rate.setValue(currency.getConversionRatio());
     }
 
     private void addFields() {
@@ -29,8 +29,8 @@ public class CurrencyDialog extends EntityDialog<Currency>{
 
     @Override
     Currency getEntity() {
-        currency.setName(name.getText());
-        currency.setRate(((Number) rate.getValue()).floatValue());
+        currency.setCode(name.getText());
+        currency.setConversionRatio(((Number) rate.getValue()).floatValue());
         return currency;
     }
 
