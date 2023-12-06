@@ -23,6 +23,7 @@ public class CurrencyEditDialog extends EntityDialog<Currency> {
 
     private void addFields() {
         add("Currency:", name);
+        addErrorPanel();
     }
     @Override
     Currency getEntity() {

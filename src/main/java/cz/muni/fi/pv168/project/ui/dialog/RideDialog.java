@@ -92,6 +92,7 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Distance (km): ", distance);
         add("Hours:", hours);
         add("Date", new JDatePicker(date));
+        addErrorPanel();
     }
 
     @Override

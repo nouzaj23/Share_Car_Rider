@@ -50,6 +50,7 @@ public class TemplateDialog extends EntityDialog<Template>{
         add("To:", to);
         add("Distance (km): ", distance);
         add("Hours:", hours);
+        addErrorPanel();
     }
 
     @Override

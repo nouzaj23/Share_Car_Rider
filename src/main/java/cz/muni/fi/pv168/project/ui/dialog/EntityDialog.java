@@ -47,7 +47,12 @@ abstract public class EntityDialog<E> {
         );
     }
 
+    protected void addErrorPanel() {
+        panel.add(errors, "span");
+    }
+
     public Optional<E> show(JComponent parentComponent, String title) {
+        panel.add(buttonPanel, "span 2, align center");
         int result = JOptionPane.showOptionDialog(parentComponent, panel, title,
                 OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
 

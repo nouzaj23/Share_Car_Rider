@@ -22,6 +22,7 @@ public class CategoryDialog extends EntityDialog<Category>{
 
     private void addFields() {
         add("Ride name:", name);
+        addErrorPanel();
     }
 
     @Override
