@@ -3,6 +3,7 @@ package cz.muni.fi.pv168.project.ui.dialog;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 
 import javax.swing.*;
@@ -18,7 +19,11 @@ public class TemplateDialog extends EntityDialog<Template>{
     private final JSpinner hours = new JSpinner(new SpinnerNumberModel(1, 0, Float.MAX_VALUE, 0.1));
     private final Template template;
 
-    public TemplateDialog(Template template, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel) {
+    public TemplateDialog(Template template,
+                          ListModel<Category> categoryListModel,
+                          ListModel<Currency> currencyListModel,
+                          Validator<Template> templateValidator) {
+        super(templateValidator);
         this.template = template;
         this.currencyModel = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
         this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));

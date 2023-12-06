@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.project.ui.dialog;
 
 import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.*;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
 import org.jdatepicker.DateModel;
@@ -25,7 +26,13 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JComboBox<Template> templates;
     private final CategoryModel categoryModel;
 
-    public RideDialog(Ride ride, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel, TemplateModel templateModel, CategoryModel categoryModel) {
+    public RideDialog(Ride ride,
+                      ListModel<Category> categoryListModel,
+                      ListModel<Currency> currencyListModel,
+                      TemplateModel templateModel,
+                      CategoryModel categoryModel,
+                      Validator<Ride> rideValidator) {
+        super(rideValidator);
         this.categoryModel = categoryModel;
         this.ride = ride;
         this.currencyJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
