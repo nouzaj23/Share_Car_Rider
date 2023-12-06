@@ -17,8 +17,11 @@ public class RideDateValidator implements Validator<Ride> {
 
     @Override
     public ValidationResult validate(Ride ride) {
+        if (ride.getDate() == null) {
+            return ValidationResult.failed("Date not selected");
+        }
         if (calculateDays(ride) < 0) {
-            return ValidationResult.failed("Date cannot be in the future!");
+            return ValidationResult.failed("Date cannot be in the future");
         }
         return ValidationResult.success();
     }

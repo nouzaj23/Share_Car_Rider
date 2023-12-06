@@ -11,6 +11,9 @@ public class CategoryValidator implements Validator<Category> {
 
     @Override
     public ValidationResult validate(Category category) {
+        if (category == null) {
+            return ValidationResult.failed("Category not selected");
+        }
         var validators = List.of(
                 extracting(
                         Category::getName, new StringLengthValidator(1, 50, "Category name"))

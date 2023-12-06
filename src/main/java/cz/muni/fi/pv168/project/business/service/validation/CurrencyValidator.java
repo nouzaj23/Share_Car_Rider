@@ -13,6 +13,9 @@ public class CurrencyValidator implements Validator<Currency> {
 
     @Override
     public ValidationResult validate(Currency currency) {
+        if (currency == null) {
+            return ValidationResult.failed("Currency not selected");
+        }
         var validators = List.of(
                 extracting(
                         Currency::getCode, new StringLengthValidator(1, 5, "Currency code")),
