@@ -92,12 +92,15 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setName(name.getText());
         ride.setPassengers(((Number) passengers.getValue()).intValue());
         ride.setCurrency((Currency) currencyJComboBox.getSelectedItem());
-        if (!(categoryJComboBox.getSelectedItem() instanceof Category)) {
-            Category newCategory = new Category(GuidProvider.newGuid(), categoryJComboBox.getSelectedItem().toString());
-            categoryModel.addRow(newCategory);
-            ride.setCategory(newCategory);
+        var category = categoryJComboBox.getSelectedItem();
+        if (!(category instanceof Category)) {
+            if (category != null) {
+                Category newCategory = new Category(GuidProvider.newGuid(), category.toString());
+                categoryModel.addRow(newCategory);
+                ride.setCategory(newCategory);
+            }
         } else {
-            ride.setCategory((Category) categoryJComboBox.getSelectedItem());
+            ride.setCategory((Category) category);
         }
         ride.setFrom(from.getText());
         ride.setTo(to.getText());
