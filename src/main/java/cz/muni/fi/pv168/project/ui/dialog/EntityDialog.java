@@ -4,13 +4,14 @@ import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static javax.swing.JOptionPane.*;
 
-abstract public class EntityDialog<E> {
+abstract public class EntityDialog<E> extends Component {
 
     private final JPanel panel = new JPanel();
     private final JPanel errors = new JPanel();
