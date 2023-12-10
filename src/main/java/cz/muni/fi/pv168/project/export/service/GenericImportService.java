@@ -25,21 +25,18 @@ public class GenericImportService implements ImportService {
     private final CrudService<Template> crudTemplate;
     private final CrudService<Currency> crudCurrency;
     private final FormatMapping<BatchImporter> importers;
-    private final GuidProvider guidProvider;
 
     public GenericImportService(
             CrudService<Ride> ridesModel,
             CrudService<Template> templateModel,
             CrudService<Category> categoryModel,
             CrudService<Currency> crudCurrency,
-            GuidProvider guidProvider,
             Collection<BatchImporter> importers
     ) {
         this.crudRide = ridesModel;
         this.crudCategory = categoryModel;
         this.crudTemplate = templateModel;
         this.crudCurrency = crudCurrency;
-        this.guidProvider = guidProvider;
         this.importers = new FormatMapping<>(importers);
     }
 
@@ -62,7 +59,7 @@ public class GenericImportService implements ImportService {
                     "Ride with this guid was found, do you want to import anyways?", "ERROR: duplicated ride",
                     OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
             if (result == OK_OPTION) {
-                ride.setGuid(guidProvider.newGuid());
+                ride.setGuid(GuidProvider.newGuid());
                 crudRide.create(ride).intoException();
             }
         }
@@ -76,7 +73,7 @@ public class GenericImportService implements ImportService {
                     "Category with this guid was found, do you want to import anyways?", "ERROR: duplicated category",
                     OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
             if (result == OK_OPTION) {
-                category.setGuid(guidProvider.newGuid());
+                category.setGuid(GuidProvider.newGuid());
                 crudCategory.create(category).intoException();
             }
         }
@@ -90,7 +87,7 @@ public class GenericImportService implements ImportService {
                     "Ride with this guid was found, do you want to import anyways?", "ERROR: duplicated ride",
                     OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
             if (result == OK_OPTION) {
-                template.setGuid(guidProvider.newGuid());
+                template.setGuid(GuidProvider.newGuid());
                 crudTemplate.create(template).intoException();
             }
         }

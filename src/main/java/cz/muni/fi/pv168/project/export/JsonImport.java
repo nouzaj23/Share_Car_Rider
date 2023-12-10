@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.export;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
@@ -41,7 +42,7 @@ public class JsonImport implements BatchImporter {
         List<Template> templates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         var currencyHashMap = new HashMap<String, Currency>(currencyCrudService.findAll().stream()
-                .collect(Collectors.toMap(Currency::getName, currency -> currency)));
+                .collect(Collectors.toMap(Currency::getCode, currency -> currency)));
 
         try {
             String jsonContent = new String(Files.readAllBytes(Path.of(filePath)));
@@ -55,9 +56,9 @@ public class JsonImport implements BatchImporter {
 
             for (int i = 0; i < currencyArray.length(); i++) {
                 JSONObject currencyObject = currencyArray.getJSONObject(i);
-                String name = currencyObject.getString("name");
-                float rate = currencyObject.getFloat("rate");
-                var cur = new Currency(name, rate);
+                String name = currencyObject.getString("code");
+                float rate = currencyObject.getFloat("conversionRatio");
+                var cur = new Currency(GuidProvider.newGuid(), name, rate);
 
                 currencyHashMap.putIfAbsent(name, cur);
             }
@@ -66,8 +67,7 @@ public class JsonImport implements BatchImporter {
                 JSONObject categoryObject = categoryArray.getJSONObject(i);
                 String guid = categoryObject.getString("guid");
                 String name = categoryObject.getString("name");
-                var cat = new Category(name);
-                cat.setGuid(guid);
+                var cat = new Category(guid, name);
 
                 categoryHashMap.putIfAbsent(name, cat);
             }
@@ -77,8 +77,8 @@ public class JsonImport implements BatchImporter {
                 String guid = rideObject.getString("guid");
                 String name = rideObject.getString("name");
                 int passengers = rideObject.getInt("passengers");
-                String currencyName = rideObject.getJSONObject("currency").getString("name");
-                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(currencyName, 0));
+                String currencyName = rideObject.getJSONObject("currency").getString("code");
+                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(GuidProvider.newGuid(), currencyName, 0));
                 Category category = categoryHashMap.get(rideObject.getJSONObject("category").getString("name"));
                 String from = rideObject.getString("from");
                 String to = rideObject.getString("to");
@@ -89,9 +89,7 @@ public class JsonImport implements BatchImporter {
                 category.setRides(category.getRides() + 1);
                 category.modifyDistanceFluent(distance);
 
-                Ride ride = new Ride(name, passengers,currency, fuel, category, from, to, distance);
-                ride.setDate(localDate);
-                ride.setGuid(guid);
+                Ride ride = new Ride(guid, name, passengers,currency, fuel, category, from, to, distance, localDate);
 
                 rides.add(ride);
             }
@@ -101,15 +99,14 @@ public class JsonImport implements BatchImporter {
                 String guid = templateObject.getString("guid");
                 String name = templateObject.getString("name");
                 int passengers = templateObject.getInt("passengers");
-                String currencyName = templateObject.getJSONObject("currency").getString("name");
-                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(currencyName, 0));
+                String currencyName = templateObject.getJSONObject("currency").getString("code");
+                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(GuidProvider.newGuid(), currencyName, 0));
                 Category category = categoryHashMap.get(templateObject.getJSONObject("category").getString("name"));
                 String from = templateObject.getString("from");
                 String to = templateObject.getString("to");
                 int distance = templateObject.getInt("distance");
 
-                Template template = new Template(name, passengers,currency, category, from, to, distance);
-                template.setGuid(guid);
+                Template template = new Template(guid, name, passengers, currency, category, from, to, distance);
 
                 templates.add(template);
             }

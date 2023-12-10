@@ -100,7 +100,7 @@ public class CommonDependencyProvider implements DependencyProvider {
         this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator);
         this.rideCrudService = new RideCrudService(rides, rideValidator, (CategorySqlRepository) categories);
 
-        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, guidProvider, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
+        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
     }
 
     @Override

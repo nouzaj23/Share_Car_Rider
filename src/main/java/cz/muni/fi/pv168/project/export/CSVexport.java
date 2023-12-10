@@ -31,14 +31,14 @@ public class CSVexport implements BatchExporter {
     }
 
     private String createCsvLine(Ride ride) {
-        return serializeEmployee(ride);
+        return serializeRide(ride);
     }
 
-    private String serializeEmployee(Ride ride) {
+    private String serializeRide(Ride ride) {
         return String.join(SEPARATOR,
                 ride.getName(),
                 Integer.toString(ride.getPassengers()),
-                ride.getCurrency().getName(),
+                ride.getCurrency().getCode(),
                 Float.toString(ride.getFuelExpenses()),
                 ride.getCategory().getName(),
                 ride.getFrom(),

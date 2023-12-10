@@ -43,13 +43,14 @@ public class MainWindow {
         this.templateModel = new TemplateModel(dependencyProvider.getTemplateCrudService());
         var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
         this.categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
-        this.carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
+        this.carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService(), categoryModel);
         var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
         this.currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
 
         var categoryValidator = dependencyProvider.getCategoryValidator();
         var templateValidator = dependencyProvider.getTemplateValidator();
         var currencyValidator = dependencyProvider.getCurrencyValidator();
+        var rideValidator = dependencyProvider.getRideValidator();
 
         this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel, rideValidator);
         this.categoriesPanel = createCategoriesPanel(categoryModel, categoryValidator);

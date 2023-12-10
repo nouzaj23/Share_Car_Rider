@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.export;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
@@ -33,7 +34,7 @@ public class CSVimport implements BatchImporter {
     public Batch importBatch(String filePath) {
         var categoryHashMap = new HashMap<String, Category>();
         var currencyHashMap = new HashMap<String, Currency>(currencyCrudService.findAll().stream()
-                .collect(Collectors.toMap(Currency::getName, currency -> currency)));
+                .collect(Collectors.toMap(Currency::getCode, currency -> currency)));
 
 
         try(var reader = Files.newBufferedReader(Path.of(filePath))) {
@@ -49,13 +50,15 @@ public class CSVimport implements BatchImporter {
 
     private Ride parseRide(HashMap<String, Category> categories, HashMap<String, Currency> currencies, String line) {
         var fields = line.split(",");
-        var category = categories.computeIfAbsent(fields[4], num -> new Category(fields[4]));
+        var category = categories.computeIfAbsent(fields[4], num -> new Category(GuidProvider.newGuid(), fields[4]));
         category.setRides(category.getRides() + 1);
         category.modifyDistanceFluent(Integer.parseInt(fields[7]));
 
-        var currency = currencies.computeIfAbsent(fields[2], cur -> new Currency(fields[2],0));
+        var currency = currencies.computeIfAbsent(fields[2], cur -> new Currency(GuidProvider.newGuid(), fields[2],0));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy");
 
         Ride ride = new Ride(
+                GuidProvider.newGuid(),
                 fields[0],
                 Integer.parseInt(fields[1]),
                 currency,
@@ -63,11 +66,10 @@ public class CSVimport implements BatchImporter {
                 category,
                 fields[5],
                 fields[6],
-                Integer.parseInt(fields[7])
+                Integer.parseInt(fields[7]),
+                LocalDate.parse(fields[8], formatter)
         );
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy");
-        ride.setDate(LocalDate.parse(fields[8], formatter));
-        ride.setGuid(fields[9]);
+
         return ride;
     }
 }
