@@ -6,6 +6,7 @@ import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.storage.sql.db.DatabaseManager;
 import cz.muni.fi.pv168.project.storage.sql.db.TransactionExecutor;
 
@@ -23,5 +24,9 @@ public interface DependencyProvider {
     CrudService<Category> getCategoryCrudService();
     CrudService<Template> getTemplateCrudService();
     CrudService<Currency> getCurrencyCrudService();
+    Validator<Ride> getRideValidator();
+    Validator<Category> getCategoryValidator();
+    Validator<Template> getTemplateValidator();
+    Validator<Currency> getCurrencyValidator();
     TransactionExecutor getTransactionExecutor();
 }

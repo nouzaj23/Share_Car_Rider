@@ -10,10 +10,7 @@ import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 import cz.muni.fi.pv168.project.business.service.crud.CurrencyCrudService;
 import cz.muni.fi.pv168.project.business.service.crud.RideCrudService;
 import cz.muni.fi.pv168.project.business.service.crud.TemplateCrudService;
-import cz.muni.fi.pv168.project.business.service.validation.CategoryValidator;
-import cz.muni.fi.pv168.project.business.service.validation.CurrencyValidator;
-import cz.muni.fi.pv168.project.business.service.validation.RideValidator;
-import cz.muni.fi.pv168.project.business.service.validation.TemplateValidator;
+import cz.muni.fi.pv168.project.business.service.validation.*;
 import cz.muni.fi.pv168.project.storage.sql.CategorySqlRepository;
 import cz.muni.fi.pv168.project.storage.sql.CurrencySqlRepository;
 import cz.muni.fi.pv168.project.storage.sql.RideSqlRepository;
@@ -50,6 +47,11 @@ public class CommonDependencyProvider implements DependencyProvider {
     private final CrudService<Template> templateCrudService;
     private final CrudService<Currency> currencyCrudService;
 
+    private final Validator<Ride> rideValidator;
+    private final Validator<Category> categoryValidator;
+    private final Validator<Template> templateValidator;
+    private final Validator<Currency> currencyValidator;
+
     public CommonDependencyProvider(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
         var transactionManager = new TransactionManagerImpl(databaseManager);
@@ -81,10 +83,10 @@ public class CommonDependencyProvider implements DependencyProvider {
             new TemplateMapper(currencyDao, categoryDao, currencyMapper, categoryMapper)
         );
         
-        var rideValidator = new RideValidator();
-        var categoryValidator = new CategoryValidator();
-        var templateValidator = new TemplateValidator();
-        var currencyValidator = new CurrencyValidator();
+        rideValidator = new RideValidator();
+        categoryValidator = new CategoryValidator();
+        templateValidator = new TemplateValidator();
+        currencyValidator = new CurrencyValidator();
         this.categoryCrudService = new CategoryCrudService(categories, categoryValidator);
         this.templateCrudService = new TemplateCrudService(templates, templateValidator);
         this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator);
@@ -134,6 +136,26 @@ public class CommonDependencyProvider implements DependencyProvider {
     @Override
     public CrudService<Currency> getCurrencyCrudService() {
         return currencyCrudService;
+    }
+
+    @Override
+    public Validator<Ride> getRideValidator() {
+        return rideValidator;
+    }
+
+    @Override
+    public Validator<Category> getCategoryValidator() {
+        return categoryValidator;
+    }
+
+    @Override
+    public Validator<Template> getTemplateValidator() {
+        return templateValidator;
+    }
+
+    @Override
+    public Validator<Currency> getCurrencyValidator() {
+        return currencyValidator;
     }
 
     @Override

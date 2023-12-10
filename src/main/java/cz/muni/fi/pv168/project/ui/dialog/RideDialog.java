@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.project.ui.dialog;
 
 import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.*;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
 import org.jdatepicker.DateModel;
@@ -25,7 +26,13 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JComboBox<Template> templates;
     private final CategoryModel categoryModel;
 
-    public RideDialog(Ride ride, ListModel<Category> categoryListModel, ListModel<Currency> currencyListModel, TemplateModel templateModel, CategoryModel categoryModel) {
+    public RideDialog(Ride ride,
+                      ListModel<Category> categoryListModel,
+                      ListModel<Currency> currencyListModel,
+                      TemplateModel templateModel,
+                      CategoryModel categoryModel,
+                      Validator<Ride> rideValidator) {
+        super(rideValidator);
         this.categoryModel = categoryModel;
         this.ride = ride;
         this.currencyJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
@@ -85,6 +92,7 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Distance (km): ", distance);
         add("Hours:", hours);
         add("Date", new JDatePicker(date));
+        addErrorPanel();
     }
 
     @Override
@@ -92,12 +100,15 @@ public class RideDialog extends EntityDialog<Ride>{
         ride.setName(name.getText());
         ride.setPassengers(((Number) passengers.getValue()).intValue());
         ride.setCurrency((Currency) currencyJComboBox.getSelectedItem());
-        if (!(categoryJComboBox.getSelectedItem() instanceof Category)) {
-            Category newCategory = new Category(GuidProvider.newGuid(), categoryJComboBox.getSelectedItem().toString());
-            categoryModel.addRow(newCategory);
-            ride.setCategory(newCategory);
+        var category = categoryJComboBox.getSelectedItem();
+        if (!(category instanceof Category)) {
+            if (category != null) {
+                Category newCategory = new Category(GuidProvider.newGuid(), category.toString());
+                categoryModel.addRow(newCategory);
+                ride.setCategory(newCategory);
+            }
         } else {
-            ride.setCategory((Category) categoryJComboBox.getSelectedItem());
+            ride.setCategory((Category) category);
         }
         ride.setFrom(from.getText());
         ride.setTo(to.getText());

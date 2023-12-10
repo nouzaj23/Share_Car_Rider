@@ -4,6 +4,7 @@ import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.filters.RideTableFilter;
@@ -35,10 +36,15 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final TemplateModel templates;
     private final CategoryModel categoryModel;
     private final CurrencyListModel currencyListModel;
+    private final Validator<Ride> rideValidator;
 
-    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
-                         Consumer<Integer> onSelectionChange, TemplateModel templates,
-                         CategoryModel categoryModel, CurrencyListModel currencyListModel) {
+    public CarRidesPanel(CarRidesModel carRidesModel,
+                         CategoryListModel categoryListModel,
+                         Consumer<Integer> onSelectionChange,
+                         TemplateModel templates,
+                         CategoryModel categoryModel,
+                         CurrencyListModel currencyListModel,
+                         Validator<Ride> rideValidator) {
 
         this.carRidesModel = carRidesModel;
         this.carRidesModel.setLinkedPanel(this);
@@ -47,6 +53,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         this.categoryModel = categoryModel;
         this.templates = templates;
         this.onSelectionChange = onSelectionChange;
+        this.rideValidator = rideValidator;
         setLayout(new BorderLayout());
 
         var toolbar = new JToolBar();
@@ -103,13 +110,12 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
             categoryListModel,
             currencyListModel,
             templates,
-            categoryModel
-        );    
+            categoryModel, rideValidator);
     }
 
     @Override
     public EntityDialog<Ride> getDialog(Ride entity) {
-        return new RideDialog(entity, categoryListModel, currencyListModel, templates, categoryModel);
+        return new RideDialog(entity, categoryListModel, currencyListModel, templates, categoryModel, rideValidator);
     }
 
     @Override
