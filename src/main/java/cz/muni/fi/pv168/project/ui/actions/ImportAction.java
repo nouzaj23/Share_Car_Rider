@@ -1,6 +1,8 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
 import cz.muni.fi.pv168.project.export.service.ImportService;
+import cz.muni.fi.pv168.project.export.worker.AsyncImporter;
+import cz.muni.fi.pv168.project.export.worker.Importer;
 import cz.muni.fi.pv168.project.util.Filter;
 
 import javax.swing.*;
@@ -12,7 +14,7 @@ import java.util.Objects;
 public final class ImportAction extends AbstractAction {
 
     private final JFrame frame;
-    private final ImportService importService;
+    private final Importer importer;
     private final Runnable refresh;
 
     public ImportAction(
@@ -23,29 +25,25 @@ public final class ImportAction extends AbstractAction {
         super("Import");
         this.refresh = refresh;
         this.frame = Objects.requireNonNull(frame);
-        this.importService = Objects.requireNonNull(importService);
+        this.importer = new AsyncImporter(Objects.requireNonNull(importService),
+                                            () -> { refresh.run();
+                                                    JOptionPane.showMessageDialog(frame, "Import was done");});
 
         putValue(SHORT_DESCRIPTION, "Imports employees from a file");
-        putValue(MNEMONIC_KEY, KeyEvent.VK_I);
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl I"));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         var fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        importService.getFormats().forEach(f -> fileChooser.addChoosableFileFilter(new Filter(f)));
+        importer.getFormats().forEach(f -> fileChooser.addChoosableFileFilter(new Filter(f)));
 
         int dialogResult = fileChooser.showOpenDialog(frame);
 
         if (dialogResult == JFileChooser.APPROVE_OPTION) {
             File importFile = fileChooser.getSelectedFile();
 
-            importService.importData(importFile.getAbsolutePath());
-
-            refresh.run();
-
-            JOptionPane.showMessageDialog(frame, "Import was done");
+            importer.importData(importFile.getAbsolutePath());
         }
     }
 }
