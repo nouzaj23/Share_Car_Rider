@@ -5,10 +5,15 @@ public class Category extends Entity {
     private int distance;
     private int rides;
 
-    public Category(String name) {
+    public Category(String guid, String name) {
+        this(guid, name, 0, 0);
+    }
+
+    public Category(String guid, String name, int distance, int rides) {
+        super(guid);
         this.name = name;
-        this.distance = 0;
-        this.rides = 0;
+        this.distance = distance;
+        this.rides = rides;
     }
 
     public String getName() {
@@ -51,9 +56,5 @@ public class Category extends Entity {
     @Override
     public String toString() {
         return name;
-    }
-
-    public static Category exampleCategory(){
-        return new Category("Sluzobka");
     }
 }

@@ -1,7 +1,9 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.dialog.CurrencyDialog;
 import cz.muni.fi.pv168.project.ui.dialog.CurrencyEditDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
@@ -17,10 +19,12 @@ import java.util.function.Consumer;
 public class CurrencyPanel extends AbstractPanel<Currency> {
     private final Consumer<Integer> onSelectionChange;
     private final CurrencyModel currencyModel;
+    private final Validator<Currency> currencyValidator;
 
-    public CurrencyPanel(CurrencyModel currencyModel, Consumer<Integer> onSelectionChange) {
+    public CurrencyPanel(CurrencyModel currencyModel, Consumer<Integer> onSelectionChange, Validator<Currency> currencyValidator) {
         this.currencyModel = currencyModel;
         this.onSelectionChange = onSelectionChange;
+        this.currencyValidator = currencyValidator;
 
         setLayout(new BorderLayout());
         this.table = setUpTable(currencyModel);
@@ -47,17 +51,17 @@ public class CurrencyPanel extends AbstractPanel<Currency> {
 
     @Override
     public EntityDialog<Currency> getDialog() {
-        return new CurrencyDialog(Currency.exampleCurrency());
+        return new CurrencyDialog(new Currency(GuidProvider.newGuid(), "", 0), currencyValidator);
     }
 
     @Override
     public EntityDialog<Currency> getDialog(Currency entity) {
-        return new CurrencyDialog(entity);
+        return new CurrencyDialog(entity, currencyValidator);
     }
 
     @Override
     public EntityDialog<Currency> getEditDialog(Currency entity) {
-        return new CurrencyEditDialog(entity);
+        return new CurrencyEditDialog(entity, currencyValidator);
     }
 
     @Override

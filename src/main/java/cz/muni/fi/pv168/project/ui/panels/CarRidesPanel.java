@@ -1,8 +1,10 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.RideDialog;
 import cz.muni.fi.pv168.project.ui.filters.RideTableFilter;
@@ -19,6 +21,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -33,10 +36,15 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final TemplateModel templates;
     private final CategoryModel categoryModel;
     private final CurrencyListModel currencyListModel;
+    private final Validator<Ride> rideValidator;
 
-    public CarRidesPanel(CarRidesModel carRidesModel, CategoryListModel categoryListModel,
-                         Consumer<Integer> onSelectionChange, TemplateModel templates,
-                         CategoryModel categoryModel, CurrencyListModel currencyListModel) {
+    public CarRidesPanel(CarRidesModel carRidesModel,
+                         CategoryListModel categoryListModel,
+                         Consumer<Integer> onSelectionChange,
+                         TemplateModel templates,
+                         CategoryModel categoryModel,
+                         CurrencyListModel currencyListModel,
+                         Validator<Ride> rideValidator) {
 
         this.carRidesModel = carRidesModel;
         this.carRidesModel.setLinkedPanel(this);
@@ -45,6 +53,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         this.categoryModel = categoryModel;
         this.templates = templates;
         this.onSelectionChange = onSelectionChange;
+        this.rideValidator = rideValidator;
         setLayout(new BorderLayout());
 
         var toolbar = new JToolBar();
@@ -96,12 +105,17 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
 
     @Override
     public EntityDialog<Ride> getDialog() {
-        return new RideDialog(Ride.exampleRide(), categoryListModel, currencyListModel, templates, categoryModel);
+        return new RideDialog(
+            new Ride(GuidProvider.newGuid(), "", 0, null, 0, null, "", "", 0, LocalDate.now()),
+            categoryListModel,
+            currencyListModel,
+            templates,
+            categoryModel, rideValidator);
     }
 
     @Override
     public EntityDialog<Ride> getDialog(Ride entity) {
-        return new RideDialog(entity, categoryListModel, currencyListModel, templates, categoryModel);
+        return new RideDialog(entity, categoryListModel, currencyListModel, templates, categoryModel, rideValidator);
     }
 
     @Override
@@ -113,10 +127,14 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void addRow(Ride entity) {
         carRidesModel.addRow(entity);
         Category rideCategory = entity.getCategory();
+
         if (rideCategory != null) {
             rideCategory.modifyDistanceFluent(entity.getDistance());
             entity.getCategory().setRides(rideCategory.getRides() + 1);
         }
+
+        categoryModel.refresh();
+
         triggerStatsUpdate();
     }
 
@@ -124,11 +142,15 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void deleteRow(int rowIndex) {
         Ride ride = carRidesModel.getEntity(rowIndex);
         Category rideCategory = ride.getCategory();
+
         if (rideCategory != null) {
             rideCategory.modifyDistanceFluent(-ride.getDistance());
             ride.getCategory().setRides(rideCategory.getRides() - 1);
         }
+
         carRidesModel.deleteRow(rowIndex);
+        categoryModel.refresh();
+
         triggerStatsUpdate();
     }
 
@@ -136,6 +158,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     public void editRow(Ride newEntity, Ride oldRide) {
         Category oldCategory = oldRide.getCategory();
         Category newCategory = newEntity.getCategory();
+
         if (oldCategory != newCategory) {
             if (oldCategory != null) {
                 oldCategory.modifyDistanceFluent(-oldRide.getDistance());
@@ -146,7 +169,10 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
                 newCategory.setRides(newCategory.getRides() + 1);
             }
         }
+
         carRidesModel.updateRow(newEntity);
+        categoryModel.refresh();
+
         triggerStatsUpdate();
     }
 

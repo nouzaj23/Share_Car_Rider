@@ -2,24 +2,23 @@ package cz.muni.fi.pv168.project.business.model;
 
 import java.time.LocalDate;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
+
 public class Ride extends AbstractRide{
     private LocalDate date;
 
     private float fuelExpenses;
     private boolean isCommitted = false;
 
-    public Ride(String name, int passengers, Currency currency, float fuelExpenses, Category category,
-                String from, String to, int distance) {
-        super(name, passengers, currency, category, from, to, distance);
+    public Ride(String guid, String name, int passengers, Currency currency, float fuelExpenses, Category category,
+                String from, String to, int distance, LocalDate date) {
+        super(guid, name, passengers, currency, category, from, to, distance);
+        this.date = date;
         this.fuelExpenses = fuelExpenses;
     }
 
     public Template extractTemplate() {
-        return new Template(name, passengers, currency, category, from, to, distance);
-    }
-
-    public static Ride exampleRide() {
-        return new Ride("Sluzobka", 3, null,157, null, "Doma", "Práce", 2);
+        return new Template(GuidProvider.newGuid(), name, passengers, currency, category, from, to, distance);
     }
 
     public LocalDate getDate() {

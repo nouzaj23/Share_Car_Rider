@@ -1,7 +1,9 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.dialog.CategoryDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryModel;
@@ -17,10 +19,12 @@ public class CategoriesPanel extends AbstractPanel<Category> {
 
     private final Consumer<Integer> onSelectionChange;
     private final CategoryModel categoryModel;
+    private final Validator<Category> categoryValidator;
 
-    public CategoriesPanel(CategoryModel categoryModel, Consumer<Integer> onSelectionChange) {
+    public CategoriesPanel(CategoryModel categoryModel, Consumer<Integer> onSelectionChange, Validator<Category> categoryValidator) {
         this.categoryModel = categoryModel;
         this.onSelectionChange = onSelectionChange;
+        this.categoryValidator = categoryValidator;
 
         setLayout(new BorderLayout());
         this.table = setUpTable(categoryModel);
@@ -47,12 +51,12 @@ public class CategoriesPanel extends AbstractPanel<Category> {
 
     @Override
     public EntityDialog<Category> getDialog() {
-        return new CategoryDialog(Category.exampleCategory());
+        return new CategoryDialog(new Category(GuidProvider.newGuid(), ""), categoryValidator);
     }
 
     @Override
     public EntityDialog<Category> getDialog(Category entity) {
-        return new CategoryDialog(entity);
+        return new CategoryDialog(entity, categoryValidator);
     }
 
     @Override

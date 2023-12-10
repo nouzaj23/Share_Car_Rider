@@ -1,9 +1,11 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
@@ -24,12 +26,18 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     private final Consumer<Integer> onSelectionChange;
     private final CategoryListModel categoryListModel;
     private final CurrencyListModel currencyListModel;
+    private final Validator<Template> templateValidator;
 
-    public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Consumer<Integer> onSelectionChange) {
+    public TemplatesPanel(TemplateModel templateModel,
+                          CategoryListModel categoryListModel,
+                          CurrencyListModel currencyListModel,
+                          Consumer<Integer> onSelectionChange,
+                          Validator<Template> templateValidator) {
         this.templateModel = templateModel;
         this.categoryListModel = categoryListModel;
         this.onSelectionChange = onSelectionChange;
         this.currencyListModel = currencyListModel;
+        this.templateValidator = templateValidator;
 
         setLayout(new BorderLayout());
 
@@ -63,12 +71,16 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
     @Override
     public EntityDialog<Template> getDialog() {
-        return new TemplateDialog(Template.exampleTemplate(), categoryListModel, currencyListModel);
+        return new TemplateDialog(
+            new Template(GuidProvider.newGuid(), "", 0, null, null, "", "", 0),
+            categoryListModel,
+            currencyListModel, templateValidator
+        );
     }
 
     @Override
     public EntityDialog<Template> getDialog(Template entity) {
-        return new TemplateDialog(entity, categoryListModel, currencyListModel);
+        return new TemplateDialog(entity, categoryListModel, currencyListModel, templateValidator);
     }
 
     @Override

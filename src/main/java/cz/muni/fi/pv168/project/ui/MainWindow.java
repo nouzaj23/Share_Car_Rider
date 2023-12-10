@@ -1,9 +1,13 @@
 package cz.muni.fi.pv168.project.ui;
 
-import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.export.CSVexport;
 import cz.muni.fi.pv168.project.export.JsonExport;
 import cz.muni.fi.pv168.project.export.service.GenericExportService;
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.actions.ExportAction;
 import cz.muni.fi.pv168.project.ui.actions.ImportAction;
@@ -43,10 +47,14 @@ public class MainWindow {
         var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
         this.currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
 
-        this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
-        this.categoriesPanel = createCategoriesPanel(categoryModel);
-        this.templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel);
-        this.currencyPanel = createCurrencyPanel(currencyModel);
+        var categoryValidator = dependencyProvider.getCategoryValidator();
+        var templateValidator = dependencyProvider.getTemplateValidator();
+        var currencyValidator = dependencyProvider.getCurrencyValidator();
+
+        this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel, rideValidator);
+        this.categoriesPanel = createCategoriesPanel(categoryModel, categoryValidator);
+        this.templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel, templateValidator);
+        this.currencyPanel = createCurrencyPanel(currencyModel, currencyValidator);
 
         var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel, currencyPanel);
 
@@ -65,9 +73,7 @@ public class MainWindow {
     private JMenuBar createMenuBar(DependencyProvider dependencyProvider) {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem openMenuItem = new JMenuItem("Open");
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        JMenu fileMenu = new JMenu("Menu");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
         JMenuItem exportItem = new JMenuItem(new ExportAction(frame,
                                              new GenericExportService(carRidesPanel, templatesPanel, categoriesPanel,
@@ -75,11 +81,9 @@ public class MainWindow {
                                                                       dependencyProvider,
                                                                       List.of( new JsonExport(), new CSVexport()))));
         JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getGenericImportService(), this::refresh));
-        fileMenu.add(openMenuItem);
-        fileMenu.add(exitMenuItem);
-        fileMenu.add(exitMenuItem);
         fileMenu.add(exportItem);
         fileMenu.add(importItem);
+
         fileMenu.add(darkModeToggle);
         menuBar.add(fileMenu);
 
@@ -91,20 +95,20 @@ public class MainWindow {
         return menuBar;
     }
 
-    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel, CurrencyListModel currencyListModel) {
-        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel, currencyListModel);
+    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel, CurrencyListModel currencyListModel, Validator<Ride> rideValidator) {
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel, currencyListModel, rideValidator);
     }
 
-    private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {
-        return new CategoriesPanel(categoryModel, this::changeActionsState);
+    private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel, Validator<Category> categoryValidator) {
+        return new CategoriesPanel(categoryModel, this::changeActionsState, categoryValidator);
     }
 
-    private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel) {
-        return new TemplatesPanel(templateModel, categoryListModel, currencyListModel, this::changeActionsState);
+    private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Validator<Template> templateValidator) {
+        return new TemplatesPanel(templateModel, categoryListModel, currencyListModel, this::changeActionsState, templateValidator);
     }
 
-    private CurrencyPanel createCurrencyPanel(CurrencyModel currencyModel) {
-        return new CurrencyPanel( currencyModel, this::changeActionsState);
+    private CurrencyPanel createCurrencyPanel(CurrencyModel currencyModel, Validator<Currency> currencyValidator) {
+        return new CurrencyPanel( currencyModel, this::changeActionsState, currencyValidator);
     }
 
     private JTabbedPane createTabbedPane(CarRidesPanel carRidesPanel, CategoriesPanel categoriesPanel, TemplatesPanel templatesPanel, CurrencyPanel currencyPanel) {

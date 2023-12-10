@@ -9,7 +9,6 @@ import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CarRidesModel extends AbstractTableModel implements EntityTableModel<Ride> {
@@ -17,6 +16,7 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
     private List<Ride> rides;
     private final CrudService<Ride> rideCrudService;
     private CarRidesPanel linkedPanel;
+    private CategoryModel categoryModel;
 
     private final List<Column<Ride, ?>> columns = List.of(
             Column.editable("Name", String.class, Ride::getName, Ride::setName),
@@ -34,9 +34,10 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
             Column.readonly("Date", LocalDate.class, Ride::getDate)
     );
 
-    public CarRidesModel(CrudService<Ride> rideCrudService) {
+    public CarRidesModel(CrudService<Ride> rideCrudService, CategoryModel categoryModel) {
         this.rideCrudService = rideCrudService;
         this.rides = new ArrayList<>(rideCrudService.findAll());
+        this.categoryModel = categoryModel;
     }
 
     @Override
@@ -81,6 +82,8 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
             var ride = getEntity(rowIndex);
             columns.get(columnIndex).setValue(value, ride);
             updateRow(ride);
+            
+            categoryModel.refresh();
         }
     }
 
