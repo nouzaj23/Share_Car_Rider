@@ -10,7 +10,7 @@ import cz.muni.fi.pv168.project.business.service.crud.CategoryCrudService;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 import cz.muni.fi.pv168.project.business.service.crud.RideCrudService;
 import cz.muni.fi.pv168.project.business.service.crud.TemplateCrudService;
-import cz.muni.fi.pv168.project.business.service.crud.CurencyCrudService;
+import cz.muni.fi.pv168.project.business.service.crud.CurrencyCrudService;
 import cz.muni.fi.pv168.project.business.service.validation.CategoryValidator;
 import cz.muni.fi.pv168.project.business.service.validation.CurrencyValidator;
 import cz.muni.fi.pv168.project.business.service.validation.RideValidator;
@@ -50,8 +50,9 @@ public class CommonDependencyProvider implements DependencyProvider {
         this.rideCrudService = new RideCrudService(rideRepository, rideValidator, guidProvider);
         this.categoryCrudService = new CategoryCrudService(categoryRepository, categoryValidator, guidProvider);
         this.templateCrudService = new TemplateCrudService(templateRepository, templateValidator, guidProvider);
-        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, guidProvider, List.of(new JsonImport(), new CSVimport()));
         this.currencyCrudService = new CurrencyCrudService(currencyRepository, currencyValidator, guidProvider);
+        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, guidProvider, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
+
 
     }
     @Override

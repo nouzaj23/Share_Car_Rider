@@ -4,6 +4,7 @@ import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 import cz.muni.fi.pv168.project.business.service.crud.EntityAlreadyExistsException;
 import cz.muni.fi.pv168.project.export.batch.BatchImporter;
@@ -22,6 +23,7 @@ public class GenericImportService implements ImportService {
     private final CrudService<Ride> crudRide;
     private final CrudService<Category> crudCategory;
     private final CrudService<Template> crudTemplate;
+    private final CrudService<Currency> crudCurrency;
     private final FormatMapping<BatchImporter> importers;
     private final GuidProvider guidProvider;
 
@@ -29,12 +31,14 @@ public class GenericImportService implements ImportService {
             CrudService<Ride> ridesModel,
             CrudService<Template> templateModel,
             CrudService<Category> categoryModel,
+            CrudService<Currency> crudCurrency,
             GuidProvider guidProvider,
             Collection<BatchImporter> importers
     ) {
         this.crudRide = ridesModel;
         this.crudCategory = categoryModel;
         this.crudTemplate = templateModel;
+        this.crudCurrency = crudCurrency;
         this.guidProvider = guidProvider;
         this.importers = new FormatMapping<>(importers);
     }
@@ -46,6 +50,7 @@ public class GenericImportService implements ImportService {
         batch.categories().forEach(this::createCategory);
         batch.rides().forEach(this::createRide);
         batch.templates().forEach(this::createTemplate);
+        batch.currencies().forEach(this::createCurrency);
     }
 
     private void createRide(Ride ride) {
@@ -91,6 +96,10 @@ public class GenericImportService implements ImportService {
         }
     }
 
+    private void createCurrency(Currency currency){
+        crudCurrency.create(currency);
+    }
+
     @Override
     public Collection<Format> getFormats() {
         return importers.getFormats();
@@ -105,4 +114,5 @@ public class GenericImportService implements ImportService {
 
         return importer;
     }
+
 }

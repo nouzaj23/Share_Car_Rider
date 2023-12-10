@@ -4,6 +4,8 @@ import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.service.crud.CrudService;
+import cz.muni.fi.pv168.project.business.service.crud.CurrencyCrudService;
 import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchImporter;
 import cz.muni.fi.pv168.project.export.format.Format;
@@ -14,8 +16,11 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,12 +30,18 @@ import org.json.JSONObject;
  */
 public class JsonImport implements BatchImporter {
 
+    private final CrudService<Currency> currencyCrudService;
+    public JsonImport(CrudService<Currency> currencyCrudService) {
+        this.currencyCrudService = currencyCrudService;
+    }
     @Override
     public Batch importBatch(String filePath) {
         var categoryHashMap = new HashMap<String, Category>();
         List<Ride> rides = new ArrayList<>();
         List<Template> templates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        var currencyHashMap = new HashMap<String, Currency>(currencyCrudService.findAll().stream()
+                .collect(Collectors.toMap(Currency::getName, currency -> currency)));
 
         try {
             String jsonContent = new String(Files.readAllBytes(Path.of(filePath)));
@@ -40,6 +51,16 @@ public class JsonImport implements BatchImporter {
             JSONArray ridesArray = jsonSystemHelper.getJSONArray("rides");
             JSONArray categoryArray = jsonSystemHelper.getJSONArray("categories");
             JSONArray templateArray = jsonSystemHelper.getJSONArray("templates");
+            JSONArray currencyArray = jsonSystemHelper.getJSONArray("currencies");
+
+            for (int i = 0; i < currencyArray.length(); i++) {
+                JSONObject currencyObject = currencyArray.getJSONObject(i);
+                String name = currencyObject.getString("name");
+                float rate = currencyObject.getFloat("rate");
+                var cur = new Currency(name, rate);
+
+                currencyHashMap.putIfAbsent(name, cur);
+            }
 
             for (int i = 0; i < categoryArray.length(); i++) {
                 JSONObject categoryObject = categoryArray.getJSONObject(i);
@@ -56,7 +77,8 @@ public class JsonImport implements BatchImporter {
                 String guid = rideObject.getString("guid");
                 String name = rideObject.getString("name");
                 int passengers = rideObject.getInt("passengers");
-                Currency currency = Currency.valueOf(rideObject.getString("currency"));
+                String currencyName = rideObject.getJSONObject("currency").getString("name");
+                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(currencyName, 0));
                 Category category = categoryHashMap.get(rideObject.getJSONObject("category").getString("name"));
                 String from = rideObject.getString("from");
                 String to = rideObject.getString("to");
@@ -79,7 +101,8 @@ public class JsonImport implements BatchImporter {
                 String guid = templateObject.getString("guid");
                 String name = templateObject.getString("name");
                 int passengers = templateObject.getInt("passengers");
-                Currency currency = Currency.valueOf(templateObject.getString("currency"));
+                String currencyName = templateObject.getJSONObject("currency").getString("name");
+                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(currencyName, 0));
                 Category category = categoryHashMap.get(templateObject.getJSONObject("category").getString("name"));
                 String from = templateObject.getString("from");
                 String to = templateObject.getString("to");
@@ -91,7 +114,7 @@ public class JsonImport implements BatchImporter {
                 templates.add(template);
             }
 
-            return new Batch(rides, categoryHashMap.values(), templates);
+            return new Batch(rides, categoryHashMap.values(), templates, currencyHashMap.values());
 
         } catch (IOException e) {
             throw new RuntimeException("Unable to read file", e);

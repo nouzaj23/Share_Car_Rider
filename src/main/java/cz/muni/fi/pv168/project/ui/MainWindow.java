@@ -26,9 +26,11 @@ public class MainWindow {
     private final TemplateModel templateModel;
     private final CategoryModel categoryModel;
     private final CarRidesModel carRideModel;
+    private final CurrencyModel currencyModel;
     private final CategoriesPanel categoriesPanel;
     private final CarRidesPanel carRidesPanel;
     private final TemplatesPanel templatesPanel;
+    private final CurrencyPanel currencyPanel;
 
 
     public MainWindow(DependencyProvider dependencyProvider) {
@@ -39,12 +41,12 @@ public class MainWindow {
         this.categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
         this.carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService());
         var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
-        var currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
+        this.currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
 
-        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
-        var categoriesPanel = createCategoriesPanel(categoryModel);
-        var templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel);
-        var currencyPanel = createCurrencyPanel(currencyModel);
+        this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
+        this.categoriesPanel = createCategoriesPanel(categoryModel);
+        this.templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel);
+        this.currencyPanel = createCurrencyPanel(currencyModel);
 
         var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel, currencyPanel);
 
@@ -125,5 +127,6 @@ public class MainWindow {
         carRideModel.refresh();
         templateModel.refresh();
         categoryModel.refresh();
+        currencyModel.refresh();
     }
 }

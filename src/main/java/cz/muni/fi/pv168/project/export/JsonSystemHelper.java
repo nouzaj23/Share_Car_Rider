@@ -17,12 +17,13 @@ public class JsonSystemHelper {
     private Collection<Ride> rides;
     private Collection<Category> categories;
     private Collection<Template> templates;
-    private Currency[] currencies = Currency.values();
+    private Collection<Currency> currencies;
 
     public JsonSystemHelper(Batch batch) {
         rides = batch.rides();
         categories = batch.categories();
         templates = batch.templates();
+        currencies = batch.currencies();
     }
 
     public void setRides(Collection<Ride> rides) {
@@ -41,7 +42,7 @@ public class JsonSystemHelper {
         return templates;
     }
 
-    public Currency[] getCurrencies() {
+    public Collection<Currency> getCurrencies() {
         return currencies;
     }
 }

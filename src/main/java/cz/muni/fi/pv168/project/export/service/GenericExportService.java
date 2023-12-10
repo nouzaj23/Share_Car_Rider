@@ -77,7 +77,7 @@ public class GenericExportService implements ExportService {
         var templateBatch = createEntityList(templateModel, templates.getTable(), dependencyProvider.getTemplateCrudService());
         var categoryBatch = createEntityList(categoryModel, categories.getTable(), dependencyProvider.getCategoryCrudService());
 
-        return new Batch(rideBatch, categoryBatch, templateBatch);
+        return new Batch(rideBatch, categoryBatch, templateBatch, dependencyProvider.getCurrencyCrudService().findAll());
     }
 
     private <T extends Entity> List<T> createEntityList(EntityTableModel<T> model, JTable table, CrudService<T> crudService) {

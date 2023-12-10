@@ -23,7 +23,7 @@ public class TemplatesPanel extends AbstractPanel<Template> {
     private final TemplateModel templateModel;
     private final Consumer<Integer> onSelectionChange;
     private final CategoryListModel categoryListModel;
-    private CurrencyListModel currencyListModel;
+    private final CurrencyListModel currencyListModel;
 
     public TemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Consumer<Integer> onSelectionChange) {
         this.templateModel = templateModel;
