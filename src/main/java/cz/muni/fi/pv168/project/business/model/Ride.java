@@ -8,7 +8,6 @@ public class Ride extends AbstractRide{
     private LocalDate date;
 
     private float fuelExpenses;
-    private boolean isCommitted = false;
 
     public Ride(String guid, String name, int passengers, Currency currency, float fuelExpenses, Category category,
                 String from, String to, int distance, LocalDate date) {
@@ -43,16 +42,9 @@ public class Ride extends AbstractRide{
         if (distance >= 0) {
             var originalDistance = this.distance;
             this.distance = distance;
-            if (category != null && isCommitted) {
+            if (category != null) {
                 category.modifyDistanceFluent(distance - originalDistance);
             }
         }
-
     }
-
-    public void setCommitted(boolean committed) {
-        isCommitted = committed;
-    }
-
-
 }
