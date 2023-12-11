@@ -106,7 +106,6 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         rideCrudService.create(ride)
                 .intoException();
         int newRowIndex = rides.size();
-        ride.setCommitted(true);
         rides.add(ride);
         fireTableRowsInserted(newRowIndex, newRowIndex);
     }
