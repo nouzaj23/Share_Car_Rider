@@ -44,10 +44,10 @@ public class GenericImportService implements ImportService {
     public void importData(String filePath) {
         var batch = getImporter(filePath).importBatch(filePath);
 
+        batch.currencies().forEach(this::createCurrency);
         batch.categories().forEach(this::createCategory);
         batch.rides().forEach(this::createRide);
         batch.templates().forEach(this::createTemplate);
-        batch.currencies().forEach(this::createCurrency);
     }
 
     private void createRide(Ride ride) {
@@ -94,7 +94,11 @@ public class GenericImportService implements ImportService {
     }
 
     private void createCurrency(Currency currency){
-        crudCurrency.create(currency);
+        try {
+            crudCurrency.create(currency);
+        } catch (EntityAlreadyExistsException e ) {
+            //idk todo
+        }
     }
 
     @Override

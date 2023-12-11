@@ -39,6 +39,7 @@ public class CSVexport implements BatchExporter {
                 ride.getName(),
                 Integer.toString(ride.getPassengers()),
                 ride.getCurrency().getCode(),
+                Double.toString(ride.getCurrency().getConversionRatio()),
                 Float.toString(ride.getFuelExpenses()),
                 ride.getCategory().getName(),
                 ride.getFrom(),

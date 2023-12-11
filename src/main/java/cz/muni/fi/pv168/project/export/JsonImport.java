@@ -78,7 +78,7 @@ public class JsonImport implements BatchImporter {
                 String name = rideObject.getString("name");
                 int passengers = rideObject.getInt("passengers");
                 String currencyName = rideObject.getJSONObject("currency").getString("code");
-                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(GuidProvider.newGuid(), currencyName, 0));
+                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(GuidProvider.newGuid(), currencyName, 15));
                 Category category = categoryHashMap.get(rideObject.getJSONObject("category").getString("name"));
                 String from = rideObject.getString("from");
                 String to = rideObject.getString("to");
@@ -100,7 +100,7 @@ public class JsonImport implements BatchImporter {
                 String name = templateObject.getString("name");
                 int passengers = templateObject.getInt("passengers");
                 String currencyName = templateObject.getJSONObject("currency").getString("code");
-                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(GuidProvider.newGuid(), currencyName, 0));
+                var currency = currencyHashMap.computeIfAbsent(currencyName, cur -> new Currency(GuidProvider.newGuid(), currencyName, 15));
                 Category category = categoryHashMap.get(templateObject.getJSONObject("category").getString("name"));
                 String from = templateObject.getString("from");
                 String to = templateObject.getString("to");
