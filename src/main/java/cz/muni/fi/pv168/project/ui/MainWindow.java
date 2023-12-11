@@ -35,6 +35,8 @@ public class MainWindow {
     private final CarRidesPanel carRidesPanel;
     private final TemplatesPanel templatesPanel;
     private final CurrencyPanel currencyPanel;
+    private final CurrencyListModel currencyListModel;
+    private final CategoryListModel categoryListModel;
 
 
     public MainWindow(DependencyProvider dependencyProvider) {
@@ -62,6 +64,9 @@ public class MainWindow {
         frame.setJMenuBar(createMenuBar(dependencyProvider));
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.pack();
+
+        this.categoryListModel = categoryListModel;
+        this.currencyListModel = currencyListModel;
     }
 
     private void initializeFrame() {
@@ -133,5 +138,7 @@ public class MainWindow {
         templateModel.refresh();
         categoryModel.refresh();
         currencyModel.refresh();
+        categoryListModel.refresh();
+        currencyListModel.refresh();
     }
 }
