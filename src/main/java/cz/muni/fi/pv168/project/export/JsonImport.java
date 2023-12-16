@@ -6,7 +6,6 @@ import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
-import cz.muni.fi.pv168.project.business.service.crud.CurrencyCrudService;
 import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchImporter;
 import cz.muni.fi.pv168.project.export.format.Format;
@@ -17,13 +16,12 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -41,7 +39,7 @@ public class JsonImport implements BatchImporter {
         List<Ride> rides = new ArrayList<>();
         List<Template> templates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        var currencyHashMap = new HashMap<String, Currency>(currencyCrudService.findAll().stream()
+        var currencyHashMap = new HashMap<>(currencyCrudService.findAll().stream()
                 .collect(Collectors.toMap(Currency::getCode, currency -> currency)));
 
         try {
@@ -113,7 +111,7 @@ public class JsonImport implements BatchImporter {
 
             return new Batch(rides, categoryHashMap.values(), templates, currencyHashMap.values());
 
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException("Unable to read file", e);
         }
     }
