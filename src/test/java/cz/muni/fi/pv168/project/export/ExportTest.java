@@ -68,7 +68,7 @@ class ExportTest {
         createOneOfEach();
         genericExportService.exportData(exportFilePathCSV.toString());
 
-        assertExportedContent("1,1,eur,1.0,1.0,cat,1,1,1,31 12 01,1", exportFilePathCSV);
+        assertExportedContent("1,1,eur,1.0,1.0,cat,1,1,1,01 01 00,1", exportFilePathCSV);
     }
 
     @Test
@@ -97,7 +97,7 @@ class ExportTest {
                     "to" : "1",
                     "distance" : 1,
                     "hours" : 0.0,
-                    "date" : "0001-12-31",
+                    "date" : "2000-01-01",
                     "fuelExpenses" : 1.0
                   } ],
                   "categories" : [ {
@@ -158,7 +158,7 @@ class ExportTest {
         var currency = new Currency("1", "eur", 1);
         var category = new Category("1", "cat");
         var temp = new Template("1", "1",1,currency,category,"1","1",1);
-        var ride= new Ride("1", "1",1,currency,1,category,"1","1",1,LocalDate.ofYearDay(1,1));
+        var ride= new Ride("1", "1",1,currency,1,category,"1","1",1,LocalDate.ofYearDay(2000,1));
         dependencyProvider.getCurrencyCrudService().create(currency);
         dependencyProvider.getCategoryCrudService().create(category);
         dependencyProvider.getRideCrudService().create(ride);
