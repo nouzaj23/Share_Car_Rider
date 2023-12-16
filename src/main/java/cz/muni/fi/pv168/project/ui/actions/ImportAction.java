@@ -7,7 +7,6 @@ import cz.muni.fi.pv168.project.util.Filter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Objects;
 
@@ -15,7 +14,6 @@ public final class ImportAction extends AbstractAction {
 
     private final JFrame frame;
     private final Importer importer;
-    private final Runnable refresh;
 
     public ImportAction(
             JFrame frame,
@@ -23,11 +21,8 @@ public final class ImportAction extends AbstractAction {
             Runnable refresh) {
 
         super("Import");
-        this.refresh = refresh;
         this.frame = Objects.requireNonNull(frame);
-        this.importer = new AsyncImporter(Objects.requireNonNull(importService),
-                                            () -> { refresh.run();
-                                                    JOptionPane.showMessageDialog(frame, "Import was done");});
+        this.importer = new AsyncImporter(Objects.requireNonNull(importService), refresh);
 
         putValue(SHORT_DESCRIPTION, "Imports employees from a file");
     }
