@@ -42,12 +42,23 @@ public class GenericImportService implements ImportService {
 
     @Override
     public void importData(String filePath) {
-        var batch = getImporter(filePath).importBatch(filePath);
+        try {
+            var batch = getImporter(filePath).importBatch(filePath);
 
-        batch.currencies().forEach(this::createCurrency);
-        batch.categories().forEach(this::createCategory);
-        batch.rides().forEach(this::createRide);
-        batch.templates().forEach(this::createTemplate);
+            batch.currencies().forEach(this::createCurrency);
+            batch.categories().forEach(this::createCategory);
+            batch.rides().forEach(this::createRide);
+            batch.templates().forEach(this::createTemplate);
+            JOptionPane.showMessageDialog(null, "Import was done");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "error while importing",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private void createRide(Ride ride) {
