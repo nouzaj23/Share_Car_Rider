@@ -9,7 +9,6 @@ import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchImporter;
 import cz.muni.fi.pv168.project.export.format.Format;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -33,7 +32,7 @@ public class CSVimport implements BatchImporter {
     @Override
     public Batch importBatch(String filePath) {
         var categoryHashMap = new HashMap<String, Category>();
-        var currencyHashMap = new HashMap<String, Currency>(currencyCrudService.findAll().stream()
+        var currencyHashMap = new HashMap<>(currencyCrudService.findAll().stream()
                 .collect(Collectors.toMap(Currency::getCode, currency -> currency)));
 
 
@@ -43,7 +42,7 @@ public class CSVimport implements BatchImporter {
                     .toList();
 
             return new Batch(rides, categoryHashMap.values(), Collections.emptyList(), currencyHashMap.values());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Unable to read file", e);
         }
     }
@@ -57,7 +56,7 @@ public class CSVimport implements BatchImporter {
         var currency = currencies.computeIfAbsent(fields[2], cur -> new Currency(GuidProvider.newGuid(), fields[2],Double.parseDouble(fields[3])));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy");
 
-        Ride ride = new Ride(
+        return new Ride(
                 GuidProvider.newGuid(),
                 fields[0],
                 Integer.parseInt(fields[1]),
@@ -69,7 +68,5 @@ public class CSVimport implements BatchImporter {
                 Integer.parseInt(fields[8]),
                 LocalDate.parse(fields[9], formatter)
         );
-
-        return ride;
     }
 }
