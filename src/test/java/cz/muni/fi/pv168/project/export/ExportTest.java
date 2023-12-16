@@ -28,11 +28,9 @@ class ExportTest {
     private static final Path TEST_RESOURCES = PROJECT_ROOT.resolve(Path.of("src", "test", "resources"));
 
     private final Path exportFilePathCSV = TEST_RESOURCES
-            .resolve("output")
             .resolve(Instant.now().toString().replace(':', '_') + ".csv");
 
     private final Path exportFilePathJSON = TEST_RESOURCES
-            .resolve("output")
             .resolve(Instant.now().toString().replace(':', '_') + ".json");
 
     private GenericExportService genericExportService;
