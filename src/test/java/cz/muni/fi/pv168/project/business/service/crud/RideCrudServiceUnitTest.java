@@ -66,7 +66,7 @@ public class RideCrudServiceUnitTest {
         var newGuid = "new-guid";
         var expectedRide = createRideInstance(newGuid);
 
-        mockStatic(GuidProvider.class);
+        var mockSettings = mockStatic(GuidProvider.class);
         when(GuidProvider.newGuid())
                 .thenReturn(newGuid);
 
@@ -76,6 +76,8 @@ public class RideCrudServiceUnitTest {
         var result = rideCrudService.create(ride);
         assertThat(result)
                 .isEqualTo(ValidationResult.success());
+
+        mockSettings.close();
 
         verify(rideRepository, times(1))
                 .create(refEq(expectedRide));

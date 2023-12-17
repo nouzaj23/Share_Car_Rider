@@ -59,7 +59,7 @@ public class TemplateCrudServiceUnitTest {
         var newGuid = "new-guid";
         var expectedTemplate = createTemplateInstance(newGuid);
 
-        mockStatic(GuidProvider.class);
+        var mockSettings = mockStatic(GuidProvider.class);
         when(GuidProvider.newGuid())
                 .thenReturn(newGuid);
 
@@ -69,6 +69,8 @@ public class TemplateCrudServiceUnitTest {
         var result = templateCrudService.create(template);
         assertThat(result)
                 .isEqualTo(ValidationResult.success());
+
+        mockSettings.close();
 
         verify(templateRepository, times(1))
                 .create(refEq(expectedTemplate));

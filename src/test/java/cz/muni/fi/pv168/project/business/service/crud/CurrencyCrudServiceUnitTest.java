@@ -57,7 +57,7 @@ public class CurrencyCrudServiceUnitTest {
         var newGuid = "new-guid";
         var expectedCurrency = createCurrencyInstance(newGuid);
 
-        mockStatic(GuidProvider.class);
+        var mockSettings = mockStatic(GuidProvider.class);
         when(GuidProvider.newGuid())
                 .thenReturn(newGuid);
 
@@ -68,6 +68,8 @@ public class CurrencyCrudServiceUnitTest {
 
         assertThat(result)
                 .isEqualTo(ValidationResult.success());
+
+        mockSettings.close();
 
         verify(currencyRepository, times(1))
                 .create(refEq(expectedCurrency));

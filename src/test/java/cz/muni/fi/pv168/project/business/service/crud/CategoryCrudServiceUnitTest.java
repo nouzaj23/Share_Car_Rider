@@ -57,7 +57,7 @@ class CategoryCrudServiceUnitTest {
         var newGuid = "new-guid";
         var expectedCategory = createCategoryInstance(newGuid);
 
-        mockStatic(GuidProvider.class);
+        var mockSettings = mockStatic(GuidProvider.class);
         when(GuidProvider.newGuid())
                 .thenReturn(newGuid);
 
@@ -68,6 +68,8 @@ class CategoryCrudServiceUnitTest {
 
         assertThat(result)
                 .isEqualTo(ValidationResult.success());
+
+        mockSettings.close();
 
         verify(categoryRepository, times(1))
                 .create(refEq(expectedCategory));
