@@ -1,0 +1,55 @@
+{
+  "rides" : [ {
+    "guid" : "1",
+    "name" : "1",
+    "passengers" : 1,
+    "currency" : {
+      "guid" : "1",
+      "code" : "eur",
+      "conversionRatio" : 1.0
+    },
+    "category" : {
+      "guid" : "1",
+      "name" : "cat",
+      "distance" : 1,
+      "rides" : 1
+    },
+    "from" : "1",
+    "to" : "1",
+    "distance" : 1,
+    "hours" : 0.0,
+    "date" : "2000-01-01",
+    "fuelExpenses" : 1.0
+  } ],
+  "categories" : [ {
+    "guid" : "1",
+    "name" : "cat",
+    "distance" : 1,
+    "rides" : 1
+  } ],
+  "templates" : [ {
+    "guid" : "1",
+    "name" : "1",
+    "passengers" : 1,
+    "currency" : {
+      "guid" : "1",
+      "code" : "eur",
+      "conversionRatio" : 1.0
+    },
+    "category" : {
+      "guid" : "1",
+      "name" : "cat",
+      "distance" : 1,
+      "rides" : 1
+    },
+    "from" : "1",
+    "to" : "1",
+    "distance" : 1,
+    "hours" : 0.0
+  } ],
+  "currencies" : [ {
+    "guid" : "1",
+    "code" : "eur",
+    "conversionRatio" : 1.0
+  } ]
+}

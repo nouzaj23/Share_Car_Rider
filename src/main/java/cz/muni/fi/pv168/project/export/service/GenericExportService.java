@@ -1,18 +1,16 @@
 package cz.muni.fi.pv168.project.export.service;
 
+import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Entity;
+import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchExporter;
 import cz.muni.fi.pv168.project.export.format.Format;
 import cz.muni.fi.pv168.project.export.format.FormatMapping;
-import cz.muni.fi.pv168.project.ui.model.CarRidesModel;
-import cz.muni.fi.pv168.project.ui.model.CategoryModel;
 import cz.muni.fi.pv168.project.ui.model.EntityTableModel;
-import cz.muni.fi.pv168.project.ui.model.TemplateModel;
-import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
-import cz.muni.fi.pv168.project.ui.panels.CategoriesPanel;
-import cz.muni.fi.pv168.project.ui.panels.TemplatesPanel;
+import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
 import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
 import javax.swing.*;
@@ -22,22 +20,22 @@ import java.util.List;
 
 public class GenericExportService implements ExportService {
 
-    private final CarRidesPanel rides;
-    private final TemplatesPanel templates;
-    private final CategoriesPanel categories;
+    private final AbstractPanel<Ride> rides;
+    private final AbstractPanel<Template> templates;
+    private final AbstractPanel<Category> categories;
     private final FormatMapping<BatchExporter> exporters;
-    private final CarRidesModel carRidesModel;
-    private final TemplateModel templateModel;
-    private final CategoryModel categoryModel;
+    private final EntityTableModel<Ride> carRidesModel;
+    private final EntityTableModel<Template> templateModel;
+    private final EntityTableModel<Category> categoryModel;
     private final DependencyProvider dependencyProvider;
 
     public GenericExportService(
-            CarRidesPanel rides,
-            TemplatesPanel templates,
-            CategoriesPanel categories,
-            CarRidesModel carRidesModel,
-            TemplateModel templateModel,
-            CategoryModel categoryModel,
+            AbstractPanel<Ride> rides,
+            AbstractPanel<Template> templates,
+            AbstractPanel<Category> categories,
+            EntityTableModel<Ride> carRidesModel,
+            EntityTableModel<Template> templateModel,
+            EntityTableModel<Category> categoryModel,
             DependencyProvider dependencyProvider,
             Collection<BatchExporter> exporters
     ) {

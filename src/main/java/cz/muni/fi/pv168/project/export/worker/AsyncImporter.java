@@ -1,7 +1,6 @@
 package cz.muni.fi.pv168.project.export.worker;
 
 import cz.muni.fi.pv168.project.export.format.Format;
-import cz.muni.fi.pv168.project.export.service.ExportService;
 import cz.muni.fi.pv168.project.export.service.ImportService;
 
 import javax.swing.*;
@@ -31,7 +30,17 @@ public class AsyncImporter implements Importer {
         var asyncWorker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                importService.importData(filePath);
+                try {
+                    importService.importData(filePath);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "error while importing",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                JOptionPane.showMessageDialog(null, "Import was done");
                 return null;
             }
 
