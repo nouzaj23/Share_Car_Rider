@@ -6,4 +6,18 @@ public class Template extends AbstractRide{
                 String from, String to, int distance) {
         super(guid, name, passengers, currency, category, from, to, distance);
     }
+
+    @Override
+    public String toString() {
+        return "Template{" +
+                "name='" + name + '\'' +
+                ", passengers=" + passengers +
+                ", currency=" + currency +
+                ", category=" + category +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", distance=" + distance +
+                ", guid='" + guid + '\'' +
+                '}';
+    }
 }

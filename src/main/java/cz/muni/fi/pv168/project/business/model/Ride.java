@@ -47,4 +47,20 @@ public class Ride extends AbstractRide{
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "Ride{" +
+                "date=" + date +
+                ", fuelExpenses=" + fuelExpenses +
+                ", name='" + name + '\'' +
+                ", passengers=" + passengers +
+                ", currency=" + currency +
+                ", category=" + category +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", distance=" + distance +
+                ", guid='" + guid + '\'' +
+                '}';
+    }
 }

@@ -28,6 +28,10 @@ public class Currency extends Entity{
 
     @Override
     public String toString() {
-        return code;
+        return "Currency{" +
+                "code='" + code + '\'' +
+                ", conversionRatio=" + conversionRatio +
+                ", guid='" + guid + '\'' +
+                '}';
     }
 }
