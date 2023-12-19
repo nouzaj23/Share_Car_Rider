@@ -91,8 +91,6 @@ public class MainWindow {
         fileMenu.add(importItem);
 
         fileMenu.add(darkModeToggle);
-        fileMenu.add(exportMenuItem);
-        fileMenu.add(importMenuItem);
         menuBar.add(fileMenu);
 
         JMenu helpMenu = new JMenu("Help");
