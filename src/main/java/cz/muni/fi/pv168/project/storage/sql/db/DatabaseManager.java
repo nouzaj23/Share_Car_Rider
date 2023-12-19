@@ -40,7 +40,6 @@ public final class DatabaseManager {
         String connectionString = "jdbc:h2:mem:%s;%s".formatted(PROJECT_NAME, DB_PROPERTIES_STRING);
         var databaseManager = new DatabaseManager(connectionString);
         databaseManager.initSchema();
-        databaseManager.initData("test");
 
         return databaseManager;
     }

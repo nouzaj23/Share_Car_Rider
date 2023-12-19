@@ -29,6 +29,13 @@ import cz.muni.fi.pv168.project.storage.sql.entity.mapper.CurrencyMapper;
 import cz.muni.fi.pv168.project.storage.sql.entity.mapper.RideMapper;
 import cz.muni.fi.pv168.project.storage.sql.entity.mapper.TemplateMapper;
 
+import cz.muni.fi.pv168.project.export.CSVimport;
+import cz.muni.fi.pv168.project.export.JsonImport;
+import cz.muni.fi.pv168.project.export.service.GenericImportService;
+import cz.muni.fi.pv168.project.storage.memory.InMemoryRepository;
+
+import java.util.List;
+
 /**
  * Common dependency provider for both production and test environment.
  */
@@ -45,6 +52,7 @@ public class CommonDependencyProvider implements DependencyProvider {
     private final CrudService<Ride> rideCrudService;
     private final CrudService<Category> categoryCrudService;
     private final CrudService<Template> templateCrudService;
+    private final GenericImportService genericImportService;
     private final CrudService<Currency> currencyCrudService;
 
     private final Validator<Ride> rideValidator;
@@ -91,6 +99,8 @@ public class CommonDependencyProvider implements DependencyProvider {
         this.templateCrudService = new TemplateCrudService(templates, templateValidator);
         this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator);
         this.rideCrudService = new RideCrudService(rides, rideValidator, (CategorySqlRepository) categories);
+
+        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
     }
 
     @Override
@@ -131,6 +141,11 @@ public class CommonDependencyProvider implements DependencyProvider {
     @Override
     public CrudService<Template> getTemplateCrudService() {
         return templateCrudService;
+    }
+
+    @Override
+    public GenericImportService getGenericImportService() {
+        return genericImportService;
     }
 
     @Override

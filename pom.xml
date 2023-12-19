@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.muni.fi.pv168.seminar0X.teamY</groupId><!-- FIXME: change it to your seminar group and assigned team number -->
-    <artifactId>my-project-name</artifactId><!-- FIXME: change it to your specific project NAME -->
+    <groupId>cz.muni.fi.pv168.seminar01.team2</groupId>
+    <artifactId>share-car-rider</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <url>https://gitlab.fi.muni.cz/xlogin/pv168-project-name</url><!-- FIXME: change it to the project's GIT repo URL -->
+    <url>https://gitlab.fi.muni.cz/xnouza/pv168-share-car-rider</url><!-- FIXME: change it to the project's GIT repo URL -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-inline</artifactId>
             <version>${version.mockito}</version>
             <scope>test</scope>
         </dependency>
@@ -61,6 +61,26 @@
             <groupId>io.github.lzh0379</groupId>
             <artifactId>jdatepicker</artifactId>
             <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version>
         </dependency>
     </dependencies>
 
