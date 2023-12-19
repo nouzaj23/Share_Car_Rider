@@ -56,7 +56,8 @@ public class JsonImport implements BatchImporter {
                 JSONObject currencyObject = currencyArray.getJSONObject(i);
                 String name = currencyObject.getString("code");
                 float rate = currencyObject.getFloat("conversionRatio");
-                var cur = new Currency(GuidProvider.newGuid(), name, rate);
+                String gid = currencyObject.getString("guid");
+                var cur = new Currency(gid, name, rate);
 
                 currencyHashMap.putIfAbsent(name, cur);
             }

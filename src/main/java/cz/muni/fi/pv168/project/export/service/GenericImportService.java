@@ -42,29 +42,18 @@ public class GenericImportService implements ImportService {
 
     @Override
     public void importData(String filePath) {
-        try {
-            var batch = getImporter(filePath).importBatch(filePath);
+        var batch = getImporter(filePath).importBatch(filePath);
 
-            batch.currencies().forEach(this::createCurrency);
-            batch.categories().forEach(this::createCategory);
-            batch.rides().forEach(this::createRide);
-            batch.templates().forEach(this::createTemplate);
-            JOptionPane.showMessageDialog(null, "Import was done");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "error while importing",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-        }
+        batch.currencies().forEach(this::createCurrency);
+        batch.categories().forEach(this::createCategory);
+        batch.rides().forEach(this::createRide);
+        batch.templates().forEach(this::createTemplate);
     }
 
     private void createRide(Ride ride) {
         try {
             crudRide.create(ride);
-        } catch (EntityAlreadyExistsException e ) {
+        } catch (EntityAlreadyExistsException e) {
 
             int result = JOptionPane.showOptionDialog(null,
                     "Ride with this guid was found, do you want to import anyways?", "ERROR: duplicated ride",
@@ -79,7 +68,7 @@ public class GenericImportService implements ImportService {
     private void createCategory(Category category) {
         try {
             crudCategory.create(category);
-        }  catch (EntityAlreadyExistsException e ) {
+        } catch (EntityAlreadyExistsException e) {
             int result = JOptionPane.showOptionDialog(null,
                     "Category with this guid was found, do you want to import anyways?", "ERROR: duplicated category",
                     OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
@@ -93,7 +82,7 @@ public class GenericImportService implements ImportService {
     private void createTemplate(Template template) {
         try {
             crudTemplate.create(template);
-        } catch (EntityAlreadyExistsException e ) {
+        } catch (EntityAlreadyExistsException e) {
             int result = JOptionPane.showOptionDialog(null,
                     "Ride with this guid was found, do you want to import anyways?", "ERROR: duplicated ride",
                     OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
@@ -104,10 +93,10 @@ public class GenericImportService implements ImportService {
         }
     }
 
-    private void createCurrency(Currency currency){
+    private void createCurrency(Currency currency) {
         try {
             crudCurrency.create(currency);
-        } catch (EntityAlreadyExistsException e ) {
+        } catch (EntityAlreadyExistsException e) {
             //idk todo
         }
     }

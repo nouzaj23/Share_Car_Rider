@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.project.ui.dialog;
 
 import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.*;
+import cz.muni.fi.pv168.project.business.service.validation.ValidationException;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
@@ -60,13 +61,37 @@ public class RideDialog extends EntityDialog<Ride>{
         setValues();
         addFields();
 
-        JButton addTemplate = new JButton("Save as Template");
-        addTemplate.addActionListener(e -> {
-            templateModel.addRow(getEntity().extractTemplate());
-            addTemplate.setEnabled(false);
-        });
+        JButton addTemplate = saveAsTemplate(templateModel);
         addButton(addTemplate);
     }
+
+    private JButton saveAsTemplate(TemplateModel templateModel) {
+        JButton addTemplate = new JButton("Save as Template");
+        addTemplate.addActionListener(e -> {
+            var template = getEntity().extractTemplate();
+            var isValid = true;
+            try {
+                templateModel.addRow(template);
+            } catch (ValidationException ex) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        String.join("\n", ex.getValidationErrors()),
+                        "Template creation failed",
+                        JOptionPane.ERROR_MESSAGE);
+                isValid = false;
+            }
+            if (isValid) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "New template %s successfully created".formatted(template.getName()),
+                        "Template creation succeeded",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+        return addTemplate;
+    }
+
     private void setValues() {
         name.setText(ride.getName());
         passengers.setValue(ride.getPassengers());
