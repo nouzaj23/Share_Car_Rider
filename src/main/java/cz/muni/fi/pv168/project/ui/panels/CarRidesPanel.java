@@ -88,10 +88,14 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
         var currencyComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
+        currencyComboBox.setRenderer(new CurrencyRenderer());
         table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        categoryComboBox.setRenderer(new CategoryRenderer());
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
         table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this));
+        table.setDefaultRenderer(Category.class, new CategoryRenderer());
+        table.setDefaultRenderer(Currency.class, new CurrencyRenderer());
         return table;
     }
 
