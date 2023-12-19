@@ -6,6 +6,7 @@ import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,8 @@ public class RideCrudService implements CrudService<Ride> {
                 categoryRepository.update(category);
             }
         }
-
+        Logger.info("Created new ride: {}", newEntity);
+        
         return validationResult;
     }
 
@@ -65,6 +67,8 @@ public class RideCrudService implements CrudService<Ride> {
                 }
             }
             rideRepository.update(entity);
+            Logger.info("Updated ride: {}", entity);
+
         }
         return validationResult;
     }

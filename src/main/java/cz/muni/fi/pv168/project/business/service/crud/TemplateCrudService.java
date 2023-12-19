@@ -5,6 +5,8 @@ import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import org.tinylog.Logger;
+
 
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class TemplateCrudService implements CrudService<Template> {
 
         if (validationResult.isValid()) {
             templateRepository.create(newEntity);
+            Logger.info("Created new template: {}", newEntity);
+
         }
 
         return validationResult;
@@ -43,6 +47,8 @@ public class TemplateCrudService implements CrudService<Template> {
         var validationResult = templateValidator.validate(entity);
         if (validationResult.isValid()) {
             templateRepository.update(entity);
+            Logger.info("Updated template: {}", entity);
+
         }
 
         return validationResult;

@@ -55,6 +55,11 @@ public class Category extends Entity {
 
     @Override
     public String toString() {
-        return name;
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", distance=" + distance +
+                ", rides=" + rides +
+                ", guid='" + guid + '\'' +
+                '}';
     }
 }

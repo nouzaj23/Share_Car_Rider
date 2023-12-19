@@ -7,6 +7,8 @@ import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import org.tinylog.Logger;
+
 
 public class CurrencyCrudService implements CrudService<Currency> {
     private final Repository<Currency> currencyRepository;
@@ -32,6 +34,8 @@ public class CurrencyCrudService implements CrudService<Currency> {
 
         if (validationResult.isValid()) {
             currencyRepository.create(newEntity);
+            Logger.info("Created new currency: {}", newEntity);
+
         }
         return validationResult;
     }
@@ -41,6 +45,8 @@ public class CurrencyCrudService implements CrudService<Currency> {
         var validationResult = currencyValidator.validate(entity);
         if (validationResult.isValid()) {
             currencyRepository.update(entity);
+            Logger.info("Updated currency: {}", entity);
+
         }
         return validationResult;
     }

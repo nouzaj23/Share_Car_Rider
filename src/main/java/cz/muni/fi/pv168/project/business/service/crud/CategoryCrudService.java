@@ -5,6 +5,8 @@ import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import org.tinylog.Logger;
+
 
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class CategoryCrudService implements CrudService<Category> {
 
         if (validationResult.isValid()) {
             categoryRepository.create(newEntity);
+            Logger.info("Created new category: {}", newEntity);
+
         }
         return validationResult;
     }
@@ -41,6 +45,8 @@ public class CategoryCrudService implements CrudService<Category> {
         var validationResult = categoryValidator.validate(entity);
         if (validationResult.isValid()) {
             categoryRepository.update(entity);
+            Logger.info("Updated category: {}", entity);
+
         }
         return validationResult;
     }
