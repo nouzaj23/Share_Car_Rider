@@ -5,6 +5,8 @@ import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
+import cz.muni.fi.pv168.project.ui.renderers.CategoryRenderer;
+import cz.muni.fi.pv168.project.ui.renderers.CurrencyRenderer;
 
 import javax.swing.*;
 
@@ -26,7 +28,9 @@ public class TemplateDialog extends EntityDialog<Template>{
         super(templateValidator);
         this.template = template;
         this.currencyModel = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
+        this.currencyModel.setRenderer(new CurrencyRenderer());
         this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        this.categoryModel.setRenderer(new CategoryRenderer());
         setValues();
         addFields();
     }

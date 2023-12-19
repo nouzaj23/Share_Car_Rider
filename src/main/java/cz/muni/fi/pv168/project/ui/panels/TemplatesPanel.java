@@ -14,6 +14,8 @@ import cz.muni.fi.pv168.project.ui.model.CurrencyListModel;
 import cz.muni.fi.pv168.project.ui.model.TemplateModel;
 import cz.muni.fi.pv168.project.ui.panels.helper.PanelHelper;
 import cz.muni.fi.pv168.project.ui.panels.helper.PopupMenuGenerator;
+import cz.muni.fi.pv168.project.ui.renderers.CategoryRenderer;
+import cz.muni.fi.pv168.project.ui.renderers.CurrencyRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -53,10 +55,14 @@ public class TemplatesPanel extends AbstractPanel<Template> {
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
         var currencyComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
+        currencyComboBox.setRenderer(new CurrencyRenderer());
         table.setDefaultEditor(Currency.class, new DefaultCellEditor(currencyComboBox));
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
+        categoryComboBox.setRenderer(new CategoryRenderer());
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
         table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this));
+        table.setDefaultRenderer(Currency.class, new CurrencyRenderer());
+        table.setDefaultRenderer(Category.class, new CategoryRenderer());
 
         return table;
     }
