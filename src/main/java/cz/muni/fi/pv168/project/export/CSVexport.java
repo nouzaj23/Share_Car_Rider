@@ -1,9 +1,10 @@
 package cz.muni.fi.pv168.project.export;
 
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.export.batch.Batch;
 import cz.muni.fi.pv168.project.export.batch.BatchExporter;
 import cz.muni.fi.pv168.project.export.format.Format;
-import cz.muni.fi.pv168.project.model.Ride;
+
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,20 +31,22 @@ public class CSVexport implements BatchExporter {
     }
 
     private String createCsvLine(Ride ride) {
-        return serializeEmployee(ride);
+        return serializeRide(ride);
     }
 
-    private String serializeEmployee(Ride ride) {
+    private String serializeRide(Ride ride) {
         return String.join(SEPARATOR,
                 ride.getName(),
                 Integer.toString(ride.getPassengers()),
-                ride.getCurrency().getName(),
+                ride.getCurrency().getCode(),
+                Double.toString(ride.getCurrency().getConversionRatio()),
                 Float.toString(ride.getFuelExpenses()),
                 ride.getCategory().getName(),
                 ride.getFrom(),
                 ride.getTo(),
                 Integer.toString(ride.getDistance()),
-                ride.getDate().format(DateTimeFormatter.ofPattern("dd MM yy"))
+                ride.getDate().format(DateTimeFormatter.ofPattern("dd MM yy")),
+                ride.getGuid()
                 );
     }
 

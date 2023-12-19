@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.project.ui.panels;
 
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ abstract public class AbstractPanel<E> extends JPanel {
 
     abstract public EntityDialog<E> getDialog();
     abstract public EntityDialog<E> getDialog(E entity);
-
+    abstract public EntityDialog<E> getEditDialog(E entity);
     public abstract void addRow(E entity);
     public abstract void deleteRow(int rowIndex);
     public abstract void editRow(E newEntity, Ride oldRide);

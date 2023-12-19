@@ -1,15 +1,13 @@
 package cz.muni.fi.pv168.project.ui;
 
-import cz.muni.fi.pv168.project.data.TestDataGenerator;
 import cz.muni.fi.pv168.project.export.CSVexport;
-import cz.muni.fi.pv168.project.export.CSVimport;
 import cz.muni.fi.pv168.project.export.JsonExport;
-import cz.muni.fi.pv168.project.export.JsonImport;
-import cz.muni.fi.pv168.project.export.service.ExportService;
 import cz.muni.fi.pv168.project.export.service.GenericExportService;
-import cz.muni.fi.pv168.project.export.service.GenericImportService;
-import cz.muni.fi.pv168.project.export.service.ImportService;
-import cz.muni.fi.pv168.project.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Ride;
+import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.actions.ExportAction;
 import cz.muni.fi.pv168.project.ui.actions.ImportAction;
@@ -17,42 +15,58 @@ import cz.muni.fi.pv168.project.ui.misc.HelpAboutPopup;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 import cz.muni.fi.pv168.project.ui.panels.CategoriesPanel;
+import cz.muni.fi.pv168.project.ui.panels.CurrencyPanel;
 import cz.muni.fi.pv168.project.ui.panels.TemplatesPanel;
+import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainWindow {
 
     private JFrame frame;
+    private final TemplateModel templateModel;
+    private final CategoryModel categoryModel;
+    private final CarRidesModel carRideModel;
+    private final CurrencyModel currencyModel;
+    private final CategoriesPanel categoriesPanel;
+    private final CarRidesPanel carRidesPanel;
+    private final TemplatesPanel templatesPanel;
+    private final CurrencyPanel currencyPanel;
+    private final CurrencyListModel currencyListModel;
+    private final CategoryListModel categoryListModel;
 
-    private ExportService exportService;
-    private ImportService importService;
 
-    public MainWindow() {
+    public MainWindow(DependencyProvider dependencyProvider) {
         initializeFrame();
 
-        var templateModel = new TemplateModel(new ArrayList<>());
-        var categoryListModel = new CategoryListModel(TestDataGenerator.CATEGORIES);
-        var categoryModel = new CategoryModel(categoryListModel);
-        var carRideModel = new CarRidesModel(new ArrayList<>());
-        var currencyListModel = new CurrencyListModel(Arrays.stream(Currency.values()).toList());
+        this.templateModel = new TemplateModel(dependencyProvider.getTemplateCrudService());
+        var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
+        this.categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
+        this.carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService(), categoryModel);
+        var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
+        this.currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
 
-        var carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel);
-        var categoriesPanel = createCategoriesPanel(categoryModel);
-        var templatesPanel = createTemplatesPanel(templateModel, categoryListModel);
+        var categoryValidator = dependencyProvider.getCategoryValidator();
+        var templateValidator = dependencyProvider.getTemplateValidator();
+        var currencyValidator = dependencyProvider.getCurrencyValidator();
+        var rideValidator = dependencyProvider.getRideValidator();
 
-        var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel);
+        this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel, rideValidator);
+        this.categoriesPanel = createCategoriesPanel(categoryModel, categoryValidator);
+        this.templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel, templateValidator);
+        this.currencyPanel = createCurrencyPanel(currencyModel, currencyValidator);
 
-        this.exportService = new GenericExportService(carRideModel, templateModel, categoryModel, List.of(new CSVexport(), new JsonExport()));
-        this.importService = new GenericImportService(carRideModel, categoryModel, templateModel, List.of(new CSVimport(), new JsonImport()));
+        var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel, currencyPanel);
 
-        frame.setJMenuBar(createMenuBar(exportService, importService));
+        frame.setJMenuBar(createMenuBar(dependencyProvider));
         frame.add(tabbedPane, BorderLayout.CENTER);
         frame.pack();
+
+        this.categoryListModel = categoryListModel;
+        this.currencyListModel = currencyListModel;
     }
 
     private void initializeFrame() {
@@ -62,17 +76,20 @@ public class MainWindow {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    private JMenuBar createMenuBar(ExportService exportService, ImportService importService) {
+    private JMenuBar createMenuBar(DependencyProvider dependencyProvider) {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem openMenuItem = new JMenuItem("Open");
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        JMenu fileMenu = new JMenu("Menu");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
-        JMenuItem exportMenuItem = new JMenuItem(new ExportAction(frame, exportService));
-        JMenuItem importMenuItem = new JMenuItem(new ImportAction(frame, importService));
-        fileMenu.add(openMenuItem);
-        fileMenu.add(exitMenuItem);
+        JMenuItem exportItem = new JMenuItem(new ExportAction(frame,
+                                             new GenericExportService(carRidesPanel, templatesPanel, categoriesPanel,
+                                                                      carRideModel, templateModel, categoryModel,
+                                                                      dependencyProvider,
+                                                                      List.of( new JsonExport(), new CSVexport()))));
+        JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getGenericImportService(), this::refresh));
+        fileMenu.add(exportItem);
+        fileMenu.add(importItem);
+
         fileMenu.add(darkModeToggle);
         fileMenu.add(exportMenuItem);
         fileMenu.add(importMenuItem);
@@ -86,23 +103,28 @@ public class MainWindow {
         return menuBar;
     }
 
-    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel, CurrencyListModel currencyListModel) {
-        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel, currencyListModel);
+    private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel, CurrencyListModel currencyListModel, Validator<Ride> rideValidator) {
+        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel, currencyListModel, rideValidator);
     }
 
-    private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel) {
-        return new CategoriesPanel(categoryModel, this::changeActionsState);
+    private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel, Validator<Category> categoryValidator) {
+        return new CategoriesPanel(categoryModel, this::changeActionsState, categoryValidator);
     }
 
-    private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel) {
-        return new TemplatesPanel(templateModel, categoryListModel, this::changeActionsState);
+    private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Validator<Template> templateValidator) {
+        return new TemplatesPanel(templateModel, categoryListModel, currencyListModel, this::changeActionsState, templateValidator);
     }
 
-    private JTabbedPane createTabbedPane(CarRidesPanel carRidesPanel, CategoriesPanel categoriesPanel, TemplatesPanel templatesPanel) {
+    private CurrencyPanel createCurrencyPanel(CurrencyModel currencyModel, Validator<Currency> currencyValidator) {
+        return new CurrencyPanel( currencyModel, this::changeActionsState, currencyValidator);
+    }
+
+    private JTabbedPane createTabbedPane(CarRidesPanel carRidesPanel, CategoriesPanel categoriesPanel, TemplatesPanel templatesPanel, CurrencyPanel currencyPanel) {
         var tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Car Rides", carRidesPanel);
         tabbedPane.addTab("Categories", categoriesPanel);
         tabbedPane.addTab("Templates", templatesPanel);
+        tabbedPane.addTab("Currency", currencyPanel);
         return tabbedPane;
     }
 
@@ -111,5 +133,14 @@ public class MainWindow {
     }
 
     private void changeActionsState(int selectedItemsCount) {
+    }
+
+    private void refresh() {
+        carRideModel.refresh();
+        templateModel.refresh();
+        categoryModel.refresh();
+        currencyModel.refresh();
+        categoryListModel.refresh();
+        currencyListModel.refresh();
     }
 }

@@ -1,8 +1,9 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
-import cz.muni.fi.pv168.project.model.Category;
-import cz.muni.fi.pv168.project.model.Currency;
-import cz.muni.fi.pv168.project.model.Template;
+import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Currency;
+import cz.muni.fi.pv168.project.business.model.Template;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.ComboBoxModelAdapter;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import javax.swing.*;
 public class TemplateDialog extends EntityDialog<Template>{
     private final JTextField name = new JTextField();
     private final JSpinner passengers = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-    private final ComboBoxModel<Currency> currencyModel = new DefaultComboBoxModel<>(Currency.values());
+    private final JComboBox<Currency> currencyModel;
     private final JComboBox<Category> categoryModel;
     private final JTextField from = new JTextField();
     private final JTextField to = new JTextField();
@@ -18,8 +19,13 @@ public class TemplateDialog extends EntityDialog<Template>{
     private final JSpinner hours = new JSpinner(new SpinnerNumberModel(1, 0, Float.MAX_VALUE, 0.1));
     private final Template template;
 
-    public TemplateDialog(Template template, ListModel<Category> categoryListModel) {
+    public TemplateDialog(Template template,
+                          ListModel<Category> categoryListModel,
+                          ListModel<Currency> currencyListModel,
+                          Validator<Template> templateValidator) {
+        super(templateValidator);
         this.template = template;
+        this.currencyModel = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
         this.categoryModel = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         setValues();
         addFields();
@@ -38,12 +44,13 @@ public class TemplateDialog extends EntityDialog<Template>{
     private void addFields() {
         add("Template name:", name);
         add("Number of passengers:", passengers);
-        add("Currency:", new JComboBox<>(currencyModel));
+        add("Currency:", currencyModel);
         add("Category:", categoryModel);
         add("From:", from);
         add("To:", to);
         add("Distance (km): ", distance);
         add("Hours:", hours);
+        addErrorPanel();
     }
 
     @Override

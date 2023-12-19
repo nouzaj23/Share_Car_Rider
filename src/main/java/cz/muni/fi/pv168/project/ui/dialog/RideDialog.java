@@ -1,6 +1,9 @@
 package cz.muni.fi.pv168.project.ui.dialog;
 
-import cz.muni.fi.pv168.project.model.*;
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
+import cz.muni.fi.pv168.project.business.model.*;
+import cz.muni.fi.pv168.project.business.service.validation.ValidationException;
+import cz.muni.fi.pv168.project.business.service.validation.Validator;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.TemplateRenderer;
 import org.jdatepicker.DateModel;
@@ -12,7 +15,7 @@ import java.time.LocalDate;
 public class RideDialog extends EntityDialog<Ride>{
     private final JTextField name = new JTextField();
     private final JSpinner passengers = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-    private final ComboBoxModel<Currency> currencyModel = new DefaultComboBoxModel<>(Currency.values());
+    private final JComboBox<Currency> currencyJComboBox;
     private final JSpinner fuelExpenses = new JSpinner(new SpinnerNumberModel(1, - Float.MAX_VALUE, Float.MAX_VALUE, 0.1));
     private final JComboBox<Category> categoryJComboBox;
     private final JTextField from = new JTextField();
@@ -24,9 +27,17 @@ public class RideDialog extends EntityDialog<Ride>{
     private final JComboBox<Template> templates;
     private final CategoryModel categoryModel;
 
-    public RideDialog(Ride ride, ListModel<Category> categoryListModel, TemplateModel templateModel, CategoryModel categoryModel) {
+    public RideDialog(Ride ride,
+                      ListModel<Category> categoryListModel,
+                      ListModel<Currency> currencyListModel,
+                      TemplateModel templateModel,
+                      CategoryModel categoryModel,
+                      Validator<Ride> rideValidator) {
+        super(rideValidator);
         this.categoryModel = categoryModel;
         this.ride = ride;
+        this.currencyJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
+        this.currencyJComboBox.setEditable(true);
         this.categoryJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         this.categoryJComboBox.setEditable(true);
         this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
@@ -38,7 +49,7 @@ public class RideDialog extends EntityDialog<Ride>{
             if (selectedTemplate != null) {
                 name.setText(selectedTemplate.getName());
                 passengers.setValue(selectedTemplate.getPassengers());
-                currencyModel.setSelectedItem(selectedTemplate.getCurrency());
+                currencyJComboBox.setSelectedItem(selectedTemplate.getCurrency());
                 categoryJComboBox.setSelectedItem(selectedTemplate.getCategory());
                 from.setText(selectedTemplate.getFrom());
                 to.setText(selectedTemplate.getTo());
@@ -50,17 +61,41 @@ public class RideDialog extends EntityDialog<Ride>{
         setValues();
         addFields();
 
-        JButton addTemplate = new JButton("Add Template");
-        addTemplate.addActionListener(e -> {
-            templateModel.addRow(getEntity().extractTemplate());
-        });
-
+        JButton addTemplate = saveAsTemplate(templateModel);
         addButton(addTemplate);
     }
+
+    private JButton saveAsTemplate(TemplateModel templateModel) {
+        JButton addTemplate = new JButton("Save as Template");
+        addTemplate.addActionListener(e -> {
+            var template = getEntity().extractTemplate();
+            var isValid = true;
+            try {
+                templateModel.addRow(template);
+            } catch (ValidationException ex) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        String.join("\n", ex.getValidationErrors()),
+                        "Template creation failed",
+                        JOptionPane.ERROR_MESSAGE);
+                isValid = false;
+            }
+            if (isValid) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "New template %s successfully created".formatted(template.getName()),
+                        "Template creation succeeded",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+        return addTemplate;
+    }
+
     private void setValues() {
         name.setText(ride.getName());
         passengers.setValue(ride.getPassengers());
-        currencyModel.setSelectedItem(ride.getCurrency());
+        currencyJComboBox.setSelectedItem(ride.getCurrency());
         categoryJComboBox.setSelectedItem(ride.getCategory());
         fuelExpenses.setValue(ride.getFuelExpenses());
         from.setText(ride.getFrom());
@@ -74,7 +109,7 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Templates", templates);
         add("Ride name:", name);
         add("Number of passengers:", passengers);
-        add("Currency:", new JComboBox<>(currencyModel));
+        add("Currency:", currencyJComboBox);
         add("Fuel Expenses:", fuelExpenses);
         add("Category:", categoryJComboBox);
         add("From:", from);
@@ -82,19 +117,23 @@ public class RideDialog extends EntityDialog<Ride>{
         add("Distance (km): ", distance);
         add("Hours:", hours);
         add("Date", new JDatePicker(date));
+        addErrorPanel();
     }
 
     @Override
     Ride getEntity() {
         ride.setName(name.getText());
         ride.setPassengers(((Number) passengers.getValue()).intValue());
-        ride.setCurrency((Currency) currencyModel.getSelectedItem());
-        if (!(categoryJComboBox.getSelectedItem() instanceof Category)) {
-            Category newCategory = new Category(categoryJComboBox.getSelectedItem().toString());
-            categoryModel.addRow(newCategory);
-            ride.setCategory(newCategory);
+        ride.setCurrency((Currency) currencyJComboBox.getSelectedItem());
+        var category = categoryJComboBox.getSelectedItem();
+        if (!(category instanceof Category)) {
+            if (category != null) {
+                Category newCategory = new Category(GuidProvider.newGuid(), category.toString());
+                categoryModel.addRow(newCategory);
+                ride.setCategory(newCategory);
+            }
         } else {
-            ride.setCategory((Category) categoryJComboBox.getSelectedItem());
+            ride.setCategory((Category) category);
         }
         ride.setFrom(from.getText());
         ride.setTo(to.getText());

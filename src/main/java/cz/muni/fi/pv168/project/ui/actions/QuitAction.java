@@ -21,6 +21,14 @@ public class QuitAction<E> extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.exit(0);
+        var answer = JOptionPane.showConfirmDialog(panel,
+                "Are you sure you want to quit the app?",
+                "Quit the app",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (answer == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }
 }

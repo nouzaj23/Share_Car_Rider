@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
-import cz.muni.fi.pv168.project.model.Ride;
+import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.ui.model.EntityTableModel;
 import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
 import cz.muni.fi.pv168.project.ui.resources.Icons;
@@ -34,9 +35,20 @@ public class EditAction<E> extends AbstractAction {
         var tableModel = (EntityTableModel) table.getModel();
         int modelRow = table.convertRowIndexToModel(selectedRows[0]);
         var entity = tableModel.getEntity(modelRow);
-        var dialog = panel.getDialog((E) entity);
+        var dialog = panel.getEditDialog((E) entity);
         if (entity instanceof Ride oldRide) {
-            Ride oldRideCopy = new Ride(oldRide.getName(), oldRide.getPassengers(), oldRide.getCurrency(), oldRide.getFuelExpenses(), oldRide.getCategory(), oldRide.getFrom(), oldRide.getTo(), oldRide.getDistance());
+            Ride oldRideCopy = 
+            new Ride(
+                GuidProvider.newGuid(),
+                oldRide.getName(), 
+                oldRide.getPassengers(), 
+                oldRide.getCurrency(), 
+                oldRide.getFuelExpenses(), 
+                oldRide.getCategory(),
+                oldRide.getFrom(), 
+                oldRide.getTo(),
+                oldRide.getDistance(),
+                oldRide.getDate());
             dialog.show(table, "Edit Employee")
                     .ifPresent(r -> panel.editRow(r, oldRideCopy));
         } else {

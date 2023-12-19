@@ -1,6 +1,8 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
 import cz.muni.fi.pv168.project.export.service.ExportService;
+import cz.muni.fi.pv168.project.export.worker.AsyncExporter;
+import cz.muni.fi.pv168.project.export.worker.Exporter;
 import cz.muni.fi.pv168.project.util.Filter;
 
 import javax.swing.*;
@@ -10,19 +12,20 @@ import java.io.File;
 public final class ExportAction extends AbstractAction {
 
     private final JFrame frame;
-    private final ExportService exportService;
+    private final Exporter exporter;
 
     public ExportAction(JFrame frame, ExportService exportService) {
         super("Export");
         this.frame = frame;
-        this.exportService = exportService;
+        this.exporter = new AsyncExporter(exportService,
+                                          () -> JOptionPane.showMessageDialog(frame, "Export has successfully finished.") );
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         var fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        exportService.getFormats().forEach(f -> fileChooser.addChoosableFileFilter(new Filter(f)));
+        exporter.getFormats().forEach(f -> fileChooser.addChoosableFileFilter(new Filter(f)));
 
         int dialogResult = fileChooser.showSaveDialog(frame);
         if (dialogResult == JFileChooser.APPROVE_OPTION) {
@@ -32,10 +35,7 @@ public final class ExportAction extends AbstractAction {
             if (filter instanceof Filter) {
                 exportFile = ((Filter) filter).decorate(exportFile);
             }
-
-            exportService.exportData(exportFile);
-
-            JOptionPane.showMessageDialog(frame, "Export has successfully finished.");
+            exporter.exportData(exportFile);
         }
     }
 }
