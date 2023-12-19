@@ -25,7 +25,26 @@ public class DeleteAction<E> extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         var table = panel.getTable();
 
-        Arrays.stream(table.getSelectedRows())
+        var selectedRows = table.getSelectedRows();
+        var selectedRowsLength = selectedRows.length;
+        if (selectedRowsLength > 1) {
+            var answer = JOptionPane.showConfirmDialog(
+                    panel,
+                    "Are you sure you want to delete %s rows?".formatted(selectedRowsLength),
+                    "Delete rows",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (answer==JOptionPane.YES_OPTION) {
+                deleteRows(selectedRows, table);
+            }
+        } else {
+            deleteRows(selectedRows, table);
+        }
+    }
+
+    private void deleteRows(int[] selectedRows, JTable table) {
+        Arrays.stream(selectedRows)
                 // view row index must be converted to model row index
                 .map(table::convertRowIndexToModel)
                 .boxed()
