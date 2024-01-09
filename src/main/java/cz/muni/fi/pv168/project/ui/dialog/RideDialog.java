@@ -135,6 +135,12 @@ public class RideDialog extends EntityDialog<Ride>{
                 Category newCategory = new Category(GuidProvider.newGuid(), category.toString());
                 categoryModel.addRow(newCategory);
                 ride.setCategory(newCategory);
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "New category %s created".formatted(newCategory.getName()),
+                            "Error",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
             }
         } else {
             ride.setCategory((Category) category);
