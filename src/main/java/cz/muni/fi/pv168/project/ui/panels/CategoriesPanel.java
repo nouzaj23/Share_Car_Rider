@@ -71,6 +71,17 @@ public class CategoriesPanel extends AbstractPanel<Category> {
 
     @Override
     public void deleteRow(int rowIndex) {
+
+
+        if (categoryModel.getEntity(rowIndex).getRides() != 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Unable to delete %s because it is saved in some ride".formatted(categoryModel.getEntity(rowIndex).getName()),
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+
         categoryModel.deleteRow(rowIndex);
     }
 
