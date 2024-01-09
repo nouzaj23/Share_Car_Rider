@@ -138,7 +138,7 @@ public class RideDialog extends EntityDialog<Ride>{
                     JOptionPane.showMessageDialog(
                             this,
                             "New category %s created".formatted(newCategory.getName()),
-                            "Error",
+                            "New category",
                             JOptionPane.INFORMATION_MESSAGE
                     );
             }
