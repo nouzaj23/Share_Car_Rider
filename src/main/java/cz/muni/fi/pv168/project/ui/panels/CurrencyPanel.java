@@ -4,6 +4,7 @@ import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import cz.muni.fi.pv168.project.storage.sql.dao.DataStorageException;
 import cz.muni.fi.pv168.project.ui.dialog.CurrencyDialog;
 import cz.muni.fi.pv168.project.ui.dialog.CurrencyEditDialog;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
@@ -71,7 +72,17 @@ public class CurrencyPanel extends AbstractPanel<Currency> {
 
     @Override
     public void deleteRow(int rowIndex) {
-        currencyModel.deleteRow(rowIndex);
+
+        try {
+            currencyModel.deleteRow(rowIndex);
+        } catch (DataStorageException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Unable to delete %s because it is saved in some ride or template".formatted(currencyModel.getEntity(rowIndex).getCode()),
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
     }
 
     @Override
