@@ -38,6 +38,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private final CurrencyListModel currencyListModel;
     private final Validator<Ride> rideValidator;
 
+    private static final JPanel statsPanel = new JPanel(new GridBagLayout());;
     public CarRidesPanel(CarRidesModel carRidesModel,
                          CategoryListModel categoryListModel,
                          Consumer<Integer> onSelectionChange,
@@ -65,13 +66,12 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         this.table = setUpTable();
         table.setRowSorter(rowSorter);
 
-        JPanel statsPanel = new JPanel(new GridBagLayout());
-        setUpStatsPanel(statsPanel);
+        setUpStatsPanel();
         triggerStatsUpdate();
         PanelHelper.createTopBar(this, table, createFilterPanel(carRideFilter), statsPanel);
     }
 
-    private void setUpStatsPanel(JPanel statsPanel) {
+    private void setUpStatsPanel() {
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
         statsPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Aligns contents to the left
         totalFuelExpenses.setFont(new Font("Arial", Font.BOLD, 14));
@@ -81,6 +81,11 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         statsPanel.add(totalFuelExpenses);
         statsPanel.add(filteredFuelExpenses);
     }
+
+    public static void changeStatsColorLight() {
+        statsPanel.setBackground(new Color(230, 230, 250));}
+    public static void changeStatsColorDark() {
+        statsPanel.setBackground(new Color(0, 0, 0));}
 
     private JTable setUpTable() {
         var table = new JTable(carRidesModel);
