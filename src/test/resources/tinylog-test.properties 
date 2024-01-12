@@ -1,3 +1,0 @@
-writer          =   console
-writer.level    =   debug
-writer.format   =   {date: HH:mm:ss}: {class}.{method}()\n{level}: {message}
