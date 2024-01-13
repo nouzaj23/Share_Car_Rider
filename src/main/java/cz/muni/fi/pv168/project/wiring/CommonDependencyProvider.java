@@ -32,7 +32,6 @@ import cz.muni.fi.pv168.project.storage.sql.entity.mapper.TemplateMapper;
 import cz.muni.fi.pv168.project.export.CSVimport;
 import cz.muni.fi.pv168.project.export.JsonImport;
 import cz.muni.fi.pv168.project.export.service.GenericImportService;
-import cz.muni.fi.pv168.project.storage.memory.InMemoryRepository;
 
 import java.util.List;
 
@@ -100,7 +99,8 @@ public class CommonDependencyProvider implements DependencyProvider {
         this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator);
         this.rideCrudService = new RideCrudService(rides, rideValidator, (CategorySqlRepository) categories);
 
-        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
+        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService,
+                List.of(new JsonImport(currencyCrudService, categoryCrudService), new CSVimport(currencyCrudService, categoryCrudService)));
     }
 
     @Override

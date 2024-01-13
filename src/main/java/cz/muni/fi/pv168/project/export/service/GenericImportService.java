@@ -54,14 +54,6 @@ public class GenericImportService implements ImportService {
         try {
             crudRide.create(ride);
         } catch (EntityAlreadyExistsException e) {
-
-            int result = JOptionPane.showOptionDialog(null,
-                    "Ride with this guid was found, do you want to import anyways?", "ERROR: duplicated ride",
-                    OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
-            if (result == OK_OPTION) {
-                ride.setGuid(GuidProvider.newGuid());
-                crudRide.create(ride).intoException();
-            }
         }
     }
 
@@ -69,13 +61,6 @@ public class GenericImportService implements ImportService {
         try {
             crudCategory.create(category);
         } catch (EntityAlreadyExistsException e) {
-            int result = JOptionPane.showOptionDialog(null,
-                    "Category with this guid was found, do you want to import anyways?", "ERROR: duplicated category",
-                    OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
-            if (result == OK_OPTION) {
-                category.setGuid(GuidProvider.newGuid());
-                crudCategory.create(category).intoException();
-            }
         }
     }
 
@@ -83,13 +68,6 @@ public class GenericImportService implements ImportService {
         try {
             crudTemplate.create(template);
         } catch (EntityAlreadyExistsException e) {
-            int result = JOptionPane.showOptionDialog(null,
-                    "Ride with this guid was found, do you want to import anyways?", "ERROR: duplicated ride",
-                    OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null, null);
-            if (result == OK_OPTION) {
-                template.setGuid(GuidProvider.newGuid());
-                crudTemplate.create(template).intoException();
-            }
         }
     }
 
@@ -97,7 +75,6 @@ public class GenericImportService implements ImportService {
         try {
             crudCurrency.create(currency);
         } catch (EntityAlreadyExistsException e) {
-            //idk todo
         }
     }
 

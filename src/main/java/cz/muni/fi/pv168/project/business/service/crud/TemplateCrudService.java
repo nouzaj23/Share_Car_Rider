@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.project.business.service.crud;
 
 import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
@@ -31,6 +32,8 @@ public class TemplateCrudService implements CrudService<Template> {
             newEntity.setGuid(GuidProvider.newGuid());
         } else if (templateRepository.existsByGuid(newEntity.getGuid())) {
             throw new EntityAlreadyExistsException("Template with given guid already exists: " + newEntity.getGuid());
+        } else if (findDuplicateByName(newEntity)) {
+            throw new EntityAlreadyExistsException("Template with given name already exists: " + newEntity.getName());
         }
 
         if (validationResult.isValid()) {
@@ -62,5 +65,11 @@ public class TemplateCrudService implements CrudService<Template> {
     @Override
     public void deleteAll() {
         templateRepository.deleteAll();
+    }
+
+    private boolean findDuplicateByName(Template newEntity){
+        return templateRepository.findAll()
+                .stream()
+                .anyMatch(ride -> ride.getName().equals(newEntity.getName()));
     }
 }
