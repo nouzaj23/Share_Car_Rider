@@ -9,7 +9,7 @@ import java.util.Collection;
  */
 public interface ImportService {
 
-    void importData(String filePath);
+    int[] importData(String filePath);
 
     Collection<Format> getFormats();
 }

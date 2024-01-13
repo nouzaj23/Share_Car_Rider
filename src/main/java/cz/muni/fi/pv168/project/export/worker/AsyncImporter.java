@@ -30,8 +30,9 @@ public class AsyncImporter implements Importer {
         var asyncWorker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
+                int[] importSize = {0,0,0,0};
                 try {
-                    importService.importData(filePath);
+                    importSize = importService.importData(filePath);
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(
                             null,
@@ -40,7 +41,11 @@ public class AsyncImporter implements Importer {
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
-                JOptionPane.showMessageDialog(null, "Import was done");
+                JOptionPane.showMessageDialog(null, "Import was done\n" +
+                                                                            importSize[0] + " rides added\n" +
+                                                                            importSize[1] + " templates added\n" +
+                                                                            importSize[2] + " categories added\n" +
+                                                                            importSize[3] + " currencies added\n");
                 return null;
             }
 

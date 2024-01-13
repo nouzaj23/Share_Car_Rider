@@ -18,7 +18,7 @@ public final class ExportAction extends AbstractAction {
         super("Export");
         this.frame = frame;
         this.exporter = new AsyncExporter(exportService,
-                                          () -> JOptionPane.showMessageDialog(frame, "Export has successfully finished.") );
+                                          () -> {} );
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class ExportAction extends AbstractAction {
             if (filter instanceof Filter) {
                 exportFile = ((Filter) filter).decorate(exportFile);
             }
-            exporter.exportData(exportFile);
+            int[] exportSize = exporter.exportData(exportFile);
         }
     }
 }
