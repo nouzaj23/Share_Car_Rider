@@ -6,20 +6,18 @@ import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Optional;
 
 public class RideCrudService implements CrudService<Ride> {
 
     private final Repository<Ride> rideRepository;
-    private final Repository<Category> categoryRepository;
     private final Validator<Ride> rideValidator;
 
     public RideCrudService(Repository<Ride> rideRepository, Validator<Ride> rideValidator, Repository<Category> categoryRepository) {
         this.rideRepository = rideRepository;
-        this.categoryRepository = categoryRepository;
         this.rideValidator = rideValidator;
     }
     @Override
@@ -40,13 +38,6 @@ public class RideCrudService implements CrudService<Ride> {
 
         if (validationResult.isValid()) {
             rideRepository.create(newEntity);
-            Optional<Category> categoryOptional = categoryRepository.findByGuid(newEntity.getCategory().getGuid());
-            if(categoryOptional.isPresent()) {
-                var category = categoryOptional.get();
-                category.setDistance(category.getDistance() + newEntity.getDistance());
-                category.setRides(category.getRides() + 1);
-                categoryRepository.update(category);
-            }
         }
         Logger.info("Created new ride: {}", newEntity);
         
@@ -58,16 +49,6 @@ public class RideCrudService implements CrudService<Ride> {
         var validationResult = rideValidator.validate(entity);
 
         if (validationResult.isValid()) {
-            var rideBackup = rideRepository.findByGuid(entity.getGuid());
-            if(rideBackup.isPresent()) {
-                Ride prevRide = rideBackup.get();
-                if (prevRide.getCategory().getGuid().equals(entity.getCategory().getGuid())) {
-                    updateCategory(entity, entity.getDistance() - prevRide.getDistance(), 0);
-                } else {
-                    updateCategory(prevRide, -prevRide.getDistance(), -1);
-                    updateCategory(entity, entity.getDistance(), 1);
-                }
-            }
             rideRepository.update(entity);
             Logger.info("Updated ride: {}", entity);
 
@@ -77,22 +58,7 @@ public class RideCrudService implements CrudService<Ride> {
 
     @Override
     public void deleteByGuid(String guid) {
-        var rideBackup = rideRepository.findByGuid(guid);
-        if(rideBackup.isPresent()) {
-            Ride ride = rideBackup.get();
-            updateCategory(ride, -ride.getDistance(), -1);
-        }
         rideRepository.deleteByGuid(guid);
-    }
-
-    private void updateCategory(Ride ride, int distanceDelta, int countDelta) {
-        Optional<Category> categoryOptional = categoryRepository.findByGuid(ride.getCategory().getGuid());
-        if(categoryOptional.isPresent()) {
-            var category = categoryOptional.get();
-            category.setDistance(category.getDistance() + distanceDelta);
-            category.setRides(category.getRides() + countDelta);
-            categoryRepository.update(category);
-        }
     }
 
     @Override

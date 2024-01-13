@@ -1,26 +1,37 @@
 package cz.muni.fi.pv168.project.ui.model;
 
 import cz.muni.fi.pv168.project.business.model.Category;
+import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CategoryModel extends AbstractTableModel implements EntityTableModel<Category> {
     private List<Category> categories;
     private final CrudService<Category> categoryCrudService;
     private final CategoryListModel categoryListModel;
+    private CarRidesModel rideModel;
     private final List<Column<Category, ?>> columns = List.of(
             Column.editable("Name", String.class, Category::getName, Category::setName),
-            Column.readonly("Rides", Integer.class, Category::getRides),
-            Column.readonly("Distance", Integer.class, Category::getDistance)
+            Column.readonly("Rides", Integer.class, this::computeTotalRideCount),
+            Column.readonly("Distance", Integer.class, this::computeTotalDistance)
     );
 
     public CategoryModel(CrudService<Category> categoryCrudService, CategoryListModel categoryListModel) {
         this.categoryCrudService = categoryCrudService;
         this.categories = new ArrayList<>(categoryCrudService.findAll());
         this.categoryListModel = categoryListModel;
+    }
+
+    public void setRidesModel(CarRidesModel rideModel) {
+        this.rideModel = rideModel;
+    }
+
+    public List<Category> getCategories() {
+        return Collections.unmodifiableList(categories);
     }
 
     @Override
@@ -96,5 +107,23 @@ public class CategoryModel extends AbstractTableModel implements EntityTableMode
     public void refresh() {
         this.categories = new ArrayList<>(categoryCrudService.findAll());
         fireTableDataChanged();
+    }
+
+    public int computeTotalDistance(Category category) {
+        return rideModel.getRides().stream()
+            .filter(ride -> ride.getCategory().getGuid().equals(category.getGuid()))
+            .mapToInt(Ride::getDistance)
+            .sum();
+    }
+
+    public int computeTotalRideCount(Category category) {
+        return rideModel.getRides().stream()
+            .filter(ride -> ride.getCategory().getGuid().equals(category.getGuid())).toList().size();
+    }
+
+    public List<Ride> getRidesForCategories(List<Category> category) {
+        return rideModel.getRides().stream()
+            .filter(ride -> category.stream().anyMatch(cat -> cat.getGuid().equals(ride.getCategory().getGuid())))
+            .toList();
     }
 }

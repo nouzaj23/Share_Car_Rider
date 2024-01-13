@@ -38,17 +38,6 @@ public class Ride extends AbstractRide{
     }
 
     @Override
-    public void setDistance(int distance) {
-        if (distance >= 0) {
-            var originalDistance = this.distance;
-            this.distance = distance;
-            if (category != null) {
-                category.modifyDistanceFluent(distance - originalDistance);
-            }
-        }
-    }
-
-    @Override
     public String toString() {
         return "Ride{" +
                 "date=" + date +

@@ -56,8 +56,6 @@ public class CSVimport implements BatchImporter {
     private Ride parseRide(HashMap<String, Category> categories, HashMap<String, Currency> currencies, String line) {
         var fields = line.split(",");
         var category = categories.computeIfAbsent(fields[4], num -> new Category(GuidProvider.newGuid(), fields[5]));
-        category.setRides(category.getRides() + 1);
-        category.modifyDistanceFluent(Integer.parseInt(fields[8]));
 
         var currency = currencies.computeIfAbsent(fields[2], cur -> new Currency(GuidProvider.newGuid(), fields[2],Double.parseDouble(fields[3])));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy");

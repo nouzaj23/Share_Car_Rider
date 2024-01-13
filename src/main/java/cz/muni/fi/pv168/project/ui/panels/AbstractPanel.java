@@ -37,4 +37,8 @@ abstract public class AbstractPanel<E> extends JPanel {
     public JTable getTable() {
         return table;
     }
+
+    public int getSelectedCount() {
+        return table.getSelectedRowCount();
+    }
 }
