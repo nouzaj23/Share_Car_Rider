@@ -3,6 +3,7 @@ package cz.muni.fi.pv168.project.ui.actions;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import cz.muni.fi.pv168.project.Main;
+import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -35,6 +36,7 @@ public class DarkModeToggle extends AbstractAction {
     private static void initFlatLightLafLookAndFeel() {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
+            CarRidesPanel.changeStatsColorLight();
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to initialize LaF", ex);
         }
@@ -43,6 +45,7 @@ public class DarkModeToggle extends AbstractAction {
     private static void initFlatDarkLafLookAndFeel() {
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
+            CarRidesPanel.changeStatsColorDark();
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to initialize LaF", ex);
         }

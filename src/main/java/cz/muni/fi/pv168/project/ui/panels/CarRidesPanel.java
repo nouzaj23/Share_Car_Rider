@@ -48,6 +48,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
     private Action editAction;
     private Action deleteAction;
 
+    private static final JPanel statsPanel = new JPanel(new GridBagLayout());;
     public CarRidesPanel(CarRidesModel carRidesModel,
                          CategoryListModel categoryListModel,
                          TemplateModel templates,
@@ -82,8 +83,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         deleteAction.setEnabled(false);
         table.setRowSorter(rowSorter);
 
-        JPanel statsPanel = new JPanel(new GridBagLayout());
-        setUpStatsPanel(statsPanel);
+        setUpStatsPanel();
         triggerStatsUpdate();
 
         var tableEmptySpaceClickAction = new MouseAdapter() {
@@ -97,7 +97,7 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         PanelHelper.createTopBar(this, table, createFilterPanel(carRideFilter), statsPanel, Optional.of(tableEmptySpaceClickAction), actions);
     }
 
-    private void setUpStatsPanel(JPanel statsPanel) {
+    private void setUpStatsPanel() {
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
         statsPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Aligns contents to the left
         totalFuelExpenses.setFont(new Font("Arial", Font.BOLD, 14));
@@ -107,6 +107,11 @@ public class CarRidesPanel extends AbstractPanel<Ride> {
         statsPanel.add(totalFuelExpenses);
         statsPanel.add(filteredFuelExpenses);
     }
+
+    public static void changeStatsColorLight() {
+        statsPanel.setBackground(new Color(230, 230, 250));}
+    public static void changeStatsColorDark() {
+        statsPanel.setBackground(new Color(0, 0, 0));}
 
     private JTable setUpTable(List<Action> actions) {
         var table = new JTable(carRidesModel);
