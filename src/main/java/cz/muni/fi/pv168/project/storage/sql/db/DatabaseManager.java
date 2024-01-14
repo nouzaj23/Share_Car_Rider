@@ -39,7 +39,7 @@ public final class DatabaseManager {
     public static DatabaseManager createTestInstance() {
         String connectionString = "jdbc:h2:mem:%s;%s".formatted(PROJECT_NAME, DB_PROPERTIES_STRING);
         var databaseManager = new DatabaseManager(connectionString);
-        databaseManager.initSchema();
+        databaseManager.initTestSchema();
 
         return databaseManager;
     }
@@ -71,6 +71,10 @@ public final class DatabaseManager {
     public void initSchema() {
         sqlFileExecutor.execute("init.sql");
         sqlFileExecutor.execute("data_dev.sql");
+    }
+
+    public void initTestSchema() {
+        sqlFileExecutor.execute("init.sql");
     }
 
     public void initData(String environment) {
