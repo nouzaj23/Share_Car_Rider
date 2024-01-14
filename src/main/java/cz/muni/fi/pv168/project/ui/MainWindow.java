@@ -21,7 +21,6 @@ import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainWindow {
@@ -86,7 +85,7 @@ public class MainWindow {
                                                                       carRideModel, templateModel, categoryModel,
                                                                       dependencyProvider,
                                                                       List.of( new JsonExport(), new CSVexport()))));
-        JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getGenericImportService(), this::refresh));
+        JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getImportService(), this::refresh));
         fileMenu.add(exportItem);
         fileMenu.add(importItem);
 
