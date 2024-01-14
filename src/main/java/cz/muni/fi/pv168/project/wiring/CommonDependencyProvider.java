@@ -11,10 +11,12 @@ import cz.muni.fi.pv168.project.business.service.crud.CurrencyCrudService;
 import cz.muni.fi.pv168.project.business.service.crud.RideCrudService;
 import cz.muni.fi.pv168.project.business.service.crud.TemplateCrudService;
 import cz.muni.fi.pv168.project.business.service.validation.*;
+import cz.muni.fi.pv168.project.export.service.ImportService;
 import cz.muni.fi.pv168.project.storage.sql.CategorySqlRepository;
 import cz.muni.fi.pv168.project.storage.sql.CurrencySqlRepository;
 import cz.muni.fi.pv168.project.storage.sql.RideSqlRepository;
 import cz.muni.fi.pv168.project.storage.sql.TemplateSqlRepository;
+import cz.muni.fi.pv168.project.storage.sql.TransactionalImportService;
 import cz.muni.fi.pv168.project.storage.sql.dao.CategoryDao;
 import cz.muni.fi.pv168.project.storage.sql.dao.CurrencyDao;
 import cz.muni.fi.pv168.project.storage.sql.dao.RideDao;
@@ -32,7 +34,6 @@ import cz.muni.fi.pv168.project.storage.sql.entity.mapper.TemplateMapper;
 import cz.muni.fi.pv168.project.export.CSVimport;
 import cz.muni.fi.pv168.project.export.JsonImport;
 import cz.muni.fi.pv168.project.export.service.GenericImportService;
-import cz.muni.fi.pv168.project.storage.memory.InMemoryRepository;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class CommonDependencyProvider implements DependencyProvider {
     private final CrudService<Ride> rideCrudService;
     private final CrudService<Category> categoryCrudService;
     private final CrudService<Template> templateCrudService;
-    private final GenericImportService genericImportService;
+    private final ImportService importService;
     private final CrudService<Currency> currencyCrudService;
 
     private final Validator<Ride> rideValidator;
@@ -100,7 +101,8 @@ public class CommonDependencyProvider implements DependencyProvider {
         this.currencyCrudService = new CurrencyCrudService(currencies, currencyValidator);
         this.rideCrudService = new RideCrudService(rides, rideValidator, (CategorySqlRepository) categories);
 
-        this.genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
+        var genericImportService = new GenericImportService(rideCrudService, templateCrudService, categoryCrudService, currencyCrudService, List.of(new JsonImport(currencyCrudService), new CSVimport(currencyCrudService)));
+        this.importService = new TransactionalImportService(genericImportService, transactionExecutor);
     }
 
     @Override
@@ -144,8 +146,8 @@ public class CommonDependencyProvider implements DependencyProvider {
     }
 
     @Override
-    public GenericImportService getGenericImportService() {
-        return genericImportService;
+    public ImportService getImportService() {
+        return importService;
     }
 
     @Override
