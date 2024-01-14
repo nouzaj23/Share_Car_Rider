@@ -44,6 +44,7 @@ public class RideDialog extends EntityDialog<Ride>{
         this.currencyJComboBox.setRenderer(new CurrencyRenderer());
         this.categoryJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         this.categoryJComboBox.setEditor(new CategoryComboBoxEditor());
+        this.categoryJComboBox.setEditable(true);
         this.categoryJComboBox.setRenderer(new CategoryRenderer());
         this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
         templates.setSelectedItem(null);
