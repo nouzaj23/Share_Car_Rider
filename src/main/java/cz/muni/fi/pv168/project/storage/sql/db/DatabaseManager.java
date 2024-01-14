@@ -70,6 +70,7 @@ public final class DatabaseManager {
 
     public void initSchema() {
         sqlFileExecutor.execute("init.sql");
+        sqlFileExecutor.execute("data_dev.sql");
     }
 
     public void initData(String environment) {
