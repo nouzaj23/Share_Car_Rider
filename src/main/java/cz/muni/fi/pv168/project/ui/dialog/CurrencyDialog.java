@@ -26,7 +26,7 @@ public class CurrencyDialog extends EntityDialog<Currency>{
 
     private void addFields() {
         add("Currency:", name);
-        add("Rate", rate);
+        add("Rate:", rate);
         addErrorPanel();
     }
 

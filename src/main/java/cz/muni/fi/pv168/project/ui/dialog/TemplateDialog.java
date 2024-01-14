@@ -52,7 +52,7 @@ public class TemplateDialog extends EntityDialog<Template>{
         add("Category:", categoryModel);
         add("From:", from);
         add("To:", to);
-        add("Distance (km): ", distance);
+        add("Distance (km):", distance);
         add("Hours:", hours);
         addErrorPanel();
     }

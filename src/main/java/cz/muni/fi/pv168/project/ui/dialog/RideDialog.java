@@ -112,17 +112,17 @@ public class RideDialog extends EntityDialog<Ride>{
     }
 
     private void addFields() {
-        add("Templates", templates);
+        add("Templates:", templates);
         add("Ride name:", name);
         add("Number of passengers:", passengers);
         add("Currency:", currencyJComboBox);
         add("Fuel Expenses:", fuelExpenses);
-        add("Category:", categoryJComboBox);
+        add("Category (Choose or type new): ", categoryJComboBox);
         add("From:", from);
         add("To:", to);
-        add("Distance (km): ", distance);
+        add("Distance (km):", distance);
         add("Hours:", hours);
-        add("Date", new JDatePicker(date));
+        add("Date:", new JDatePicker(date));
         addErrorPanel();
     }
 
