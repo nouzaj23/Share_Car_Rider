@@ -7,10 +7,6 @@ import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.repository.Repository;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
-import cz.muni.fi.pv168.project.storage.sql.CategorySqlRepository;
-import cz.muni.fi.pv168.project.storage.sql.dao.DataAccessObject;
-import cz.muni.fi.pv168.project.storage.sql.entity.CategoryEntity;
-import cz.muni.fi.pv168.project.storage.sql.entity.mapper.EntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

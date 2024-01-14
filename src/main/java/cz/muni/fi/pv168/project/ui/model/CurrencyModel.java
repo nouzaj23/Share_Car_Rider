@@ -5,6 +5,7 @@ import cz.muni.fi.pv168.project.business.service.crud.CrudService;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CurrencyModel extends AbstractTableModel implements EntityTableModel<Currency> {
@@ -95,5 +96,9 @@ public class CurrencyModel extends AbstractTableModel implements EntityTableMode
     public void refresh() {
         this.currencies = new ArrayList<>(currencyCrudService.findAll());
         fireTableDataChanged();
+    }
+
+    public List<Currency> getCurrencies() {
+        return Collections.unmodifiableList(currencies);
     }
 }

@@ -87,8 +87,6 @@ public class JsonImport implements BatchImporter {
                 float fuel = rideObject.getFloat("fuelExpenses");
                 LocalDate localDate = LocalDate.parse(rideObject.getString("date"), formatter);
 
-                category.setRides(category.getRides() + 1);
-                category.modifyDistanceFluent(distance);
 
                 Ride ride = new Ride(guid, name, passengers,currency, fuel, category, from, to, distance, localDate);
 

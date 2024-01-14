@@ -5,9 +5,8 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import org.jdatepicker.AbstractDateModel;
-import org.jdatepicker.DateModel;
 
-public class LocalDateModel extends AbstractDateModel<LocalDate> implements DateModel<LocalDate> {
+public class LocalDateModel extends AbstractDateModel<LocalDate> {
     public LocalDateModel() {
     }
 
