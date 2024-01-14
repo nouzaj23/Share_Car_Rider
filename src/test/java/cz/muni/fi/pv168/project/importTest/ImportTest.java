@@ -39,8 +39,8 @@ public class ImportTest {
                                                              dependencyProvider.getTemplateCrudService(),
                                                              dependencyProvider.getCategoryCrudService(),
                                                              dependencyProvider.getCurrencyCrudService(),
-                                                             List.of(new CSVimport(dependencyProvider.getCurrencyCrudService()),
-                                                                     new JsonImport(dependencyProvider.getCurrencyCrudService())));
+                                                             List.of(new CSVimport(dependencyProvider.getCurrencyCrudService(), dependencyProvider.getCategoryCrudService()),
+                                                                     new JsonImport(dependencyProvider.getCurrencyCrudService(), dependencyProvider.getCategoryCrudService())));
     }
 
     @AfterEach
