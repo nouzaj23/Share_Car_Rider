@@ -5,6 +5,8 @@ import cz.muni.fi.pv168.project.export.service.ImportService;
 import cz.muni.fi.pv168.project.storage.sql.db.TransactionExecutor;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TransactionalImportService implements ImportService {
 
@@ -18,8 +20,14 @@ public class TransactionalImportService implements ImportService {
     }
 
     @Override
-    public void importData(String filePath) {
-        transactionExecutor.executeInTransaction(() -> importService.importData(filePath));
+    public int[] importData(String filePath) {
+        AtomicReference<int[]> result = new AtomicReference<>();
+
+        transactionExecutor.executeInTransaction(() -> {
+            result.set(importService.importData(filePath));
+        });
+
+        return result.get();
     }
 
     @Override

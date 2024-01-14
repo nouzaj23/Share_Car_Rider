@@ -17,8 +17,7 @@ public class CSVexport implements BatchExporter {
     private static final String SEPARATOR = ",";
 
     @Override
-    public void exportBatch(Batch batch, String filePath) {
-
+    public int[] exportBatch(Batch batch, String filePath) {
         try (var writer = Files.newBufferedWriter(Path.of(filePath), StandardCharsets.UTF_8)) {
             for (var ride : batch.rides()) {
                 String line = createCsvLine(ride);
@@ -28,6 +27,7 @@ public class CSVexport implements BatchExporter {
         } catch (IOException exception) {
             throw new RuntimeException("Unable to write to file", exception);
         }
+        return new int[]{batch.rides().size(), 0, 0, 0};
     }
 
     private String createCsvLine(Ride ride) {

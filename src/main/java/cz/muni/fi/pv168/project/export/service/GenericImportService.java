@@ -1,6 +1,5 @@
 package cz.muni.fi.pv168.project.export.service;
 
-import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.Category;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
@@ -11,12 +10,7 @@ import cz.muni.fi.pv168.project.export.batch.BatchImporter;
 import cz.muni.fi.pv168.project.export.format.Format;
 import cz.muni.fi.pv168.project.export.format.FormatMapping;
 
-import javax.swing.*;
 import java.util.Collection;
-
-import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
-import static javax.swing.JOptionPane.OK_OPTION;
-import static javax.swing.JOptionPane.PLAIN_MESSAGE;
 
 public class GenericImportService implements ImportService {
 
@@ -41,41 +35,51 @@ public class GenericImportService implements ImportService {
     }
 
     @Override
-    public void importData(String filePath) {
+    public int[] importData(String filePath) {
         var batch = getImporter(filePath).importBatch(filePath);
 
-        batch.currencies().forEach(this::createCurrency);
-        batch.categories().forEach(this::createCategory);
-        batch.rides().forEach(this::createRide);
-        batch.templates().forEach(this::createTemplate);
+        int currencies = (int) batch.currencies().stream().filter(this::createCurrency).count();
+        int cat = (int) batch.categories().stream().filter(this::createCategory).count();
+        int rides = (int) batch.rides().stream().filter(this::createRide).count();
+        int template = (int) batch.templates().stream().filter(this::createTemplate).count();
+
+        return new int[]{rides, template, cat, currencies};
     }
 
-    private void createRide(Ride ride) {
+    private boolean createRide(Ride ride) {
         try {
             crudRide.create(ride);
         } catch (EntityAlreadyExistsException e) {
+            return false;
         }
+        return true;
     }
 
-    private void createCategory(Category category) {
+    private boolean createCategory(Category category) {
         try {
             crudCategory.create(category);
         } catch (EntityAlreadyExistsException e) {
+            return false;
         }
+        return true;
     }
 
-    private void createTemplate(Template template) {
+    private boolean createTemplate(Template template) {
         try {
             crudTemplate.create(template);
         } catch (EntityAlreadyExistsException e) {
+            return false;
         }
+        return true;
     }
 
-    private void createCurrency(Currency currency) {
+    private boolean createCurrency(Currency currency) {
         try {
             crudCurrency.create(currency);
         } catch (EntityAlreadyExistsException e) {
+            return false;
         }
+        return true;
     }
 
     @Override
