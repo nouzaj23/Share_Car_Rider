@@ -55,11 +55,11 @@ public class GenericExportService implements ExportService {
     }
 
     @Override
-    public void exportData(String filePath) {
+    public int[] exportData(String filePath) {
         var exporter = getExporter(filePath);
 
         var batch = createBatch();
-        exporter.exportBatch(batch, filePath);
+        return exporter.exportBatch(batch, filePath);
     }
 
     private BatchExporter getExporter(String filePath) {

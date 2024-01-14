@@ -1,8 +1,6 @@
 package cz.muni.fi.pv168.project.business.service.validation;
 
 import cz.muni.fi.pv168.project.business.model.Ride;
-import cz.muni.fi.pv168.project.business.service.validation.ValidationResult;
-import cz.muni.fi.pv168.project.business.service.validation.Validator;
 
 import java.time.Clock;
 import java.time.LocalDate;

@@ -6,6 +6,9 @@ import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import cz.muni.fi.pv168.project.ui.actions.AddAction;
+import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
+import cz.muni.fi.pv168.project.ui.actions.EditAction;
 import cz.muni.fi.pv168.project.ui.dialog.EntityDialog;
 import cz.muni.fi.pv168.project.ui.dialog.TemplateDialog;
 import cz.muni.fi.pv168.project.ui.model.CategoryListModel;
@@ -19,37 +22,57 @@ import cz.muni.fi.pv168.project.ui.renderers.CurrencyRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import java.awt.*;
-import java.util.function.Consumer;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import java.awt.BorderLayout;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class TemplatesPanel extends AbstractPanel<Template> {
 
     private final TemplateModel templateModel;
-    private final Consumer<Integer> onSelectionChange;
     private final CategoryListModel categoryListModel;
     private final CurrencyListModel currencyListModel;
     private final Validator<Template> templateValidator;
+    private Action addAction;
+    private Action editAction;
+    private Action deleteAction;
 
     public TemplatesPanel(TemplateModel templateModel,
                           CategoryListModel categoryListModel,
                           CurrencyListModel currencyListModel,
-                          Consumer<Integer> onSelectionChange,
                           Validator<Template> templateValidator) {
         this.templateModel = templateModel;
         this.categoryListModel = categoryListModel;
-        this.onSelectionChange = onSelectionChange;
         this.currencyListModel = currencyListModel;
         this.templateValidator = templateValidator;
 
         setLayout(new BorderLayout());
 
+        this.addAction = new AddAction<>(this);
+        this.editAction = new EditAction<>(this);
+        this.deleteAction = new DeleteAction<>(this);
+        var actions = Arrays.asList(addAction, editAction, deleteAction);
+        addAction.setEnabled(true);
+        editAction.setEnabled(false);
+        deleteAction.setEnabled(false);
 
-        this.table = setUpTable();
+        this.table = setUpTable(actions);
 
-        PanelHelper.createTopBar(this, table, null, null);
+        var tableEmptySpaceClickAction = new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                if (me.getButton() == MouseEvent.BUTTON3) {
+                    PopupMenuGenerator.generatePopupMenu(TemplatesPanel.this, actions).show(me.getComponent(), me.getX(), me.getY());
+                }
+            }
+        };
+        PanelHelper.createTopBar(this, table, null, null, Optional.of(tableEmptySpaceClickAction), actions);
     }
 
-    private JTable setUpTable() {
+    private JTable setUpTable(List<Action> actions) {
         var table = new JTable(templateModel);
 
         table.setAutoCreateRowSorter(true);
@@ -60,7 +83,7 @@ public class TemplatesPanel extends AbstractPanel<Template> {
         var categoryComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
         categoryComboBox.setRenderer(new CategoryRenderer());
         table.setDefaultEditor(Category.class, new DefaultCellEditor(categoryComboBox));
-        table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this));
+        table.setComponentPopupMenu(PopupMenuGenerator.generatePopupMenu(this, actions));
         table.setDefaultRenderer(Currency.class, new CurrencyRenderer());
         table.setDefaultRenderer(Category.class, new CategoryRenderer());
 
@@ -69,9 +92,20 @@ public class TemplatesPanel extends AbstractPanel<Template> {
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
         var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
-        var count = selectionModel.getSelectedItemsCount();
-        if (onSelectionChange != null) {
-            onSelectionChange.accept(count);
+        var selectedCount = selectionModel.getSelectedItemsCount();
+
+        if (selectedCount == 0) {
+            addAction.setEnabled(true);
+            editAction.setEnabled(false);
+            deleteAction.setEnabled(false);
+        } else if (selectedCount == 1) {
+            addAction.setEnabled(true);
+            editAction.setEnabled(true);
+            deleteAction.setEnabled(true);
+        } else {
+            addAction.setEnabled(true);
+            editAction.setEnabled(false);
+            deleteAction.setEnabled(true);
         }
     }
 

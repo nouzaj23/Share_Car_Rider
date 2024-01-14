@@ -1,13 +1,15 @@
 package cz.muni.fi.pv168.project.ui.panels.helper;
 
-import cz.muni.fi.pv168.project.ui.actions.AddAction;
-import cz.muni.fi.pv168.project.ui.actions.DeleteAction;
-import cz.muni.fi.pv168.project.ui.actions.EditAction;
 import cz.muni.fi.pv168.project.ui.actions.QuitAction;
 import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
 
 import javax.swing.*;
 import java.awt.*;
+
+import java.util.List;
+
+import java.awt.event.MouseListener;
+import java.util.Optional;
 
 public final class PanelHelper {
 
@@ -15,17 +17,15 @@ public final class PanelHelper {
         throw new AssertionError("This class is not instantiable");
     }
 
-    public static void createTopBar(AbstractPanel panel, JTable table, JPanel filterPanel, JComponent extra) {
+    public static void createTopBar(AbstractPanel panel, JTable table, JPanel filterPanel, JComponent extra, Optional<MouseListener> listener, List<Action> actions) {
         var toolbar = new JToolBar();
 
         Action quitAction = new QuitAction<>(panel);
-        Action addAction = new AddAction<>(panel);
-        Action deleteAction = new DeleteAction<>(panel);
-        Action editAction = new EditAction<>(panel);
+        
+        for (var action : actions) {
+            toolbar.add(new JButton(action));
+        }
         toolbar.add(new JButton(quitAction));
-        toolbar.add(new JButton(addAction));
-        toolbar.add(new JButton(deleteAction));
-        toolbar.add(new JButton(editAction));
 
         if (extra != null) {
             toolbar.add(Box.createHorizontalGlue());
@@ -45,6 +45,11 @@ public final class PanelHelper {
         }
 
         panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+
+        var scrollPane = new JScrollPane(table);
+        if (listener != null && listener.isPresent()) {
+            scrollPane.addMouseListener(listener.get());
+        };
+        panel.add(scrollPane, BorderLayout.CENTER);
     }
 }

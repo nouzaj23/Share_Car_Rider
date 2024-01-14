@@ -21,7 +21,6 @@ import cz.muni.fi.pv168.project.wiring.DependencyProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainWindow {
@@ -46,6 +45,7 @@ public class MainWindow {
         var categoryListModel = new CategoryListModel(dependencyProvider.getCategoryCrudService());
         this.categoryModel = new CategoryModel(dependencyProvider.getCategoryCrudService(), categoryListModel);
         this.carRideModel = new CarRidesModel(dependencyProvider.getRideCrudService(), categoryModel);
+        categoryModel.setRidesModel(carRideModel);
         var currencyListModel = new CurrencyListModel(dependencyProvider.getCurrencyCrudService());
         this.currencyModel = new CurrencyModel(dependencyProvider.getCurrencyCrudService(), currencyListModel);
 
@@ -57,7 +57,7 @@ public class MainWindow {
         this.carRidesPanel = createCarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel, rideValidator);
         this.categoriesPanel = createCategoriesPanel(categoryModel, categoryValidator);
         this.templatesPanel = createTemplatesPanel(templateModel, categoryListModel, currencyListModel, templateValidator);
-        this.currencyPanel = createCurrencyPanel(currencyModel, currencyValidator);
+        this.currencyPanel = createCurrencyPanel(currencyModel, currencyValidator, carRideModel);
 
         var tabbedPane = createTabbedPane(carRidesPanel, categoriesPanel, templatesPanel, currencyPanel);
 
@@ -86,7 +86,7 @@ public class MainWindow {
                                                                       carRideModel, templateModel, categoryModel,
                                                                       dependencyProvider,
                                                                       List.of( new JsonExport(), new CSVexport()))));
-        JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getGenericImportService(), this::refresh));
+        JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getImportService(), this::refresh));
         fileMenu.add(exportItem);
         fileMenu.add(importItem);
 
@@ -102,19 +102,19 @@ public class MainWindow {
     }
 
     private CarRidesPanel createCarRidesPanel(CarRidesModel carRideModel, CategoryListModel categoryListModel, TemplateModel templateModel, CategoryModel categoryModel, CurrencyListModel currencyListModel, Validator<Ride> rideValidator) {
-        return new CarRidesPanel(carRideModel, categoryListModel, this::changeActionsState, templateModel, categoryModel, currencyListModel, rideValidator);
+        return new CarRidesPanel(carRideModel, categoryListModel, templateModel, categoryModel, currencyListModel, rideValidator);
     }
 
     private CategoriesPanel createCategoriesPanel(CategoryModel categoryModel, Validator<Category> categoryValidator) {
-        return new CategoriesPanel(categoryModel, this::changeActionsState, categoryValidator);
+        return new CategoriesPanel(categoryModel, categoryValidator);
     }
 
     private TemplatesPanel createTemplatesPanel(TemplateModel templateModel, CategoryListModel categoryListModel, CurrencyListModel currencyListModel, Validator<Template> templateValidator) {
-        return new TemplatesPanel(templateModel, categoryListModel, currencyListModel, this::changeActionsState, templateValidator);
+        return new TemplatesPanel(templateModel, categoryListModel, currencyListModel, templateValidator);
     }
 
-    private CurrencyPanel createCurrencyPanel(CurrencyModel currencyModel, Validator<Currency> currencyValidator) {
-        return new CurrencyPanel( currencyModel, this::changeActionsState, currencyValidator);
+    private CurrencyPanel createCurrencyPanel(CurrencyModel currencyModel, Validator<Currency> currencyValidator, CarRidesModel rideModel) {
+        return new CurrencyPanel(currencyModel,currencyValidator, rideModel);
     }
 
     private JTabbedPane createTabbedPane(CarRidesPanel carRidesPanel, CategoriesPanel categoriesPanel, TemplatesPanel templatesPanel, CurrencyPanel currencyPanel) {
@@ -128,9 +128,6 @@ public class MainWindow {
 
     public void show() {
         frame.setVisible(true);
-    }
-
-    private void changeActionsState(int selectedItemsCount) {
     }
 
     private void refresh() {

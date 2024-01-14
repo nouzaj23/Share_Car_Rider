@@ -9,9 +9,7 @@ public class CategoryMapper implements EntityMapper<CategoryEntity, Category> {
     public Category mapToBusiness(CategoryEntity dbCategory) {
         return new Category(
                 dbCategory.guid(),
-                dbCategory.name(),
-                dbCategory.distace(),
-                dbCategory.rides()
+                dbCategory.name()
         );
     }
 
@@ -29,9 +27,7 @@ public class CategoryMapper implements EntityMapper<CategoryEntity, Category> {
         return new CategoryEntity(
                 dbId,
                 entity.getGuid(),
-                entity.getName(),
-                entity.getDistance(),
-                entity.getRides()
+                entity.getName()
         );
     }
 }

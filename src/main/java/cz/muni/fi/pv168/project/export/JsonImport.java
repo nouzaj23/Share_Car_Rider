@@ -30,12 +30,14 @@ import org.json.JSONObject;
 public class JsonImport implements BatchImporter {
 
     private final CrudService<Currency> currencyCrudService;
-    public JsonImport(CrudService<Currency> currencyCrudService) {
+    private final CrudService<Category> categoryCrudService;
+    public JsonImport(CrudService<Currency> currencyCrudService, CrudService<Category> categoryCrudService) {
         this.currencyCrudService = currencyCrudService;
+        this.categoryCrudService = categoryCrudService;
     }
     @Override
     public Batch importBatch(String filePath) {
-        var categoryHashMap = new HashMap<String, Category>();
+        var categoryHashMap = new HashMap<>(categoryCrudService.findAll().stream().collect(Collectors.toMap(Category::getName, cat -> cat)));
         List<Ride> rides = new ArrayList<>();
         List<Template> templates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -85,8 +87,6 @@ public class JsonImport implements BatchImporter {
                 float fuel = rideObject.getFloat("fuelExpenses");
                 LocalDate localDate = LocalDate.parse(rideObject.getString("date"), formatter);
 
-                category.setRides(category.getRides() + 1);
-                category.modifyDistanceFluent(distance);
 
                 Ride ride = new Ride(guid, name, passengers,currency, fuel, category, from, to, distance, localDate);
 

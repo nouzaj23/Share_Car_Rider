@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public interface Exporter {
 
-    void exportData(String filePath);
+    int[] exportData(String filePath);
 
     Collection<Format> getFormats();
 }

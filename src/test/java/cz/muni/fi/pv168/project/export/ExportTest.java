@@ -89,9 +89,7 @@ class ExportTest {
                     },
                     "category" : {
                       "guid" : "1",
-                      "name" : "cat",
-                      "distance" : 1,
-                      "rides" : 1
+                      "name" : "cat"
                     },
                     "from" : "1",
                     "to" : "1",
@@ -102,9 +100,7 @@ class ExportTest {
                   } ],
                   "categories" : [ {
                     "guid" : "1",
-                    "name" : "cat",
-                    "distance" : 1,
-                    "rides" : 1
+                    "name" : "cat"
                   } ],
                   "templates" : [ {
                     "guid" : "1",
@@ -117,9 +113,7 @@ class ExportTest {
                     },
                     "category" : {
                       "guid" : "1",
-                      "name" : "cat",
-                      "distance" : 1,
-                      "rides" : 1
+                      "name" : "cat"
                     },
                     "from" : "1",
                     "to" : "1",

@@ -15,7 +15,7 @@ public class TemplateValidator implements Validator<Template> {
     public ValidationResult validate(Template template) {
         var validators = List.of(
                 extracting(
-                        Template::getName, new StringLengthValidator(1, 50, "Template name")),
+                        Template::getName, new StringLengthValidator(1, 50, "Name")),
                 extracting(
                         Template::getFrom, new StringLengthValidator(1, 50, "From place name")),
                 extracting(

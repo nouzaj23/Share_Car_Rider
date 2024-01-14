@@ -18,7 +18,7 @@ import java.util.*;
 
 public class JsonExport implements BatchExporter {
     @Override
-    public void exportBatch(Batch batch, String filePath) {
+    public int[] exportBatch(Batch batch, String filePath) {
 
         var system = new JsonSystemHelper(batch);
         try (var writer = Files.newBufferedWriter(Path.of(filePath), StandardCharsets.UTF_8)) {
@@ -26,6 +26,7 @@ public class JsonExport implements BatchExporter {
         } catch (IOException exception) {
             throw new RuntimeException("Unable to write to file", exception);
         }
+        return new int[]{batch.rides().size(), batch.templates().size(), batch.categories().size(), batch.currencies().size()};
     }
 
     private static String exportToJson(JsonSystemHelper system) {

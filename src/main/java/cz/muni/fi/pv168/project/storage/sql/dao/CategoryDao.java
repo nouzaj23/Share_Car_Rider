@@ -56,9 +56,7 @@ public final class CategoryDao implements DataAccessObject<CategoryEntity> {
         var sql = """
                 SELECT id,
                        guid,
-                       name,
-                       distance,
-                       rides
+                       name
                 FROM Category
                 """;
         try (
@@ -84,9 +82,7 @@ public final class CategoryDao implements DataAccessObject<CategoryEntity> {
         var sql = """
                 SELECT id,
                        guid,
-                       name,
-                       distance,
-                       rides
+                       name
                 FROM Category
                 WHERE id = ?
                 """;
@@ -111,9 +107,7 @@ public final class CategoryDao implements DataAccessObject<CategoryEntity> {
         var sql = """
                 SELECT id,
                        guid,
-                       name,
-                       distance,
-                       rides
+                       name
                 FROM Category
                 WHERE guid = ?
                 """;
@@ -137,9 +131,7 @@ public final class CategoryDao implements DataAccessObject<CategoryEntity> {
     public CategoryEntity update(CategoryEntity entity) {
         var sql = """
                 UPDATE Category
-                SET name = ?,
-                    distance = ?,
-                    rides = ?
+                SET name = ?
                 WHERE id = ?
                 """;
         try (
@@ -147,8 +139,6 @@ public final class CategoryDao implements DataAccessObject<CategoryEntity> {
                 var statement = connection.use().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
             statement.setString(1, entity.name());
-            statement.setInt(2, entity.distace());
-            statement.setInt(3, entity.rides());
             statement.setLong(4, entity.id());
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated == 0) {
@@ -225,9 +215,7 @@ public final class CategoryDao implements DataAccessObject<CategoryEntity> {
         return new CategoryEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("guid"),
-                resultSet.getString("name"),
-                resultSet.getInt("distance"),
-                resultSet.getInt("rides")
+                resultSet.getString("name")
         );
     }
 }

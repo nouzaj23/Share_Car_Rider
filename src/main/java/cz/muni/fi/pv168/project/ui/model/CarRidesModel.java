@@ -9,6 +9,7 @@ import cz.muni.fi.pv168.project.ui.panels.CarRidesPanel;
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CarRidesModel extends AbstractTableModel implements EntityTableModel<Ride> {
@@ -130,5 +131,9 @@ public class CarRidesModel extends AbstractTableModel implements EntityTableMode
         while ( getRowCount() != 0 ){
             deleteRow(0);
         }
+    }
+
+    public List<Ride> getRides() {
+        return Collections.unmodifiableList(rides);
     }
 }

@@ -2,9 +2,7 @@ CREATE TABLE IF NOT EXISTS "Category"
 (
     `id`        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     `guid`      VARCHAR     NOT NULL UNIQUE,
-    `name`      VARCHAR(150) NOT NULL,
-    `distance`  INT   NOT NULL DEFAULT 0,
-    `rides`     INT   NOT NULL DEFAULT 0
+    `name`      VARCHAR(150) NOT NULL
 );
 
 

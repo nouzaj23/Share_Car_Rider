@@ -4,6 +4,7 @@ import cz.muni.fi.pv168.project.business.guidProvider.GuidProvider;
 import cz.muni.fi.pv168.project.business.model.*;
 import cz.muni.fi.pv168.project.business.service.validation.ValidationException;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import cz.muni.fi.pv168.project.ui.editors.CategoryComboBoxEditor;
 import cz.muni.fi.pv168.project.ui.model.*;
 import cz.muni.fi.pv168.project.ui.renderers.CategoryRenderer;
 import cz.muni.fi.pv168.project.ui.renderers.CurrencyRenderer;
@@ -39,10 +40,10 @@ public class RideDialog extends EntityDialog<Ride>{
         this.categoryModel = categoryModel;
         this.ride = ride;
         this.currencyJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(currencyListModel));
-        this.currencyJComboBox.setEditable(true);
+        this.currencyJComboBox.setEditable(false);
         this.currencyJComboBox.setRenderer(new CurrencyRenderer());
         this.categoryJComboBox = new JComboBox<>(new ComboBoxModelAdapter<>(categoryListModel));
-        this.categoryJComboBox.setEditable(true);
+        this.categoryJComboBox.setEditor(new CategoryComboBoxEditor());
         this.categoryJComboBox.setRenderer(new CategoryRenderer());
         this.templates = new JComboBox<>(new DefaultComboBoxModel<>(templateModel.getArray()));
         templates.setSelectedItem(null);
@@ -135,6 +136,12 @@ public class RideDialog extends EntityDialog<Ride>{
                 Category newCategory = new Category(GuidProvider.newGuid(), category.toString());
                 categoryModel.addRow(newCategory);
                 ride.setCategory(newCategory);
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "New category %s created".formatted(newCategory.getName()),
+                            "New category",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
             }
         } else {
             ride.setCategory((Category) category);
