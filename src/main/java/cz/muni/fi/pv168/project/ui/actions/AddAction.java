@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.project.ui.actions;
 
+import cz.muni.fi.pv168.project.business.service.crud.EntityAlreadyExistsException;
 import cz.muni.fi.pv168.project.ui.panels.AbstractPanel;
 import cz.muni.fi.pv168.project.ui.resources.Icons;
 
@@ -22,7 +23,16 @@ public class AddAction<E> extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         var dialog = panel.getDialog();
-        dialog.show(panel, "Add record")
-                .ifPresent(panel::addRow);
+        try{
+            dialog.show(panel, "Add record")
+                    .ifPresent(panel::addRow);
+        } catch (EntityAlreadyExistsException exception){
+            JOptionPane.showMessageDialog(
+                    null,
+                    exception.getMessage(),
+                    "Duplicate",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        }
     }
 }
