@@ -7,6 +7,7 @@ import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.export.CSVimport;
 import cz.muni.fi.pv168.project.export.JsonImport;
 import cz.muni.fi.pv168.project.export.service.GenericImportService;
+import cz.muni.fi.pv168.project.export.service.ProgressCallback;
 import cz.muni.fi.pv168.project.storage.sql.db.DatabaseManager;
 import cz.muni.fi.pv168.project.wiring.CommonDependencyProvider;
 import cz.muni.fi.pv168.project.wiring.DependencyProvider;
@@ -50,7 +51,10 @@ public class ImportTest {
 
     @Test
     void importEmptyCSV() {
-        genericImportService.importData(TEST_RESOURCES.resolve("TestEmpty.csv").toString());
+        ProgressCallback progressCallback = progress -> {
+        };
+
+        genericImportService.importData(TEST_RESOURCES.resolve("TestEmpty.csv").toString(), progressCallback);
 
         assertThat(dependencyProvider.getRideCrudService().findAll()).isEmpty();
         assertThat(dependencyProvider.getTemplateCrudService().findAll()).isEmpty();
@@ -60,7 +64,9 @@ public class ImportTest {
 
     @Test
     void importEmptyJSON() {
-        genericImportService.importData(TEST_RESOURCES.resolve("TestEmpty.json").toString());
+        ProgressCallback progressCallback = progress -> {
+        };
+        genericImportService.importData(TEST_RESOURCES.resolve("TestEmpty.json").toString(), progressCallback);
 
         assertThat(dependencyProvider.getRideCrudService().findAll()).isEmpty();
         assertThat(dependencyProvider.getTemplateCrudService().findAll()).isEmpty();
@@ -70,7 +76,9 @@ public class ImportTest {
 
     @Test
     void importOneOfEachJSON() {
-        genericImportService.importData(TEST_RESOURCES.resolve("TestOneOfEach.json").toString());
+        ProgressCallback progressCallback = progress -> {
+        };
+        genericImportService.importData(TEST_RESOURCES.resolve("TestOneOfEach.json").toString(), progressCallback);
 
         var currency = new Currency("1", "eur", 1);
         var category = new Category("1", "cat");
@@ -85,7 +93,9 @@ public class ImportTest {
 
     @Test
     void importOneOfEachCSV() {
-        genericImportService.importData(TEST_RESOURCES.resolve("TestOneOfEach.csv").toString());
+        ProgressCallback progressCallback = progress -> {
+        };
+        genericImportService.importData(TEST_RESOURCES.resolve("TestOneOfEach.csv").toString(), progressCallback);
 
         assertThat(dependencyProvider.getRideCrudService().findAll()).hasSize(1);
         assertThat(dependencyProvider.getCategoryCrudService().findAll()).hasSize(1);
@@ -94,11 +104,15 @@ public class ImportTest {
 
     @Test
     void importFailCSV() {
-        assertThrows(RuntimeException.class, () -> genericImportService.importData(TEST_RESOURCES.resolve("TestFail.csv").toString()));
+        ProgressCallback progressCallback = progress -> {
+        };
+        assertThrows(RuntimeException.class, () -> genericImportService.importData(TEST_RESOURCES.resolve("TestFail.csv").toString(), progressCallback));
     }
 
     @Test
     void importFailJSON() {
-        assertThrows(RuntimeException.class, () -> genericImportService.importData(TEST_RESOURCES.resolve("TestFail.json").toString()));
+        ProgressCallback progressCallback = progress -> {
+        };
+        assertThrows(RuntimeException.class, () -> genericImportService.importData(TEST_RESOURCES.resolve("TestFail.json").toString(), progressCallback));
     }
 }

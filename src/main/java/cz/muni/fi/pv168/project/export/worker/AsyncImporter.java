@@ -2,8 +2,11 @@ package cz.muni.fi.pv168.project.export.worker;
 
 import cz.muni.fi.pv168.project.export.format.Format;
 import cz.muni.fi.pv168.project.export.service.ImportService;
+import cz.muni.fi.pv168.project.export.service.ProgressCallback;
+import org.h2.constraint.DomainColumnResolver;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -27,12 +30,42 @@ public class AsyncImporter implements Importer {
 
     @Override
     public void importData(String filePath) {
+
         var asyncWorker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
+                JProgressBar progressBar = new JProgressBar(0, 100);
+                JFrame parentFrame = new JFrame();
+
+                SwingUtilities.invokeLater(() -> {
+                    var progressDialog = new JDialog(parentFrame, "Import Progress", Dialog.ModalityType.MODELESS);
+                    progressDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    progressDialog.setSize(300, 100);
+                    progressDialog.setLocationRelativeTo(null);
+
+                    progressBar.setStringPainted(true);
+                    progressDialog.add(progressBar);
+
+                    // Show the progress dialog on the EDT
+                    SwingUtilities.invokeLater(() -> progressDialog.setVisible(true));
+                });
+
                 int[] importSize = {0,0,0,0};
+
+                ProgressCallback progressCallback = progress -> {
+                    setProgress((int) progress);
+                };
+
+                addPropertyChangeListener(evt -> {
+                    if ("progress".equals(evt.getPropertyName())) {
+                        int progress = (int) evt.getNewValue();
+                        progressBar.setValue(progress);
+                    }
+                });
+
                 try {
-                    importSize = importService.importData(filePath);
+                    importSize = importService.importData(filePath, progressCallback);
+                    parentFrame.dispose();
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(
                             null,
@@ -55,6 +88,7 @@ public class AsyncImporter implements Importer {
                 onFinish.run();
             }
         };
+
         asyncWorker.execute();
     }
 }
