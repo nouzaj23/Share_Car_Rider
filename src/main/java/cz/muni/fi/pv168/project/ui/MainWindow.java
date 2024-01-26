@@ -8,6 +8,7 @@ import cz.muni.fi.pv168.project.business.model.Currency;
 import cz.muni.fi.pv168.project.business.model.Ride;
 import cz.muni.fi.pv168.project.business.model.Template;
 import cz.muni.fi.pv168.project.business.service.validation.Validator;
+import cz.muni.fi.pv168.project.storage.sql.TransactionalExportService;
 import cz.muni.fi.pv168.project.ui.actions.DarkModeToggle;
 import cz.muni.fi.pv168.project.ui.actions.ExportAction;
 import cz.muni.fi.pv168.project.ui.actions.ImportAction;
@@ -82,10 +83,10 @@ public class MainWindow {
         JMenu fileMenu = new JMenu("Menu");
         JMenuItem darkModeToggle = new JCheckBoxMenuItem(new DarkModeToggle(frame));
         JMenuItem exportItem = new JMenuItem(new ExportAction(frame,
-                                             new GenericExportService(carRidesPanel, templatesPanel, categoriesPanel,
+                new TransactionalExportService (new GenericExportService(carRidesPanel, templatesPanel, categoriesPanel,
                                                                       carRideModel, templateModel, categoryModel,
                                                                       dependencyProvider,
-                                                                      List.of( new JsonExport(), new CSVexport()))));
+                                                                      List.of( new JsonExport(), new CSVexport())), dependencyProvider.getTransactionExecutor())));
         JMenuItem importItem = new JMenuItem(new ImportAction(frame, dependencyProvider.getImportService(), this::refresh));
         fileMenu.add(exportItem);
         fileMenu.add(importItem);
