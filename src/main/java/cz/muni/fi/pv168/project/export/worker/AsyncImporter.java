@@ -67,12 +67,14 @@ public class AsyncImporter implements Importer {
                     importSize = importService.importData(filePath, progressCallback);
                     parentFrame.dispose();
                 } catch (Exception e) {
+                    parentFrame.dispose();
                     JOptionPane.showMessageDialog(
                             null,
                             "error while importing",
                             "Error",
                             JOptionPane.ERROR_MESSAGE
                     );
+                    throw e;
                 }
                 JOptionPane.showMessageDialog(null, "Import was done\n" +
                                                                             importSize[0] + " rides added\n" +
